@@ -62,7 +62,8 @@ class User(AbstractUser):
     patronymic = models.CharField(verbose_name='Отчество', max_length=20, null=True, blank=True)
 
     birthdate = models.DateField(verbose_name='Дата рождения', null=True, blank=True)
-    image = models.ImageField(verbose_name='Аватарка', null=True, blank=True)
+    image = models.ImageField(verbose_name='Аватарка',
+                              null=True, blank=True, upload_to=f'avatars/{first_name}+{last_name}')
     email = models.EmailField(verbose_name='Почта', unique=True, null=True, blank=True)
 
     role = models.CharField(verbose_name='Роль', max_length=1, choices=KINDES, default='d')
@@ -102,7 +103,7 @@ class Document(models.Model):
     created_at = models.DateField(verbose_name='Дата создания',
                                   auto_now_add=True)
     expiration_date = models.DateField(verbose_name='Дата окончания')
-    file = models.FileField(verbose_name='Эл. копия документа')
+
 
     class Meta:
         abstract = True
