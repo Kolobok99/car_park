@@ -56,6 +56,8 @@ class User(AbstractUser):
         ('d', 'driver'),
     )
 
+    def upload_path(self):
+        return f'{self.username}'
 
     first_name = models.CharField(verbose_name='Имя', max_length=20, null=True, blank=True)
     last_name = models.CharField(verbose_name='Фамилия', max_length=20, null=True, blank=True)
@@ -63,7 +65,7 @@ class User(AbstractUser):
 
     birthdate = models.DateField(verbose_name='Дата рождения', null=True, blank=True)
     image = models.ImageField(verbose_name='Аватарка',
-                              null=True, blank=True, upload_to=f'avatars/{first_name}+{last_name}')
+                              null=True, blank=True, upload_to=f'avatars/')
     email = models.EmailField(verbose_name='Почта', unique=True, null=True, blank=True)
 
     role = models.CharField(verbose_name='Роль', max_length=1, choices=KINDES, default='d')
@@ -75,15 +77,14 @@ class Driver(models.Model):
     '''Водитель'''
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name='d_user')
-    phone = models.IntegerField(verbose_name='номер телефона', validators=[
-                                               MaxValueValidator(99999999999),
-                                               MinValueValidator(10000000000)
-                                           ], null=True, blank=True)
+    phone = models.CharField(verbose_name='номер телефона',null=True, blank=True ,max_length=12)
     unique_number = models.IntegerField(verbose_name='уникальный номер', db_index=True, validators=[
                                                MaxValueValidator(9999),
                                                MinValueValidator(1)
                                            ], null=True, blank=True)
 
+    def __str__(self):
+        return f'{self.user.first_name} {self.user.last_name}'
 
     class Meta:
         verbose_name = 'Водитель'
