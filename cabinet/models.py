@@ -70,7 +70,7 @@ class User(AbstractUser):
         default=False,
     )
 
-class Driver(User):
+class Driver(models.Model):
     '''Водитель'''
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name='d_user')
@@ -88,7 +88,7 @@ class Driver(User):
         verbose_name = 'Водитель'
         verbose_name_plural = 'Водители'
 
-class Manager(User):
+class Manager(models.Model):
     '''Модель администратора'''
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name='m_user')
     class Meta:
