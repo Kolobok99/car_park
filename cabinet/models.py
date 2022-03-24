@@ -1,11 +1,8 @@
 from django.db import models
-
-# Create your models here.
-from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.core.validators import MaxValueValidator, MinValueValidator
+
+from datetime import timedelta
 
 class Car(models.Model):
     '''машины водилетей'''
@@ -150,3 +147,22 @@ class DocType(models.Model):
         verbose_name = 'Тип документа'
         verbose_name_plural = 'Типы документов'
 
+class Application(models.Model):
+    """Заявки на ремонт"""
+
+    type_of = models.ForeignKey("TypeOfAppl", on_delete=models.PROTECT)
+    onwer = models.ForeignKey(Driver, on_delete=models.PROTECT)
+    start_date = models.DateField(verbose_name='время создания', auto_now_add=True)
+    time_to_execute = models.PositiveIntegerField(verbose_name='время на выполнение',
+                                                  default=7)
+    end_date = models.DateField(verbose_name='дата окончани')
+
+    def save(self, *args, **kwargs):
+        self.end_date = self.start_date + timedelta(self.time_to_execute)
+        super().save(*args, **kwargs)
+
+
+class TypeOfAppl(models.Model):
+    """Типы заявок"""
+
+    title = models.CharField(verbose_name='Наименование', max_length=50)
