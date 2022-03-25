@@ -155,14 +155,26 @@ class Application(models.Model):
     start_date = models.DateField(verbose_name='время создания', auto_now_add=True)
     time_to_execute = models.PositiveIntegerField(verbose_name='время на выполнение',
                                                   default=7)
-    end_date = models.DateField(verbose_name='дата окончани')
+    end_date = models.DateField(verbose_name='дата окончания', null=True, blank=True)
 
     def save(self, *args, **kwargs):
-        self.end_date = self.start_date + timedelta(self.time_to_execute)
         super().save(*args, **kwargs)
-
+        self.end_date = self.start_date + timedelta(days=self.time_to_execute)
+        super().save(*args, **kwargs)
+    # def __str__(self):
+    #     return
+    class Meta:
+        verbose_name = 'Заявка'
+        verbose_name_plural = 'Заявки'
 
 class TypeOfAppl(models.Model):
     """Типы заявок"""
 
     title = models.CharField(verbose_name='Наименование', max_length=50)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Тип заявки'
+        verbose_name_plural = 'Типы заявок'
