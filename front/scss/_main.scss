@@ -43,9 +43,13 @@
     border: 1px solid #D6DDEB;
 	border-radius: 10px;
     
-    // > :not(:first-child) {
-    //     border-left:1px solid #D6DDEB;
-    // }
+    > :not(:first-child):not(:last-child) {
+        &::after{
+            content: url(../img/filtr/arrow-down.svg);
+            padding-right: 15px;
+        }
+    }
+    
     > :not(:last-child){
         padding-left: 25px;
         border-right:1px solid #D6DDEB;
@@ -74,6 +78,7 @@
     }
     // .filtr-items__title
     &__title {
+        flex: 1 1 auto;
         font-weight: 400;
         font-size: 18px;
         line-height: 144%;

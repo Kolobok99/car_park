@@ -192,6 +192,11 @@ body {
   border-radius: 10px;
 }
 
+.filtr-items > :not(:first-child):not(:last-child)::after {
+  content: url(../img/filtr/arrow-down.svg);
+  padding-right: 15px;
+}
+
 .filtr-items > :not(:last-child) {
   padding-left: 25px;
   border-right: 1px solid #D6DDEB;
@@ -247,6 +252,9 @@ body {
 }
 
 .filtr-items__title {
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 auto;
+          flex: 1 1 auto;
   font-weight: 400;
   font-size: 18px;
   line-height: 144%;
