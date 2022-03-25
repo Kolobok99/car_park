@@ -151,12 +151,36 @@
 }
 
 .table {
+    border-collapse: collapse;
     width: 100%;
+
+    // .table__titles
+    &__titles {
+        background: #0828dba2;
+        color: #f5f5f5;
+
+    }
+
+    &__title, &__cell{
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+    
+    // .table__title
+    &__title {
+
+    }
     // .table__row
-    &__row {}
+    &__row {
+        &:nth-child(even){
+            background-color: #e6e5f1;
+        }
+        &:hover {
+            background-color: rgb(44, 156, 221);
+        }
+
+    }
     // .table__cell
     &__cell {
-        padding: 10px;
-        border: 1px solid #000;;
     }
 }

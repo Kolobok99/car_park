@@ -337,12 +337,26 @@ body {
 }
 
 .table {
+  border-collapse: collapse;
   width: 100%;
 }
 
-.table__cell {
-  padding: 10px;
-  border: 1px solid #000;
+.table__titles {
+  background: #0828dba2;
+  color: #f5f5f5;
+}
+
+.table__title, .table__cell {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.table__row:nth-child(even) {
+  background-color: #e6e5f1;
+}
+
+.table__row:hover {
+  background-color: #2c9cdd;
 }
 
 .footer {
