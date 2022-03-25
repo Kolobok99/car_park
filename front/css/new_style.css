@@ -59,7 +59,7 @@ html {
 
 body {
   line-height: 1;
-  font-family: "Open Sans";
+  font-family: "CoFo Sans";
   background-color: #f5f5f5;
 }
 
@@ -197,6 +197,13 @@ body {
   padding-right: 15px;
 }
 
+.filtr-items > li:hover .filtr-items__sub-menu {
+  opacity: 1;
+  -webkit-transform: scaleY(1);
+      -ms-transform: scaleY(1);
+          transform: scaleY(1);
+}
+
 .filtr-items > :not(:last-child) {
   padding-left: 25px;
   border-right: 1px solid #D6DDEB;
@@ -216,6 +223,7 @@ body {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  position: relative;
 }
 
 .filtr-items__item input {
@@ -261,8 +269,41 @@ body {
   color: #9E9E9E;
 }
 
+.filtr-items__sub-menu {
+  background: #F5F5F5;
+  -webkit-box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.12);
+          box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.12);
+  position: absolute;
+  left: 0;
+  top: 100%;
+  z-index: 5;
+  display: block;
+  width: 100%;
+  opacity: 0;
+  -webkit-transform: scaleY(0);
+      -ms-transform: scaleY(0);
+          transform: scaleY(0);
+  -webkit-transform-origin: 0 0;
+      -ms-transform-origin: 0 0;
+          transform-origin: 0 0;
+  -webkit-transition: .5s ease-in-out;
+  -o-transition: .5s ease-in-out;
+  transition: .5s ease-in-out;
+}
+
 .filtr-items__sub-menu li {
-  display: none;
+  text-align: left;
+  padding: 12px 15px;
+  font-size: 15px;
+}
+
+.filtr-items__sub-menu li a {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 125%;
+  color: #000000a8;
+  text-align: left;
+  padding: 12px 15px;
 }
 
 .filtr-items__button {
