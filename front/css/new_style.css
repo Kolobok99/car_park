@@ -86,7 +86,7 @@ body {
 }
 
 .header {
-  background: #005BFF;
+  background: #0059ff;
   color: #F5F5F5;
   font-weight: 500;
   font-size: 18px;
@@ -181,6 +181,10 @@ body {
   opacity: 0.5;
 }
 
+.main__information {
+  margin: 100px 0px 100px 0px;
+}
+
 .filtr-items {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -190,6 +194,10 @@ body {
           justify-content: center;
   border: 1px solid #D6DDEB;
   border-radius: 10px;
+}
+
+.filtr-items > :not(:first-child):not(:last-child) {
+  padding-left: 25px;
 }
 
 .filtr-items > :not(:first-child):not(:last-child)::after {
@@ -205,8 +213,13 @@ body {
 }
 
 .filtr-items > :not(:last-child) {
-  padding-left: 25px;
   border-right: 1px solid #D6DDEB;
+}
+
+.filtr-items :first-child {
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 300px;
+          flex: 1 1 300px;
 }
 
 .filtr-items__item {
@@ -228,10 +241,14 @@ body {
 
 .filtr-items__item input {
   background: #F5F5F5;
+  height: 85%;
   width: auto;
+  padding-left: 5px;
 }
 
 .filtr-items__item input::-webkit-input-placeholder {
+  font-family: serif;
+  padding-left: 50px;
   font-weight: 400;
   font-size: 18px;
   line-height: 144%;
@@ -239,6 +256,8 @@ body {
 }
 
 .filtr-items__item input:-ms-input-placeholder {
+  font-family: serif;
+  padding-left: 50px;
   font-weight: 400;
   font-size: 18px;
   line-height: 144%;
@@ -246,6 +265,8 @@ body {
 }
 
 .filtr-items__item input::-ms-input-placeholder {
+  font-family: serif;
+  padding-left: 50px;
   font-weight: 400;
   font-size: 18px;
   line-height: 144%;
@@ -253,6 +274,8 @@ body {
 }
 
 .filtr-items__item input::placeholder {
+  font-family: serif;
+  padding-left: 50px;
   font-weight: 400;
   font-size: 18px;
   line-height: 144%;
@@ -292,7 +315,6 @@ body {
 }
 
 .filtr-items__sub-menu li {
-  text-align: left;
   padding: 12px 15px;
   font-size: 15px;
 }
@@ -302,7 +324,6 @@ body {
   font-size: 16px;
   line-height: 125%;
   color: #000000a8;
-  text-align: left;
   padding: 12px 15px;
 }
 
@@ -315,8 +336,24 @@ body {
   border-bottom-right-radius: 10px;
 }
 
+.table {
+  width: 100%;
+}
+
+.table__cell {
+  padding: 10px;
+  border: 1px solid #000;
+}
+
 .footer {
-  background-color: #a07f7f;
-  padding: 15px;
+  background-color: #337afd;
+  padding: 5px;
   text-align: center;
+  color: #fff;
+}
+
+.footer h1 {
+  color: #fff;
+  font-weight: 700;
+  font-size: 20px;
 }

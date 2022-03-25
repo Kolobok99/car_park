@@ -35,6 +35,12 @@
     &__filtration {
         
     }
+    // .main__information
+    &__information {
+        margin: 100px 0px 100px 0px;
+    }
+    // .main__table
+    &__table {}
 }
 .filtr-items {
     display: flex;
@@ -44,6 +50,7 @@
 	border-radius: 10px;
     
     > :not(:first-child):not(:last-child) {
+        padding-left: 25px;
         &::after{
             content: url(../img/filtr/arrow-down.svg);
             padding-right: 15px;
@@ -56,10 +63,14 @@
     }
     
     > :not(:last-child){
-        padding-left: 25px;
         border-right:1px solid #D6DDEB;
     }
-    
+    :first-child{
+        
+        flex: 1 1 300px;
+    }
+
+
     // .filtr-items__item
     &__item {
         flex: 1 1 25%;
@@ -73,15 +84,20 @@
 
         input{
             background: #F5F5F5;
+            height: 85%;
 			width: auto;
+            padding-left: 5px;
             &::placeholder{
-                
+                font-family: serif;
+                padding-left: 50px;
 				font-weight: 400;
 				font-size: 18px;
 				line-height: 144%;
 				color: hsl(0, 0%, 27%);
             }
+
         }
+
     }
     // .filtr-items__title
     &__title {
@@ -107,17 +123,17 @@
         transition: .5s ease-in-out;
         li{
             // display: none;
-            text-align: left;
+            // text-align: left;
             padding: 12px 15px;
             font-size: 15px;
-            
+
             a{
                 font-weight: 400;
                 font-size: 16px;
                 line-height: 125%;
                 color: #000000a8;
 
-                text-align: left;
+                // text-align: left;
                 padding: 12px 15px;
                 
             }
@@ -134,3 +150,13 @@
     }
 }
 
+.table {
+    width: 100%;
+    // .table__row
+    &__row {}
+    // .table__cell
+    &__cell {
+        padding: 10px;
+        border: 1px solid #000;;
+    }
+}
