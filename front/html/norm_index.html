@@ -4,21 +4,90 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="new_style.scss">
+    <link rel="stylesheet" href="../css/new_style.css">
     <title>Главная</title>
 </head>
 <body>
     <div class="wrapper">
         <header class="header">
-            
+            <div class="header__container">
+                
+                <div class="header__logo">
+                    <h1>OZON</h1>
+                </div>
+
+                <div class="header__menu menu">
+                    <ul class="menu__items">
+                      <li class="menu__item">Новости</li>
+                      <li class="menu__item">Сотрудники</li>
+                      <li class="menu__item">Документы</li>
+                      <li class="menu__item">Статьи</li>
+                    </ul>
+                </div>
+                
+                <div class="header__auth auth">
+                    
+                    <img class="auth__avatar" src="../img/header/avatar.png" alt="avatar">
+                    <a href="" class="auth__settings">
+                        <img src="../img/header/settings.svg" alt="">
+                    </a>
+                    <a href="#" class="auth__exit">
+                        Выход
+                    </a>
+                </div>
+
+            </div>
         </header>
         
         
         
         
         
-        <div class="main"></div>
-        <footer class="footer"></footer>
+        <div class="main">
+            <div class="main__container">
+                
+                <div class="main__title">
+                    <h1>Сотрудники</h1>
+                    <p>535</p>
+                </div>
+                
+                <ul class="main__filtration filtr-items">
+                    
+                    <li class="filtr-items__item">
+                        <input type="text" placeholder="Имя, фамилия">
+                    </li>
+                    <li class="filtr-items__item">
+                        <p class="filtr-items__title">Отдел</p>
+                        <ul class="filtr-items__sub-menu">
+                            <li><a href="">Первый отдел</a></li>
+                            <li><a href="">Второй отдел</a></li>
+                            <li><a href="">Третией отдел</a></li>
+                        </ul>
+                    </li>
+                    <li class="filtr-items__item">
+                        <p class="filtr-items__title">Должность</p>
+                        <ul class="filtr-items__sub-menu">
+                            <li><a href="">Первый отдел</a></li>
+                            <li><a href="">Второй отдел</a></li>
+                            <li><a href="">Третией отдел</a></li>
+                        </ul>
+                    </li>
+                    <li class="filtr-items__item">
+                        <p class="filtr-items__title">Город</p>
+                        <ul class="filtr-items__sub-menu">
+                            <li><a href="">Первый отдел</a></li>
+                            <li><a href="">Второй отдел</a></li>
+                            <li><a href="">Третией отдел</a></li>
+                        </ul>
+                    </li>
+
+                    <button class="filtr-items__button">
+                        <img src="../img/filtr/lupa.svg" alt="поиск">
+                    </button>
+                </ul>
+            </div>
+        </div>
+        <footer class="footer">12321</footer>
     </div>
 </body>
 </html>

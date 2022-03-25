@@ -7,8 +7,8 @@ body {
 	background-color: #f5f5f5;
 }
 [class*="__container"] {
-	max-width: 1050px;
-	margin: 0px auto;
+	max-width: 1180px;
+	margin: 0 auto;
 	padding: 0px 15px;
 }
 
@@ -21,6 +21,11 @@ body {
 
 	display: flex;
 	flex-direction: column;
+    margin: 0 auto;
 }
 
-@import "_header.scss"
+@import "_header";
+
+@import "_main";
+
+@import "_footer"
