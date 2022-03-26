@@ -18,10 +18,10 @@
 
                 <div class="header__menu menu">
                     <ul class="menu__items">
-                      <li class="menu__item">Автомобили</li>
-                      <li class="menu__item">Сотрудники</li>
-                      <li class="menu__item">Документы</li>
-                      <li class="menu__item">Статьи</li>
+                      <li class="menu__item"><a href="#">Автомобили</a></li>
+                      <li class="menu__item active-page"><a href="#">Сотрудники</a></li>
+                      <li class="menu__item"><a href="#">Документы</a></li>
+                      <li class="menu__item"><a href="#">Топливные карты</a></li>
                     </ul>
                 </div>
                 
@@ -50,42 +50,98 @@
                     <h1>Автомобили</h1>
                     <p>535</p>
                 </div>
-                
+            <form action="#" method="get">
                 <ul class="main__filtration filtr-items">
-                    
-                    <li class="filtr-items__item">
-                        <input type="text" placeholder="Регистрационный номер">
+                    <li class="filtr-items__item placeholder">
+                        <input type="text" placeholder="номер">
                     </li>
                     <li class="filtr-items__item">
                         <p class="filtr-items__title">Марка</p>
                         <ul class="filtr-items__sub-menu">
-                            <li><a href="">Первый отдел</a></li>
-                            <li><a href="">Первый отдел</a></li>
-                            <li><a href="">Первый отдел</a></li>
+                            <label for="toyota" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="mark" id="toyota">
+                                    <label for="toyota" class="filtr-items__check-label">Тойота
+                                </li>
+                            </label>
+                            <label for="kia" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="mark" id="kia">
+                                    <label for="kia" class="filtr-items__check-label">КИА
+                                </li>
+                            </label>
+                            <label for="bmw" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="mark" id="bmw">
+                                    <label for="bmw" class="filtr-items__check-label">BMW
+                                </li>
+                            </label>
                         </ul>
                     </li>
                     <li class="filtr-items__item">
                         <p class="filtr-items__title">Водитель</p>
                         <ul class="filtr-items__sub-menu">
-                            <li><a href="">Первый отдел</a></li>
-                            <li><a href="">Второй отдел</a></li>
-                            <li><a href="">Третией отдел</a></li>
+                            <label for="petrov_a_a" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="driver" id="petrov_a_a">
+                                    <label for="petrov_a_a" class="filtr-items__check-label">Петров А.А.
+                                </li>
+                            </label>
+                            <label for="ivanov_i_i" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="driver" id="ivanov_i_i">
+                                    <label for="ivanov_i_i" class="filtr-items__check-label">Иванов И.И.
+                                </li>
+                            </label>
+                            <label for="degtyrev_k_k" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="driver" id="degtyrev_k_k">
+                                    <label for="degtyrev_k_k" class="filtr-items__check-label">Дегтярев К.К.
+                                </li>
+                            </label>
                         </ul>
                     </li>
                     <li class="filtr-items__item">
                         <p class="filtr-items__title">Регион</p>
                         <ul class="filtr-items__sub-menu">
-                            <li><a href="">Первый отдел</a></li>
-                            <li><a href="">Второй отдел</a></li>
-                            <li><a href="">Третией отдел</a></li>
+                            <label for="86" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="region" id="86">
+                                    <label for="86" class="filtr-items__check-label">86
+                                </li>
+                            </label>
+                            <label for="87" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="region" id="87">
+                                    <label for="87" class="filtr-items__check-label">87
+                                </li>
+                            </label>
+                            <label for="89" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="region" id="89">
+                                    <label for="89" class="filtr-items__check-label">89
+                                </li>
+                            </label>
                         </ul>
                     </li>
 
-                    <button type="submit" class="filtr-items__button">
-                        <img src="../img/filtr/lupa.svg" alt="поиск">
-                    </button>
-                </ul>
+                    <li class="filtr-items__item">
+                        <p class="filtr-items__title">Тип заявки</p>
+                        <ul class="filtr-items__sub-menu">
+                            <label for="wheel" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="region" id="wheel ">
+                                    <label for="wheel " class="filtr-items__check-label">Колеса</label>
+                                </li>
+                            </label>
+                            <label for="engine" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="driver" id="engine">
+                                    <label for="engine" class="filtr-items__check-label">Двигатель
+                                </li>
+                            </label>
+                            <label for="glass" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="mark" id="glass">
+                                    <label for="glass" class="filtr-items__check-label">Стекла
+                                </li>
+                            </label>
+                        </ul>
+                    </li>
 
+                    <button type="button" class="filtr-items__button">
+                        <img src="../img/filtr/lupa.svg" alt="поиск">
+                    </button> 
+                </ul>
+            </form>     
 
                 <div class="main__information">
                     <table class="main__table table">
@@ -152,6 +208,7 @@
         <footer class="footer">
             <h1>CAR's</h1>
             <p>© 2022 Все права защищены</p>
+            
         </footer>
     </div>
 </body>
