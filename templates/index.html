@@ -7,7 +7,7 @@
 {% endblock static_href %}
 
 {% block title %}
-    Главная
+    Авто
 {% endblock title %}
 
 {% block main %}
@@ -121,54 +121,58 @@
                           <th class="table__title">Последний <br>осмотр</th>
                           <th class="table__title">Активные <br>заявки</th>
                         </tr>
+                        {% for car in cars %}
+{#                        A-111-EE#}
                         <tr class="table__row">
-                          <td class="table__cell">A-111-EE</td>
-                          <td class="table__cell">Петров А.А.</td>
-                          <td class="table__cell">Shkoda</td>
-                          <td class="table__cell">86</td>
+                          <td class="table__cell">{{ car.registration_number|slice:'0:1'}}-{{ car.registration_number|slice:'1:4'}}-{{ car.registration_number|slice:'4:6'}}</td>
+                          <td class="table__cell">{{ car.owner.user.last_name}} {{ car.owner.user.first_name|first}}.{{ car.owner.user.patronymic|first}}.</td>
+                          <td class="table__cell">{{ car.brand }}</td>
+                          <td class="table__cell">{{ car.region_code }}</td>
                           <td class="table__cell">12.04.22</td>
                           <td class="table__cell">
-                              Пробило Колесо<br>
-                              Разбито зеркало<br>
-
+                              {% for application in car.applications.all %}
+                                  {{ application.type_of }} {{ application.start_date }}<br>
+                              {% endfor %}
                           </td>
                         </tr>
-                        <tr class="table__row">
-                          <td class="table__cell">B-112-KT</td>
-                          <td class="table__cell">Иванов И.И.</td>
-                          <td class="table__cell">Tayota</td>
-                          <td class="table__cell">86</td>
-                          <td class="table__cell">11.03.22</td>
-                          <td class="table__cell"> Пробило Колесо<br>
-                            Разбито зеркало<br></td>
-                        </tr>
-                        <tr class="table__row">
-                          <td class="table__cell">E-199-CN</td>
-                          <td class="table__cell">Дегтярев К.К.</td>
-                          <td class="table__cell">BMW</td>
-                          <td class="table__cell">77</td>
-                          <td class="table__cell">12.12.21</td>
-                          <td class="table__cell"> Пробило Колесо<br>
-                            Разбито зеркало<br></td>
-                          </tr>
-                        <tr class="table__row">
-                          <td class="table__cell">K-123-OP</td>
-                          <td class="table__cell">Утров Б.Б.</td>
-                          <td class="table__cell">АвтоВАЗ</td>
-                          <td class="table__cell">86</td>
-                          <td class="table__cell">22.02.22</td>
-                          <td class="table__cell"> Пробило Колесо<br>
-                            Разбито зеркало<br></td>
-                        </tr>
-                        <tr class="table__row">
-                          <td class="table__cell">D-297-NN</td>
-                          <td class="table__cell">Ульянов Д.Д.</td>
-                          <td class="table__cell">Tayota</td>
-                          <td class="table__cell">79</td>
-                          <td class="table__cell">29.11.21</td>
-                          <td class="table__cell"> Пробило Колесо<br>
-                            Разбито зеркало<br></td>
-                        </tr>
+
+                         {% endfor %}
+{#                        <tr class="table__row">#}
+{#                          <td class="table__cell">B-112-KT</td>#}
+{#                          <td class="table__cell">Иванов И.И.</td>#}
+{#                          <td class="table__cell">Tayota</td>#}
+{#                          <td class="table__cell">86</td>#}
+{#                          <td class="table__cell">11.03.22</td>#}
+{#                          <td class="table__cell"> Пробило Колесо<br>#}
+{#                            Разбито зеркало<br></td>#}
+{#                        </tr>#}
+{#                        <tr class="table__row">#}
+{#                          <td class="table__cell">E-199-CN</td>#}
+{#                          <td class="table__cell">Дегтярев К.К.</td>#}
+{#                          <td class="table__cell">BMW</td>#}
+{#                          <td class="table__cell">77</td>#}
+{#                          <td class="table__cell">12.12.21</td>#}
+{#                          <td class="table__cell"> Пробило Колесо<br>#}
+{#                            Разбито зеркало<br></td>#}
+{#                          </tr>#}
+{#                        <tr class="table__row">#}
+{#                          <td class="table__cell">K-123-OP</td>#}
+{#                          <td class="table__cell">Утров Б.Б.</td>#}
+{#                          <td class="table__cell">АвтоВАЗ</td>#}
+{#                          <td class="table__cell">86</td>#}
+{#                          <td class="table__cell">22.02.22</td>#}
+{#                          <td class="table__cell"> Пробило Колесо<br>#}
+{#                            Разбито зеркало<br></td>#}
+{#                        </tr>#}
+{#                        <tr class="table__row">#}
+{#                          <td class="table__cell">D-297-NN</td>#}
+{#                          <td class="table__cell">Ульянов Д.Д.</td>#}
+{#                          <td class="table__cell">Tayota</td>#}
+{#                          <td class="table__cell">79</td>#}
+{#                          <td class="table__cell">29.11.21</td>#}
+{#                          <td class="table__cell"> Пробило Колесо<br>#}
+{#                            Разбито зеркало<br></td>#}
+{#                        </tr>#}
                     </table>
                 </div>
             </div>
