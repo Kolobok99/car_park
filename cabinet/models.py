@@ -155,11 +155,17 @@ class Application(models.Model):
     """Заявки на ремонт"""
 
     type_of = models.ForeignKey("TypeOfAppl", on_delete=models.PROTECT)
-    onwer = models.ForeignKey(Driver, on_delete=models.PROTECT)
+    owner = models.ForeignKey(Driver, on_delete=models.PROTECT)
+    car = models.ForeignKey(Car, on_delete=models.PROTECT, related_name='applications')
     start_date = models.DateField(verbose_name='время создания', auto_now_add=True)
     time_to_execute = models.PositiveIntegerField(verbose_name='время на выполнение',
                                                   default=7)
     end_date = models.DateField(verbose_name='дата окончания', null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.owner.user.last_name} + " \
+               f"{self.start_date} + {self.type_of} + {self.car.registration_number}"
+
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
