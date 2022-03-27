@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+{% block head %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% block static_href %} {% endblock static_href %}">
+    <title>{% block title %} {% endblock title%}</title>
+</head>
+{% endblock head %}
+<body>
+    <div class="wrapper">
+{% block header %}
+    <header class="header">
+            <div class="header__container">
+
+                <div class="header__logo">
+                    <h1>CAR's</h1>
+                </div>
+
+                <div class="header__menu menu">
+                    <ul class="menu__items">
+                      <li class="menu__item"><a href="#">Автомобили</a></li>
+                      <li class="menu__item active-page"><a href="#">Сотрудники</a></li>
+                      <li class="menu__item"><a href="#">Документы</a></li>
+                      <li class="menu__item"><a href="#">Топливные карты</a></li>
+                    </ul>
+                </div>
+
+                <div class="header__auth auth">
+
+                    <img class="auth__avatar" src="../img/header/avatar.png" alt="avatar">
+                    <a href="" class="auth__settings">
+                        <img src="../img/header/settings.svg" alt="">
+                    </a>
+                    <a href="#" class="auth__exit">
+                        Выход
+                    </a>
+                </div>
+
+            </div>
+        </header>
+{% endblock header %}
+
+{% block main %}
+
+{% endblock main %}
+
+{% block footer %}
+<footer class="footer">
+    <h1>CAR's</h1>
+    <p>© 2022 Все права защищены</p>
+
+</footer>
+{% endblock footer %}
+</div>
+</body>
+</html>

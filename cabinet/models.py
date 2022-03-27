@@ -10,15 +10,17 @@ class Car(models.Model):
     brand = models.ForeignKey('CarBrand', on_delete=models.SET(1),
                               related_name='cars', verbose_name='Марка')
     registration_number = models.CharField(verbose_name='Регистрационный номер',
-                                           unique=True, max_length=5)
+                                           unique=True, max_length=6)
     region_code = models.SmallIntegerField(verbose_name='Код региона',
                                            validators=[
                                                MaxValueValidator(200),
                                                MinValueValidator(1)
                                            ])
-    onwer = models.ForeignKey('Driver', on_delete=models.PROTECT,
+    owner = models.ForeignKey('Driver', on_delete=models.PROTECT,
                               related_name='my_cars')
 
+    def __str__(self):
+        return f"{self.registration_number} + {self.owner.user.last_name}"
     class Meta:
         verbose_name = 'Автомобиль'
         verbose_name_plural = 'Автомобили'
@@ -28,6 +30,8 @@ class CarBrand(models.Model):
 
     name = models.CharField(verbose_name='Название бредна', max_length=20)
 
+    def __str__(self):
+        return self.name
     class Meta:
         verbose_name = 'Марка'
         verbose_name_plural = 'Марки'
