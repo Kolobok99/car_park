@@ -1,13 +1,16 @@
-from django.shortcuts import render
+from .forms import CarMainForm
 from .models import *
-# Create your views here.
-from django.views.generic import ListView, TemplateView
+
+from django.views.generic import ListView, TemplateView, FormView
 
 
-class CarsView(ListView):
+class CarsView(ListView, FormView):
     """Вывод всех автомобилей"""
     template_name = "index.html"
     queryset = Car.objects.all()
     context_object_name = "cars"
 
-    # def get_context_data(self, *, object_list=None, **kwargs):
+    form_class = CarMainForm()
+
+
+

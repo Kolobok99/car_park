@@ -7,7 +7,7 @@ class CarMainForm(ModelForm):
         model = Car
         fields = (
             'brand',
-            'registration_number',
-            'region_code',
-            'owner'
+            # 'registration_number',
+            # 'region_code',
+            # 'owner',
         )
