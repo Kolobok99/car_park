@@ -161,7 +161,7 @@ class Application(models.Model):
     time_to_execute = models.PositiveIntegerField(verbose_name='время на выполнение',
                                                   default=7)
     end_date = models.DateField(verbose_name='дата окончания', null=True, blank=True)
-
+    is_active = models.BooleanField(verbose_name="Активность заявки", default=True)
 
     def __str__(self):
         return f"{self.owner.user.last_name} + " \
