@@ -18,18 +18,18 @@
                     <h1>Автомобили</h1>
                     <p>535</p>
                 </div>
-            <form method="get">
+            <form method="get" action="{% url 'filter_cars' %}">
                 <ul class="main__filtration filtr-items">
                     <li class="filtr-items__item placeholder">
-                        <input type="text" placeholder="номер">
+                        <input name="registration_number" type="text" placeholder="номер" value="">
                     </li>
                     <li class="filtr-items__item">
                         <p class="filtr-items__title">Марка</p>
                         <ul class="filtr-items__sub-menu">
                           {% for brand in view.get_car_brands %}
-                            <label for="{{ brand.name }}" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="mark" id="{{ brand.name }}">
-                                    <label for="{{ brand.name }}" class="filtr-items__check-label">{{ brand.name }}
+                            <label for="{{ brand.id }}" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="brand" value="{{ brand.id }}" id="{{ brand.id }}">
+                                    <label for="{{ brand.id }}" class="filtr-items__check-label">{{ brand.name }}
                                 </li>
                             </label>
                           {% endfor %}
@@ -49,9 +49,9 @@
                         <p class="filtr-items__title">Водитель</p>
                         <ul class="filtr-items__sub-menu">
                           {% for driver in view.get_drivers %}
-                            <label for="petrov_a_a" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="driver" id="petrov_a_a">
-                                    <label for="petrov_a_a" class="filtr-items__check-label">
+                            <label for="{{ driver.user }}" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="driver" value="{{ driver.user.id}}" id="{{ driver.user }}">
+                                    <label for="{{ driver.user }}" class="filtr-items__check-label">
                                         {{ driver.user.last_name}} {{ driver.user.first_name|first}}.{{ driver.user.patronymic|first}}.
                                 </li>
                             </label>
@@ -73,7 +73,7 @@
                         <ul class="filtr-items__sub-menu">
                           {% for car in view.get_regions %}
                             <label for="{{ car.region_code }}" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="region" id="{{ car.region_code }}">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="region" value="{{ car.region_code }}" id="{{ car.region_code }}">
                                     <label for="{{ car.region_code }}" class="filtr-items__check-label">{{ car.region_code }}
                                 </li>
                             </label>
@@ -117,6 +117,7 @@
                     <button type="submit" class="filtr-items__button">
                         <img src="{% static 'icons/lupa.svg' %}" alt="поиск">
                     </button>
+{#                    <button type="reset">Сбросить</button>#}
                 </ul>
             </form>
 
@@ -130,7 +131,7 @@
                           <th class="table__title">Последний <br>осмотр</th>
                           <th class="table__title">Активные <br>заявки</th>
                         </tr>
-                        {% for car in cars.qs %}
+                        {% for car in cars %}
 {#                        A-111-EE#}
                         <tr class="table__row">
                           <td class="table__cell">{{ car.registration_number|slice:'0:1'}}-{{ car.registration_number|slice:'1:4'}}-{{ car.registration_number|slice:'4:6'}}</td>

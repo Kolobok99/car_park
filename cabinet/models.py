@@ -162,6 +162,7 @@ class Application(models.Model):
                                                   default=7)
     end_date = models.DateField(verbose_name='дата окончания', null=True, blank=True)
 
+
     def __str__(self):
         return f"{self.owner.user.last_name} + " \
                f"{self.start_date} + {self.type_of} + {self.car.registration_number}"
