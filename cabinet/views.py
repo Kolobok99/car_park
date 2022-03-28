@@ -27,21 +27,20 @@ class FilterCars(Context, ListView):
     template_name = 'index.html'
     context_object_name = "cars"
     def get_queryset(self):
-        reg_number = self.request.GET.getlist('registration_number')
-        if len(reg_number) != 0:
-            reg_number = '`'
-        else:
-            reg_number = " ".join(reg_number)
-        query_set= Car.objects.filter(
+        reg_number = self.request.GET.get('registration_number')
+        if reg_number == '':reg_number = '`'
+        # print(f"{reg_number=}")
+
+        query_set = Car.objects.filter(
             Q(registration_number__icontains=reg_number) |
-            Q(brand__in = self.request.GET.getlist('brand')) |
+            Q(brand__in=self.request.GET.getlist('brand')) |
             Q(owner__in=self.request.GET.getlist('driver')) |
             Q(region_code__in=self.request.GET.getlist('region')) |
-            Q(applications__is_active=False), Q(applications__type_of__in=self.request.GET.getlist('type_of_app'))
+            (Q(applications__type_of_id__in=self.request.GET.getlist('type_of_app')) & Q(applications__is_active=True))
 
         )
         # print(query_set)
-        return query_set
+        return set(query_set)
 
 class CarsView(Context,ListView):
     """Вывод всех автомобилей"""
