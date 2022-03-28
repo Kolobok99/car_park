@@ -21,17 +21,18 @@
             <form method="get">
                 <ul class="main__filtration filtr-items">
                     <li class="filtr-items__item placeholder">
-
-{#                        <input type="text" placeholder="номер">#}
+                        <input type="text" placeholder="номер">
                     </li>
                     <li class="filtr-items__item">
                         <p class="filtr-items__title">Марка</p>
                         <ul class="filtr-items__sub-menu">
-                            <label for="toyota" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="mark" id="toyota">
-                                    <label for="toyota" class="filtr-items__check-label">Тойота
+                          {% for brand in view.get_car_brands %}
+                            <label for="{{ brand.name }}" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="mark" id="{{ brand.name }}">
+                                    <label for="{{ brand.name }}" class="filtr-items__check-label">{{ brand.name }}
                                 </li>
                             </label>
+                          {% endfor %}
 {#                            <label for="kia" class="filtr-items__check-label">#}
 {#                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="mark" id="kia">#}
 {#                                    <label for="kia" class="filtr-items__check-label">КИА#}
@@ -47,62 +48,69 @@
                     <li class="filtr-items__item">
                         <p class="filtr-items__title">Водитель</p>
                         <ul class="filtr-items__sub-menu">
+                          {% for driver in view.get_drivers %}
                             <label for="petrov_a_a" class="filtr-items__check-label">
                                 <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="driver" id="petrov_a_a">
-                                    <label for="petrov_a_a" class="filtr-items__check-label">Петров А.А.
+                                    <label for="petrov_a_a" class="filtr-items__check-label">
+                                        {{ driver.user.last_name}} {{ driver.user.first_name|first}}.{{ driver.user.patronymic|first}}.
                                 </li>
                             </label>
-                            <label for="ivanov_i_i" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="driver" id="ivanov_i_i">
-                                    <label for="ivanov_i_i" class="filtr-items__check-label">Иванов И.И.
-                                </li>
-                            </label>
-                            <label for="degtyrev_k_k" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="driver" id="degtyrev_k_k">
-                                    <label for="degtyrev_k_k" class="filtr-items__check-label">Дегтярев К.К.
-                                </li>
-                            </label>
+                          {% endfor %}
+{#                            <label for="ivanov_i_i" class="filtr-items__check-label">#}
+{#                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="driver" id="ivanov_i_i">#}
+{#                                    <label for="ivanov_i_i" class="filtr-items__check-label">Иванов И.И.#}
+{#                                </li>#}
+{#                            </label>#}
+{#                            <label for="degtyrev_k_k" class="filtr-items__check-label">#}
+{#                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="driver" id="degtyrev_k_k">#}
+{#                                    <label for="degtyrev_k_k" class="filtr-items__check-label">Дегтярев К.К.#}
+{#                                </li>#}
+{#                            </label>#}
                         </ul>
                     </li>
                     <li class="filtr-items__item">
                         <p class="filtr-items__title">Регион</p>
                         <ul class="filtr-items__sub-menu">
-                            <label for="86" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="region" id="86">
-                                    <label for="86" class="filtr-items__check-label">86
+                          {% for car in view.get_regions %}
+                            <label for="{{ car.region_code }}" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="region" id="{{ car.region_code }}">
+                                    <label for="{{ car.region_code }}" class="filtr-items__check-label">{{ car.region_code }}
                                 </li>
                             </label>
-                            <label for="87" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="region" id="87">
-                                    <label for="87" class="filtr-items__check-label">87
-                                </li>
-                            </label>
-                            <label for="89" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="region" id="89">
-                                    <label for="89" class="filtr-items__check-label">89
-                                </li>
-                            </label>
+                          {% endfor %}
+{#                            <label for="87" class="filtr-items__check-label">#}
+{#                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="region" id="87">#}
+{#                                    <label for="87" class="filtr-items__check-label">87#}
+{#                                </li>#}
+{#                            </label>#}
+{#                            <label for="89" class="filtr-items__check-label">#}
+{#                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="region" id="89">#}
+{#                                    <label for="89" class="filtr-items__check-label">89#}
+{#                                </li>#}
+{#                            </label>#}
                         </ul>
                     </li>
 
                     <li class="filtr-items__item">
                         <p class="filtr-items__title">Тип заявки</p>
                         <ul class="filtr-items__sub-menu">
-                            <label for="wheel" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="type_of" id="wheel ">
-                                    <label for="wheel " class="filtr-items__check-label">Колеса
+{#                            <label for="wheel" class="filtr-items__check-label">#}
+{#                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="type_of" id="wheel ">#}
+{#                                    <label for="wheel " class="filtr-items__check-label">Колеса#}
+{#                                </li>#}
+{#                            </label>#}
+{#                            <label for="engine" class="filtr-items__check-label">#}
+{#                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="type_of" id="engine">#}
+{#                                    <label for="engine" class="filtr-items__check-label">Двигатель#}
+{#                                </li>#}
+{#                            </label>#}
+                            {% for app in view.get_types_of_app %}
+                            <label for="{{ app.title }}" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="type_of" id="{{ app.title }}">
+                                    <label for="{{ app.title }}" class="filtr-items__check-label">{{ app.title }}
                                 </li>
                             </label>
-                            <label for="engine" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="type_of" id="engine">
-                                    <label for="engine" class="filtr-items__check-label">Двигатель
-                                </li>
-                            </label>
-                            <label for="glass" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="type_of" id="glass">
-                                    <label for="glass" class="filtr-items__check-label">Стекла
-                                </li>
-                            </label>
+                            {% endfor %}
                         </ul>
                     </li>
 
