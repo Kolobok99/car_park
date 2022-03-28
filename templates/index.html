@@ -106,7 +106,7 @@
 {#                            </label>#}
                             {% for app in view.get_types_of_app %}
                             <label for="{{ app.title }}" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="type_of" id="{{ app.title }}">
+                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="type_of_app" value="{{ app.id }}" id="{{ app.title }}">
                                     <label for="{{ app.title }}" class="filtr-items__check-label">{{ app.title }}
                                 </li>
                             </label>

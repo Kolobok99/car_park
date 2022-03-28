@@ -36,7 +36,8 @@ class FilterCars(Context, ListView):
             Q(registration_number__icontains=reg_number) |
             Q(brand__in = self.request.GET.getlist('brand')) |
             Q(owner__in=self.request.GET.getlist('driver')) |
-            Q(region_code__in=self.request.GET.getlist('region'))
+            Q(region_code__in=self.request.GET.getlist('region')) |
+            Q(applications__is_active=False), Q(applications__type_of__in=self.request.GET.getlist('type_of_app'))
 
         )
         # print(query_set)
