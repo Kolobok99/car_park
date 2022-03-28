@@ -18,10 +18,11 @@
                     <h1>Автомобили</h1>
                     <p>535</p>
                 </div>
-            <form action="#" method="get">
+            <form method="get">
                 <ul class="main__filtration filtr-items">
                     <li class="filtr-items__item placeholder">
-                        <input type="text" placeholder="номер">
+
+{#                        <input type="text" placeholder="номер">#}
                     </li>
                     <li class="filtr-items__item">
                         <p class="filtr-items__title">Марка</p>
@@ -31,16 +32,16 @@
                                     <label for="toyota" class="filtr-items__check-label">Тойота
                                 </li>
                             </label>
-                            <label for="kia" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="mark" id="kia">
-                                    <label for="kia" class="filtr-items__check-label">КИА
-                                </li>
-                            </label>
-                            <label for="bmw" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="mark" id="bmw">
-                                    <label for="bmw" class="filtr-items__check-label">BMW
-                                </li>
-                            </label>
+{#                            <label for="kia" class="filtr-items__check-label">#}
+{#                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="mark" id="kia">#}
+{#                                    <label for="kia" class="filtr-items__check-label">КИА#}
+{#                                </li>#}
+{#                            </label>#}
+{#                            <label for="bmw" class="filtr-items__check-label">#}
+{#                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="mark" id="bmw">#}
+{#                                    <label for="bmw" class="filtr-items__check-label">BMW#}
+{#                                </li>#}
+{#                            </label>#}
                         </ul>
                     </li>
                     <li class="filtr-items__item">
@@ -88,24 +89,24 @@
                         <p class="filtr-items__title">Тип заявки</p>
                         <ul class="filtr-items__sub-menu">
                             <label for="wheel" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="region" id="wheel ">
-                                    <label for="wheel " class="filtr-items__check-label">Колеса</label>
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="type_of" id="wheel ">
+                                    <label for="wheel " class="filtr-items__check-label">Колеса
                                 </li>
                             </label>
                             <label for="engine" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="driver" id="engine">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="type_of" id="engine">
                                     <label for="engine" class="filtr-items__check-label">Двигатель
                                 </li>
                             </label>
                             <label for="glass" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="mark" id="glass">
+                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="type_of" id="glass">
                                     <label for="glass" class="filtr-items__check-label">Стекла
                                 </li>
                             </label>
                         </ul>
                     </li>
 
-                    <button type="button" class="filtr-items__button">
+                    <button type="submit" class="filtr-items__button">
                         <img src="{% static 'icons/lupa.svg' %}" alt="поиск">
                     </button>
                 </ul>
@@ -121,7 +122,7 @@
                           <th class="table__title">Последний <br>осмотр</th>
                           <th class="table__title">Активные <br>заявки</th>
                         </tr>
-                        {% for car in cars %}
+                        {% for car in cars.qs %}
 {#                        A-111-EE#}
                         <tr class="table__row">
                           <td class="table__cell">{{ car.registration_number|slice:'0:1'}}-{{ car.registration_number|slice:'1:4'}}-{{ car.registration_number|slice:'4:6'}}</td>

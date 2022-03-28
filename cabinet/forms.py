@@ -9,5 +9,5 @@ class CarMainForm(ModelForm):
             'brand',
             # 'registration_number',
             # 'region_code',
-            # 'owner',
+            # 'owner'
         )
