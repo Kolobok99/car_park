@@ -1,24 +1,23 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load static %}
-{% block static_href  %}
 
-    {% static 'css/style.css' %}
-
+{% block static_href %}
+    {% static 'css/drivers.css' %}
 {% endblock static_href %}
 
-{% block title %}
-    Авто
-{% endblock title %}
+{% block title %} Водители {% endblock title%}
+
+{% block driver_active %} active-page   {% endblock driver_active %}
 
 {% block main %}
 <div class="main">
             <div class="main__container">
 
                 <div class="main__title">
-                    <h1>Автомобили</h1>
-                    <p>535</p>
+                    <h1>Сотрудники</h1>
+                    <p>{{ drivers.count }}</p>
                 </div>
-            <form method="get" action="{% url 'filter_cars' %}">
+            <form method="get" action="{% url 'cars' %}">
                 <ul class="main__filtration filtr-items">
                     <li class="filtr-items__item placeholder">
                         <input name="registration_number" type="text" placeholder="номер" value="">
@@ -94,16 +93,6 @@
                     <li class="filtr-items__item">
                         <p class="filtr-items__title">Тип заявки</p>
                         <ul class="filtr-items__sub-menu">
-{#                            <label for="wheel" class="filtr-items__check-label">#}
-{#                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="type_of" id="wheel ">#}
-{#                                    <label for="wheel " class="filtr-items__check-label">Колеса#}
-{#                                </li>#}
-{#                            </label>#}
-{#                            <label for="engine" class="filtr-items__check-label">#}
-{#                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="type_of" id="engine">#}
-{#                                    <label for="engine" class="filtr-items__check-label">Двигатель#}
-{#                                </li>#}
-{#                            </label>#}
                             {% for app in view.get_types_of_app %}
                             <label for="{{ app.title }}" class="filtr-items__check-label">
                                 <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="type_of_app" value="{{ app.id }}" id="{{ app.title }}">
@@ -117,8 +106,8 @@
                     <button type="submit" class="filtr-items__button">
                         <img src="{% static 'icons/lupa.svg' %}" alt="поиск">
                     </button>
-{#                    <button type="reset">Сбросить</button>#}
                 </ul>
+            <button class="btn-reset" type="reset">Сбросить</button>
             </form>
 
                 <div class="main__information">
@@ -141,8 +130,13 @@
                           <td class="table__cell">12.04.22</td>
                           <td class="table__cell">
                               {% for application in car.applications.all %}
-                                  {{ application.type_of }} {{ application.start_date }}<br>
-                              {% endfor %}
+                                <table>
+                                    <tr>
+                                        <td>{{ application.type_of }}</td>
+                                        <td>{{ application.start_date }}</td>
+                                    </tr>
+                                </table>
+                            {% endfor %}
                           </td>
                         </tr>
 

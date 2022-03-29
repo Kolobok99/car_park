@@ -1,3 +1,4 @@
+import union as union
 from django.db.models import Q
 from django.shortcuts import render
 
@@ -22,42 +23,35 @@ class Context():
     def get_types_of_app(self):
         return TypeOfAppl.objects.all()
 
-class FilterCars(Context, ListView):
-    """фильтрация авто"""
-    template_name = 'index.html'
-    context_object_name = "cars"
-    def get_queryset(self):
-        reg_number = self.request.GET.get('registration_number')
-        if reg_number == '':reg_number = '`'
-        # print(f"{reg_number=}")
-
-        query_set = Car.objects.filter(
-            Q(registration_number__icontains=reg_number) |
-            Q(brand__in=self.request.GET.getlist('brand')) |
-            Q(owner__in=self.request.GET.getlist('driver')) |
-            Q(region_code__in=self.request.GET.getlist('region')) |
-            (Q(applications__type_of_id__in=self.request.GET.getlist('type_of_app')) & Q(applications__is_active=True))
-
-        )
-        # print(query_set)
-        return set(query_set)
-
 class CarsView(Context,ListView):
     """Вывод всех автомобилей"""
-    template_name = "index.html"
-    queryset = Car.objects.all()
+    template_name = "cars.html"
+    # queryset = Car.objects.all()
     context_object_name = "cars"
-    #
-    # def setup(self, request, *args, **kwargs):
-    #     print(self.get_types_of_app())
-    #     super(CarsView, self).setup(request, *args, **kwargs)
 
-def CarFilterView(request):
-    cars = CarFilter(request.GET, queryset=Car.objects.all())
-    cars_brand = CarBrand.objects.all()
-    context = {
-        "cars": cars,
-        "cars_brand":cars_brand,
-    }
+    def get_queryset(self):
+        if len(self.request.GET) == 0:
+            return Car.objects.all()
+        else:
+            reg_number = self.request.GET.get('registration_number')
+            if reg_number == '': reg_number = '`'
+            # print(f"{reg_number=}")
 
-    return render(request, 'index.html', context=context)
+            query_set = Car.objects.filter(
+                Q(registration_number__icontains=reg_number) |
+                Q(brand__in=self.request.GET.getlist('brand')) |
+                Q(owner__in=self.request.GET.getlist('driver')) |
+                Q(region_code__in=self.request.GET.getlist('region')) |
+                (Q(applications__type_of_id__in=self.request.GET.getlist('type_of_app')) & Q(
+                    applications__is_active=True))
+
+            )
+
+            return query_set.distinct()
+        # print(self.request.GET)
+        # return Car.objects.all()
+
+class DriversView(Context, ListView):
+    template_name = 'drivers.html'
+    queryset = Driver.objects.all()
+    context_object_name = "drivers"

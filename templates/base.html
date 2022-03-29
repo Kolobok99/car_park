@@ -22,10 +22,11 @@
 
                 <div class="header__menu menu">
                     <ul class="menu__items">
-                      <li class="menu__item"><a href="#">Автомобили</a></li>
-                      <li class="menu__item active-page"><a href="#">Сотрудники</a></li>
-                      <li class="menu__item"><a href="#">Документы</a></li>
-                      <li class="menu__item"><a href="#">Топливные карты</a></li>
+                        {#      active-page     #}
+                      <li class="menu__item {% block car_active %}    {% endblock car_active %}"><a href="{% url 'cars' %}">Автомобили</a></li>
+                      <li class="menu__item {% block driver_active %}    {% endblock driver_active %}"><a href="{% url 'drivers' %}">Водители</a></li>
+                      <li class="menu__item {% block document_active %}    {% endblock document_active %}"><a href="#">Документы</a></li>
+                      <li class="menu__item {% block cards_active %}    {% endblock cards_active %}"><a href="#">Топливные карты</a></li>
                     </ul>
                 </div>
 

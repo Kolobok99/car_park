@@ -1,10 +1,9 @@
 from django.contrib import admin
 from django.urls import path
 
-from cabinet.views import CarsView, CarFilterView, FilterCars
+from cabinet.views import CarsView, DriversView
 
 urlpatterns = [
-    path('filter_cars',FilterCars.as_view(), name='filter_cars' ),
-    path('', CarsView.as_view(), name='cars')
-    # path('', CarFilterView, name='cars')
+    path('cars/', CarsView.as_view(), name='cars'),
+    path('drivers/', DriversView.as_view(), name='drivers'),
 ]

@@ -218,7 +218,7 @@ body {
 }
 
 .filtr-items > :not(:first-child):not(:last-child)::after {
-  content: url(../img/filtr/arrow-down.svg);
+  content: url("../icons/arrow-down.svg");
   padding-right: 15px;
 }
 
@@ -444,4 +444,12 @@ body {
   color: #fff;
   font-weight: 700;
   font-size: 20px;
+}
+.btn-reset {
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 144%;
+  color: #005BFF;
+  background: none;
+  padding: 5px 0px 0px 5px;
 }

@@ -1,7 +1,7 @@
 @charset "UTF-8";
-/* 
+/*
 &display=swap
-&subset=cyrillic-ext 
+&subset=cyrillic-ext
 */
 /* ОБНУЛЕНИЕ СТИЛЕЙ */
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:300,regular,500,600,700,800,300italic,italic,500italic,600italic,700italic,800italic);
@@ -218,7 +218,7 @@ body {
 }
 
 .filtr-items > :not(:first-child):not(:last-child)::after {
-  content: url(../img/filtr/arrow-down.svg);
+  content: url("../icons/arrow-down.svg");
   padding-right: 15px;
 }
 
@@ -426,15 +426,8 @@ body {
   background-color: rgba(23, 151, 226, 0.514);
 }
 
-.btn-reset {
-  font-weight: 400;
-  font-size: 18px;
-  line-height: 144%;
-  color: #005BFF;
-}
-
 .footer {
-  background-color: #337afd;
+  background: #005BFF;
   padding: 5px;
   text-align: center;
   color: #fff;
@@ -444,4 +437,13 @@ body {
   color: #fff;
   font-weight: 700;
   font-size: 20px;
+}
+
+.btn-reset {
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 144%;
+  color: #005BFF;
+  background: none;
+  padding: 5px 0px 0px 5px;
 }
