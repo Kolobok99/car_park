@@ -55,3 +55,7 @@ class DriversView(Context, ListView):
     template_name = 'drivers.html'
     queryset = Driver.objects.all()
     context_object_name = "drivers"
+
+    # def setup(self, request, *args, **kwargs):
+    #     print(self.queryset)
+    #     super(DriversView, self).setup(request, *args, **kwargs)

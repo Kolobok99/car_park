@@ -155,7 +155,7 @@ class Application(models.Model):
     """Заявки на ремонт"""
 
     type_of = models.ForeignKey("TypeOfAppl", on_delete=models.PROTECT)
-    owner = models.ForeignKey(Driver, on_delete=models.PROTECT)
+    owner = models.ForeignKey(Driver, on_delete=models.PROTECT, related_name='my_apps')
     car = models.ForeignKey(Car, on_delete=models.PROTECT, related_name='applications')
     start_date = models.DateField(verbose_name='время создания', auto_now_add=True)
     time_to_execute = models.PositiveIntegerField(verbose_name='время на выполнение',
