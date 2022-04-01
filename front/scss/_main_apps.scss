@@ -13,17 +13,15 @@
         display: flex;
         column-gap: 10px;
         align-items: baseline;
-
+        font-size: 40px;
+        font-weight: 500;
         h1 {
-            font-size: 30px;
+            
             line-height: 50px;
             color: #06204E;
-            font-weight: 500;
         }
 
         p {
-            font-weight: 500;
-            font-size: 30px;
             line-height: 50px;
 
             color: #06204E;
@@ -49,7 +47,7 @@
     border: 1px solid #D6DDEB;
 	border-radius: 10px;
     
-    > :not(:first-child):not(:last-child) {
+    > :not(:first-child):not(:last-child):not(:nth-child(2)) {
         padding-left: 20px;
         &::after{
             content: url(../img/filtr/arrow-down.svg);
@@ -73,7 +71,7 @@
 
     // .filtr-items__item
     &__item {
-        flex: 1 1 25%;
+        flex: 1 1 15%;
         height: 58px;
 
         display: flex;
@@ -84,9 +82,10 @@
     }
     .placeholder{
         input{
+        // border: 1px solid #000;
         background: #F5F5F5;
         height: 85%;
-        width: auto;
+        max-width: auto;
         padding-left: 5px;
         &::placeholder{
             font-family: serif;
@@ -94,6 +93,7 @@
             padding-left: 50px;
             font-weight: 400;
             font-size: 18px;
+            max-width: 100px;
             line-height: 144%;
             color: hsl(0, 0%, 27%);
         }
@@ -197,8 +197,8 @@
     &__titles {
         background: #0828dba2;
         color: #f5f5f5;
-
     }
+
 
     &__title, &__cell{
         border: 1px solid #ddd;
@@ -221,6 +221,7 @@
     }
     // .table__cell
     &__cell {
+        
     }
 }
 .btn-reset {

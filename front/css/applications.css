@@ -181,18 +181,16 @@ body {
   -webkit-box-align: baseline;
       -ms-flex-align: baseline;
           align-items: baseline;
+  font-size: 40px;
+  font-weight: 500;
 }
 
 .main__title h1 {
-  font-size: 30px;
   line-height: 50px;
   color: #06204E;
-  font-weight: 500;
 }
 
 .main__title p {
-  font-weight: 500;
-  font-size: 30px;
   line-height: 50px;
   color: #06204E;
   opacity: 0.5;
@@ -213,11 +211,11 @@ body {
   border-radius: 10px;
 }
 
-.filtr-items > :not(:first-child):not(:last-child) {
+.filtr-items > :not(:first-child):not(:last-child):not(:nth-child(2)) {
   padding-left: 20px;
 }
 
-.filtr-items > :not(:first-child):not(:last-child)::after {
+.filtr-items > :not(:first-child):not(:last-child):not(:nth-child(2))::after {
   content: url(../img/filtr/arrow-down.svg);
   padding-right: 15px;
 }
@@ -235,8 +233,8 @@ body {
 
 .filtr-items__item {
   -webkit-box-flex: 1;
-      -ms-flex: 1 1 25%;
-          flex: 1 1 25%;
+      -ms-flex: 1 1 15%;
+          flex: 1 1 15%;
   height: 58px;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -253,7 +251,7 @@ body {
 .filtr-items .placeholder input {
   background: #F5F5F5;
   height: 85%;
-  width: auto;
+  max-width: auto;
   padding-left: 5px;
 }
 
@@ -263,6 +261,7 @@ body {
   padding-left: 50px;
   font-weight: 400;
   font-size: 18px;
+  max-width: 100px;
   line-height: 144%;
   color: #454545;
 }
@@ -273,6 +272,7 @@ body {
   padding-left: 50px;
   font-weight: 400;
   font-size: 18px;
+  max-width: 100px;
   line-height: 144%;
   color: #454545;
 }
@@ -283,6 +283,7 @@ body {
   padding-left: 50px;
   font-weight: 400;
   font-size: 18px;
+  max-width: 100px;
   line-height: 144%;
   color: #454545;
 }
@@ -293,6 +294,7 @@ body {
   padding-left: 50px;
   font-weight: 400;
   font-size: 18px;
+  max-width: 100px;
   line-height: 144%;
   color: #454545;
 }
