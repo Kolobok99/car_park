@@ -46,3 +46,10 @@ html {
     outline: 0;
     outline-offset: 0;
 }
+input {
+	width: 100%;
+  	/* Убираем влияние padding и border на конечную ширину input */
+  	box-sizing: border-box;
+  	/* Обнуляем margin */
+  	margin: 0;
+}

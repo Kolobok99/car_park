@@ -43,7 +43,7 @@ class FuelCard(models.Model):
     number = models.IntegerField(verbose_name='номер', unique=True)
 
     onwer = models.ForeignKey('Driver', on_delete=models.PROTECT,
-                              related_name='my_cards')
+                              related_name='my_cards', blank=True, null=True)
     class Meta:
         verbose_name = 'Топливная карта'
         verbose_name_plural = 'Топливные карты'
