@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/documents.css">
+    <title>Документы</title>
+</head>
+<body>
+    <div class="wrapper">
+        <header class="header">
+            <div class="header__container">
+                
+                <div class="header__logo">
+                    <h1>CAR's</h1>
+                </div>
+
+                <div class="header__menu menu">
+                    <ul class="menu__items">
+                      <li class="menu__item"><a href="#">Автомобили</a></li>
+                      <li class="menu__item"><a href="#">Сотрудники</a></li>
+                      <li class="menu__item"><a href="#">Заявки</a></li>
+                      <li class="menu__item"><a href="#">Топливные карты</a></li>
+                      <li class="menu__item active-page"><a href="#">Документы</a></li>
+                    </ul>
+                </div>
+                
+                <div class="header__auth auth">
+                    
+                    <img class="auth__avatar" src="../img/header/avatar.png" alt="avatar">
+                    <a href="" class="auth__settings">
+                        <img src="../img/header/settings.svg" alt="">
+                    </a>
+                    <a href="#" class="auth__exit">
+                        Выход
+                    </a>
+                </div>
+
+            </div>
+        </header>
+        <div class="main">
+            <div class="main__container">
+                
+                <div class="main__title">
+                    <h1>Документы</h1>
+                    <p>205</p>
+                </div>
+            <form action="{% url 'cars' %}" method="get">
+                <ul class="main__filtration filtr-items">
+                    <li class="filtr-items__item ">
+                        <input type="text" placeholder="номер">
+                    </li>
+                    <li class="filtr-items__item">
+                        <p>лимит:</p>
+                        <input type="text" placeholder="мин.">
+                        
+                        <input type="text" placeholder="макс.">
+                    </li>
+
+                    <li class="filtr-items__item">
+                        <p>остаток:</p>
+                        <input type="text" placeholder="мин.">
+                        
+                        <input type="text" placeholder="макс.">
+                    </li>
+                    
+                    <button type="button" class="filtr-items__button">
+                        <img src="../img/filtr/lupa.svg" alt="поиск">
+                    </button> 
+                </ul>
+            </form>     
+
+                <div class="main__information">
+                    <table class="main__table table">
+                        
+    <!-- ID -->                            <col style="width:5%">
+    <!-- Дата создания -->                 <col style="width:15%">
+    <!-- Дата окнчания -->                 <col style="width:15%">
+    <!-- Срочность -->                     <col style="width:15%">
+    <!-- Статус -->                        <col style="width:15%">
+    <!-- Тип -->                           <col style="width:2%">
+
+                        <tr class="table__titles">
+                          <th class="table__title">Тип документа</th>
+                          <th class="table__title">Дата получения</th>
+                          <th class="table__title">Дата окончания</th>
+                          <th class="table__title">Авто/Водитель</th>
+                          <th class="table__title">Владелец</th>
+                        </tr>
+                        <label for="1">
+                        <tr class="table__row">
+                          <td class="table__cell">паспорт</td>
+                          <td class="table__cell">22.02.2019</td>
+                          <td class="table__cell">22.02.2024</td>
+                          <td class="table__cell">водитель</td>
+                        
+                          <td class="table__cell">Золотавин И.А</td>
+                        </tr>    
+
+                        <tr class="table__row">
+                            <td class="table__cell">страховое</td>
+                            <td class="table__cell">22.02.2021</td>
+                            <td class="table__cell">22.02.2022</td>
+                            <td class="table__cell">машина</td>
+                            <td class="table__cell">A-111-EE</td>
+                          </tr>   
+                    </table>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <h1>CAR's</h1>
+            <p>© 2022 Все права защищены</p>
+            
+        </footer>
+    </div>
+</body>
+</html>
