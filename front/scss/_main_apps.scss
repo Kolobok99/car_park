@@ -15,7 +15,7 @@
         align-items: baseline;
 
         h1 {
-            font-size: 40px;
+            font-size: 30px;
             line-height: 50px;
             color: #06204E;
             font-weight: 500;
@@ -23,7 +23,7 @@
 
         p {
             font-weight: 500;
-            font-size: 40px;
+            font-size: 30px;
             line-height: 50px;
 
             color: #06204E;
@@ -33,7 +33,6 @@
     }
     // .main__filtration
     &__filtration {
-        max-width: 650px;
         
     }
     // .main__information
@@ -45,12 +44,12 @@
 }
 .filtr-items {
     display: flex;
-    justify-content: left;
+    justify-content: center;
     
     border: 1px solid #D6DDEB;
 	border-radius: 10px;
     
-    > :nth-child(3) {
+    > :not(:first-child):not(:last-child) {
         padding-left: 20px;
         &::after{
             content: url(../img/filtr/arrow-down.svg);
@@ -74,7 +73,7 @@
 
     // .filtr-items__item
     &__item {
-        flex: 1 1 33%;
+        flex: 1 1 25%;
         height: 58px;
 
         display: flex;
@@ -83,11 +82,11 @@
 
         position: relative;
     }
-    & .placeholder{
+    .placeholder{
         input{
         background: #F5F5F5;
         height: 85%;
-        max-width: 182px;
+        width: auto;
         padding-left: 5px;
         &::placeholder{
             font-family: serif;
@@ -178,6 +177,7 @@
     // .filtr-items__button
     &__button {
             flex: 1 1 58px;
+            
             background: #005BFF;
 
             border-top-right-radius: 10px;

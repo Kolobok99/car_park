@@ -184,7 +184,7 @@ body {
 }
 
 .main__title h1 {
-  font-size: 40px;
+  font-size: 30px;
   line-height: 50px;
   color: #06204E;
   font-weight: 500;
@@ -192,14 +192,10 @@ body {
 
 .main__title p {
   font-weight: 500;
-  font-size: 40px;
+  font-size: 30px;
   line-height: 50px;
   color: #06204E;
   opacity: 0.5;
-}
-
-.main__filtration {
-  max-width: 650px;
 }
 
 .main__information {
@@ -210,18 +206,18 @@ body {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: left;
-      -ms-flex-pack: left;
-          justify-content: left;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   border: 1px solid #D6DDEB;
   border-radius: 10px;
 }
 
-.filtr-items > :nth-child(3) {
+.filtr-items > :not(:first-child):not(:last-child) {
   padding-left: 20px;
 }
 
-.filtr-items > :nth-child(3)::after {
+.filtr-items > :not(:first-child):not(:last-child)::after {
   content: url(../img/filtr/arrow-down.svg);
   padding-right: 15px;
 }
@@ -239,8 +235,8 @@ body {
 
 .filtr-items__item {
   -webkit-box-flex: 1;
-      -ms-flex: 1 1 33%;
-          flex: 1 1 33%;
+      -ms-flex: 1 1 25%;
+          flex: 1 1 25%;
   height: 58px;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -257,7 +253,7 @@ body {
 .filtr-items .placeholder input {
   background: #F5F5F5;
   height: 85%;
-  max-width: 182px;
+  width: auto;
   padding-left: 5px;
 }
 

@@ -182,6 +182,7 @@ class TypeOfAppl(models.Model):
     """Типы заявок"""
 
     title = models.CharField(verbose_name='Наименование', max_length=50)
+    car_is = models.BooleanField(verbose_name='Машина или Сотрудник', default=True)
 
     def __str__(self):
         return self.title

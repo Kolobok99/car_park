@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/style.css">
-    <title>Главная</title>
+    <link rel="stylesheet" href="../css/applications.css">
+    <title>Заявки</title>
 </head>
 <body>
     <div class="wrapper">
@@ -19,8 +19,8 @@
                 <div class="header__menu menu">
                     <ul class="menu__items">
                       <li class="menu__item"><a href="#">Автомобили</a></li>
-                      <li class="menu__item active-page"><a href="#">Сотрудники</a></li>
-                      <li class="menu__item"><a href="#">Заявки</a></li>
+                      <li class="menu__item"><a href="#">Сотрудники</a></li>
+                      <li class="menu__item active-page"><a href="#">Заявки</a></li>
                       <li class="menu__item"><a href="#">Топливные карты</a></li>
                     </ul>
                 </div>
@@ -47,7 +47,13 @@
             <div class="main__container">
                 
                 <div class="main__title">
-                    <h1>Автомобили</h1>
+                    <h1>Ожидают</h1>
+                    <p>535</p>
+                    <h1>Ожидают</h1>
+                    <p>535</p>
+                    <h1>Ожидают</h1>
+                    <p>535</p>
+                    <h1>Ожидают</h1>
                     <p>535</p>
                 </div>
             <form action="{% url 'cars' %}" method="get">
@@ -146,7 +152,7 @@
                 <div class="main__information">
                     <table class="main__table table">
                         <tr class="table__titles">
-                          <th class="table__title">Номер</th>
+                          <th class="table__title">ID</th>
                           <th class="table__title">Водитель</th>
                           <th class="table__title">Марка</th>
                           <th class="table__title">регион</th>

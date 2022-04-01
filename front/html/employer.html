@@ -20,7 +20,7 @@
                     <ul class="menu__items">
                       <li class="menu__item"><a href="#">Автомобили</a></li>
                       <li class="menu__item active-page"><a href="#">Водители</a></li>
-                      <li class="menu__item"><a href="#">Документы</a></li>
+                      <li class="menu__item"><a href="#">Заявки</a></li>
                       <li class="menu__item"><a href="#">Топливные карты</a></li>
                     </ul>
                 </div>
@@ -48,87 +48,34 @@
             <form action="{% url 'cars' %}" method="get">
                 <ul class="main__filtration filtr-items">
                     <li class="filtr-items__item placeholder">
-                        <input type="text" placeholder="номер">
+                        <input type="text" placeholder="ФИО">
                     </li>
-                    <li class="filtr-items__item">
-                        <p class="filtr-items__title">Марка</p>
-                        <ul class="filtr-items__sub-menu">
-                            <label for="toyota" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="mark" id="toyota">
-                                    <label for="toyota" class="filtr-items__check-label">Тойота
-                                </li>
-                            </label>
-                            <label for="kia" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="mark" id="kia">
-                                    <label for="kia" class="filtr-items__check-label">КИА
-                                </li>
-                            </label>
-                            <label for="bmw" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="mark" id="bmw">
-                                    <label for="bmw" class="filtr-items__check-label">BMW
-                                </li>
-                            </label>
-                        </ul>
+                    <li class="filtr-items__item placeholder">
+                        <input type="text" placeholder="Номер телефона">
                     </li>
-                    <li class="filtr-items__item">
-                        <p class="filtr-items__title">Водитель</p>
-                        <ul class="filtr-items__sub-menu">
-                            <label for="petrov_a_a" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="driver" id="petrov_a_a">
-                                    <label for="petrov_a_a" class="filtr-items__check-label">Петров А.А.
-                                </li>
-                            </label>
-                            <label for="ivanov_i_i" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="driver" id="ivanov_i_i">
-                                    <label for="ivanov_i_i" class="filtr-items__check-label">Иванов И.И.
-                                </li>
-                            </label>
-                            <label for="degtyrev_k_k" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="driver" id="degtyrev_k_k">
-                                    <label for="degtyrev_k_k" class="filtr-items__check-label">Дегтярев К.К.
-                                </li>
-                            </label>
-                        </ul>
-                    </li>
-
-                    <!--  -->
-                    <li class="filtr-items__item">
-                        <p class="filtr-items__title">Регион</p>
-                        <ul class="filtr-items__sub-menu">
-                            <label for="86" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="region" id="86">
-                                    <label for="86" class="filtr-items__check-label">86
-                                </li>
-                            </label>
-                            <label for="87" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="region" id="87">
-                                    <label for="87" class="filtr-items__check-label">87
-                                </li>
-                            </label>
-                            <label for="89" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="region" id="89">
-                                    <label for="89" class="filtr-items__check-label">89
-                                </li>
-                            </label>
-                        </ul>
-                    </li>
-
+                    
                     <li class="filtr-items__item">
                         <p class="filtr-items__title">Тип заявки</p>
                         <ul class="filtr-items__sub-menu">
                             <label for="wheel" class="filtr-items__check-label">
                                 <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="region" id="wheel ">
-                                    <label for="wheel " class="filtr-items__check-label">Колеса</label>
+                                    <label for="wheel " class="filtr-items__check-label">Отпуск</label>
                                 </li>
                             </label>
                             <label for="engine" class="filtr-items__check-label">
                                 <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="driver" id="engine">
-                                    <label for="engine" class="filtr-items__check-label">Двигатель
+                                    <label for="engine" class="filtr-items__check-label">Больничный
                                 </li>
                             </label>
                             <label for="glass" class="filtr-items__check-label">
                                 <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="mark" id="glass">
-                                    <label for="glass" class="filtr-items__check-label">Стекла
+                                    <label for="glass" class="filtr-items__check-label">Карточки
+                                </li>
+                            </label>
+
+                            <label for="glass" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="mark" id="glass">
+                                    <label for="glass" class="filtr-items__check-label">Другое
                                 </li>
                             </label>
                         </ul>
@@ -160,50 +107,17 @@
 
                           </td>
                           <td class="table__cell">
-                              <p>от 25.03.22: разби</p>
+                              <p>от 25.03.22: пробито колесо</p>
+                              <p>от 23.03.22: пополнение карточки <p>
+                              <p>от 19.03.22: отпуск<p>
                           </td>
                           <td class="table__cell">
-                              Пробило Колесо<br>
-                              Разбито зеркало<br>
+                              Паспорт годен до 12.24<br>
+                              Снился годен до 03.24<br>
 
                           </td>
-                        </tr>
-                        <tr class="table__row">
-                          <td class="table__cell">B-112-KT</td>
-                          <td class="table__cell">Иванов И.И.</td>
-                          <td class="table__cell">Tayota</td>
-                          <td class="table__cell">86</td>
-                          <td class="table__cell">11.03.22</td>
-                          <td class="table__cell"> Пробило Колесо<br>
-                            Разбито зеркало<br></td>
-                        </tr>
-                        <tr class="table__row">
-                          <td class="table__cell">E-199-CN</td>
-                          <td class="table__cell">Дегтярев К.К.</td>
-                          <td class="table__cell">BMW</td>
-                          <td class="table__cell">77</td>
-                          <td class="table__cell">12.12.21</td>
-                          <td class="table__cell"> Пробило Колесо<br>
-                            Разбито зеркало<br></td>
-                          </tr>
-                        <tr class="table__row">
-                          <td class="table__cell">K-123-OP</td>
-                          <td class="table__cell">Утров Б.Б.</td>
-                          <td class="table__cell">АвтоВАЗ</td>
-                          <td class="table__cell">86</td>
-                          <td class="table__cell">22.02.22</td>
-                          <td class="table__cell"> Пробило Колесо<br>
-                            Разбито зеркало<br></td>
-                        </tr>
-                        <tr class="table__row">
-                          <td class="table__cell">D-297-NN</td>
-                          <td class="table__cell">Ульянов Д.Д.</td>
-                          <td class="table__cell">Tayota</td>
-                          <td class="table__cell">79</td>
-                          <td class="table__cell">29.11.21</td>
-                          <td class="table__cell"> Пробило Колесо<br>
-                            Разбито зеркало<br></td>
-                        </tr>
+                          
+                        
                     </table>
                 </div>
             </div>
