@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/account.css" />
+    <title>Личный кабинет</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <div class="header__container">
+          <div class="header__logo">
+            <h1>CAR's</h1>
+          </div>
+
+          <div class="header__menu menu">
+            <ul class="menu__items">
+              <li class="menu__item"><a href="#">Автомобили</a></li>
+              <li class="menu__item"><a href="#">Сотрудники</a></li>
+              <li class="menu__item"><a href="#">Заявки</a></li>
+              <li class="menu__item"><a href="#">Топливные карты</a></li>
+            </ul>
+          </div>
+
+          <div class="header__auth auth">
+            <img
+              class="auth__avatar"
+              src="../img/header/avatar.png"
+              alt="avatar"
+            />
+            <a href="" class="auth__settings">
+              <img src="../img/header/settings.svg" alt="" />
+            </a>
+            <a href="#" class="auth__exit"> Выход </a>
+          </div>
+        </div>
+      </header>
+
+      <div class="main">
+        <div class="main__container">
+          <div class="main__account account-area">
+            <div class="account-area__avatar">
+              <img src="../img/account/full-avatar.jpeg" alt="" />
+              <input type="file" name="avatar" id="image" />
+            </div>
+            <div class="account-area__info">
+              <div class="account-area__item">
+                <label for="first_name">Имя:</label>
+                <input
+                  type="text"
+                  name="user-info"
+                  id="first_name"
+                  value="Иван"
+                  placeholder="Иван"
+                />
+              </div>
+
+              <div class="account-area__item">
+                <label for="last_name">Фамилия:</label>
+                <input
+                  type="text"
+                  name="user-info"
+                  id="last_name"
+                  value="Золотавин"
+                  placeholder="Золотавин"
+                />
+              </div>
+
+              <div class="account-area__item">
+                <label for="patronymic">Отчество:</label>
+                <input
+                  type="text"
+                  name="user-info"
+                  id="patronymic"
+                  value="Александрович"
+                  placeholder="Александрович"
+                />
+              </div>
+             <div class="account-area__item">
+                  <label for="birthdate">Дата рождения:</label>
+                  <input
+                    type="date"
+                    name="user-info"
+                    id="birthdate"
+                    value="28.09.1999"
+                    placeholder="28.09.1999"
+                  />
+             </div>
+
+              <div class="account-area__item">
+                  <label for="phone">Телефон:</label>
+                  <input
+                    type="tel"
+                    name="user-info"
+                    id="phone"
+                    value="79227776370"
+                    placeholder="+7-922-777-6370"
+                  />
+              </div>
+
+              <div class="account-area__item">
+                  <label for="email">Email::</label>
+                  <input
+                    type="email"
+                    name="user-info"
+                    id="email"
+                    value="izolotavin99@gmail.com"
+                    placeholder="izolotavin99@gmail.com"
+                  />
+                </div>
+              </div>
+          </div>
+
+          <div class="main__tables">
+            <div class="main__table table">
+                <h1 class="table__table-title">Автомобили</h1>
+                <table>
+                    <tr class="table__titles">
+                      <th class="table__title">Номер</th>
+                      <th class="table__title">Марка</th>
+                      <th class="table__title">регион</th>
+                      <th class="table__title">Последний <br>осмотр</th>
+                      <th class="table__title">Активные <br>заявки</th>
+                      <th class="table__title">Действия</th>
+                    </tr>
+                    <tr class="table__row">
+                      <td class="table__cell">A-111-EE</td>
+                      <td class="table__cell">Shkoda</td>
+                      <td class="table__cell">86</td>
+                      <td class="table__cell">12.04.22</td>
+                      <td class="table__cell">
+                          Пробило Колесо<br>
+                          Разбито зеркало<br>
+    
+                      </td>
+                    </tr>
+                    <tr class="table__row">
+                      <td class="table__cell">B-112-KT</td>
+                      <td class="table__cell">Tayota</td>
+                      <td class="table__cell">86</td>
+                      <td class="table__cell">11.03.22</td>
+                      <td class="table__cell"> Пробило Колесо<br>
+                        Разбито зеркало<br></td>
+                    </tr>
+                 
+                </table>
+            </div>
+
+            <div class="main__table table">
+                <h1 class="table__table-title">Заявки</h1>
+                <table>
+                    <!--  -->
+    <!-- ID -->                            <col style="width:5%">
+    <!-- Дата создания -->                 <col style="width:10%">
+    <!-- Дата окнчания -->                 <col style="width:10%">
+    <!-- Срочность -->                     <col style="width:10%">
+    <!-- Статус -->                        <col style="width:10%">
+    <!-- Тип -->                           <col style="width:10%">
+    <!-- Создатель -->                     <col style="width:10%">
+    <!-- Авто -->                           <col style="width: 10%">
+    <!-- описание -->                      <col style="width: 30%">
+    
+    
+                    <tr class="table__titles">
+                      <th class="table__title">ID</th>
+                      <th class="table__title">Дата создания</th>
+                      <th class="table__title">Дата окнчания</th>
+                      <th class="table__title">Срочность</th>
+                      <th class="table__title">Статус <br> выполнения</th>
+                      <th class="table__title">Тип</th>
+                      <th class="table__title">Авто</th>
+                      <th class="table__title">Краткое<br> описание</th>
+                      <th class="table__title">Действия</th>
+                    </tr>
+                    <tr class="table__row">
+                        <td class="table__cell">2</td>
+                        <td class="table__cell">27.05.2022</td>
+                        <td class="table__cell">Колесо</td>
+                        <td class="table__cell">Срочно</td>
+                        <td class="table__cell">Рассмотрена</td>
+                        <td class="table__cell">Поломка</td>
+                        <td class="table__cell">A-111-EE</td>
+                        <td class="table__cell">Пробило левую переднюю шину</td>
+                        <td class="table__cell">Именить заявку</td>
+                      </tr>
+                      
+                </table>
+            </div>
+
+            <div class="main__table table">
+                <h1 class="table__table-title">Топливные карты</h1>
+                <table>
+                        
+                    <!-- ID -->                            <col style="width:5%">
+                    <!-- Дата создания -->                 <col style="width:15%">
+                    <!-- Дата окнчания -->                 <col style="width:15%">
+                    <!-- Срочность -->                     <col style="width:15%">
+
+                
+                                        <tr class="table__titles">
+                                          <th class="table__title">ID</th>
+                                          <th class="table__title">Номер</th>
+                                          <th class="table__title">Лимит</th>
+                                          <th class="table__title">Остаток</th>
+                                        </tr>
+                                        <label for="1">
+                                        <tr class="table__row">
+                                          <td class="table__cell">1</td>
+                                          <td class="table__cell">4264-3231</td>
+                                          <td class="table__cell">800 л.</td>
+                                          <td class="table__cell">200 л.</td>
+                                        </label>
+                                        </tr>
+                                        </label>
+                </table>
+            </div>
+
+            <div class="main__table table">
+                <h1 class="table__table-title">Документы</h1>
+                <table>
+                        
+                    <!-- ID -->                            <col style="width:5%">
+                    <!-- Дата создания -->                 <col style="width:15%">
+                    <!-- Дата окнчания -->                 <col style="width:15%">
+                
+                                        <tr class="table__titles">
+                                          <th class="table__title">Тип документа</th>
+                                          <th class="table__title">Дата получения</th>
+                                          <th class="table__title">Дата окончания</th>
+                                        </tr>
+                                        <label for="1">
+                                        <tr class="table__row">
+                                          <td class="table__cell">паспорт</td>
+                                          <td class="table__cell">22.02.2019</td>
+                                          <td class="table__cell">22.02.2024</td>
+                                        </tr>    
+                
+                                        <tr class="table__row">
+                                            <td class="table__cell">страховое</td>
+                                            <td class="table__cell">22.02.2021</td>
+                                            <td class="table__cell">22.02.2022</td>
+                                          </tr>   
+                </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <h1>CAR's</h1>
+        <p>© 2022 Все права защищены</p>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -48,21 +48,54 @@
                 </div>
             <form action="{% url 'cars' %}" method="get">
                 <ul class="main__filtration filtr-items">
-                    <li class="filtr-items__item ">
-                        <input type="text" placeholder="номер">
+                    <li class="filtr-items__item">
+                        <p class="filtr-items__title">Тип</p>
+                        <ul class="filtr-items__sub-menu">
+                            <label for="wheel" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="type" id="wheel ">
+                                    <label for="wheel " class="filtr-items__check-label">Отпуск</label>
+                                </li>
+                            </label>
+                            <label for="engine" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="type" id="engine">
+                                    <label for="engine" class="filtr-items__check-label">Больничный
+                                </li>
+                            </label>
+                            <label for="glass" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="type" id="glass">
+                                    <label for="glass" class="filtr-items__check-label">Карточки
+                                </li>
+                            </label>
+
+                            <label for="glass" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="type" id="glass">
+                                    <label for="glass" class="filtr-items__check-label">Другое
+                                </li>
+                            </label>
+                        </ul>
                     </li>
                     <li class="filtr-items__item">
-                        <p>лимит:</p>
-                        <input type="text" placeholder="мин.">
+                        <p>дата:</p>
+                        <input type="text" placeholder="от.">
                         
-                        <input type="text" placeholder="макс.">
+                        <input type="text" placeholder="до.">
                     </li>
 
                     <li class="filtr-items__item">
-                        <p>остаток:</p>
-                        <input type="text" placeholder="мин.">
-                        
-                        <input type="text" placeholder="макс.">
+                        <p class="filtr-items__title">Авто/Владелец</p>
+                        <ul class="filtr-items__sub-menu">
+                            <label for="a" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="aord" id="a">
+                                    <label for="a" class="filtr-items__check-label">Авто</label>
+                                </li>
+                            </label>
+                            <label for="d" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="aord" id="d">
+                                    <label for="d" class="filtr-items__check-label">Водитель
+                                </li>
+                            </label>
+                    
+                        </ul>
                     </li>
                     
                     <button type="button" class="filtr-items__button">
