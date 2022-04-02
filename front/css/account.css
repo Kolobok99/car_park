@@ -250,7 +250,7 @@ body {
 }
 
 .account-area__item input {
-  width: auto;
+  width: 70%;
   font-size: 18px;
 }
 
