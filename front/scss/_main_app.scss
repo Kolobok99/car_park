@@ -1,0 +1,125 @@
+// .main {
+//     flex: 1 1 auto;
+//     // .main__container
+//     &__container {
+//         font-size: 20px;
+
+//         :first-child{
+//             flex: 1 1 auto;
+//         }
+//     }
+//     // .main__app-info
+//     &__app-info {
+//         // max-width: 300px;
+//         margin: 50px auto;
+//     }
+// }
+// .info-app {
+//     display: flex;
+//     row-gap: 20px;
+//     flex: 1 1 auto;
+    
+//     // .info-app__item
+//     &__item {
+//         position: relative;
+//     }
+
+//     &__main-info {
+//         display: flex;
+//         flex-direction: column;
+//         row -gap: 20px;
+
+//     }
+
+//     &__detail {
+
+//     }
+
+//     //info-app__title
+//     &__title {
+//         font-size: 25px;
+//         font-weight: 500;
+//         margin-bottom: 5px;
+//         color: rgb(49, 40, 184);
+
+//         &:not(:last-child)::after{
+//             content: '';
+//             background: rgba(0, 81, 255, 0.824);
+//             display: block;
+//             position: absolute; /* Абсолютное позиционирование */
+//             left: 0; /* Положение линии слева */
+//             bottom: -5px; /* Положение линии */
+//             width: 30%; /* Линия на ширину текста */
+//             height: 2px; /* Высота линии */
+//         }
+//     }
+
+//     &__description {
+        
+//         width: 70%;
+//         line-height: 150%;
+//     }
+// }
+
+
+.main {
+    flex: 1 1 auto;
+
+    // .main__container
+    &__container {
+        font-size: 20px;
+        line-height: 150%;
+    }
+    // .main__app-info
+    &__app-info {
+        margin: 50px auto;
+    }
+}
+.info-app {
+    display: flex;
+    column-gap: 20px;
+
+    // .ifno-app__main-info
+    &__main-info {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        row-gap: 10px;
+    }
+
+    // .info-app__item
+    &__item {
+        position: relative;
+        color: rgba(0, 0, 0, 0.79);
+    }
+    // .info-app__title
+    &__title {
+        font-size: 25px;
+        font-weight: 500;
+        margin-bottom: 5px;
+        color: rgb(85, 75, 237);
+
+        &:not(:last-child)::after{
+            content: '';
+            background: rgba(81, 124, 217, 0.824);
+            display: block;
+            position: absolute; /* Абсолютное позиционирование */
+            left: 0; /* Положение линии слева */
+            bottom: -5px; /* Положение линии */
+            width: 30%; /* Линия на ширину текста */
+            height: 2px; /* Высота линии */
+
+        }
+    } 
+    
+    // .info-app__detail
+    &__detail {
+        flex: 1 1 800px;
+
+    }
+
+    &__description {
+        // width: 70%;
+        line-height: 150%;
+    }
+}

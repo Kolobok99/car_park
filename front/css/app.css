@@ -1,0 +1,259 @@
+@charset "UTF-8";
+/* 
+&display=swap
+&subset=cyrillic-ext 
+*/
+/* ОБНУЛЕНИЕ СТИЛЕЙ */
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,regular,500,600,700,800,300italic,italic,500italic,600italic,700italic,800italic);
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+li {
+  list-style: none;
+}
+
+a,
+a:visited {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: inherit;
+  font-size: inherit;
+}
+
+img {
+  vertical-align: top;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+html {
+  /* по умолчанию */
+  /* font-size: 16px;  */
+}
+
+:active, :hover, :focus {
+  outline: 0;
+  outline-offset: 0;
+}
+
+input {
+  width: 100%;
+  /* Убираем влияние padding и border на конечную ширину input */
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  /* Обнуляем margin */
+  margin: 0;
+}
+
+body {
+  line-height: 1;
+  font-family: "CoFo Sans";
+  background-color: #f5f5f5;
+}
+
+[class*="__container"] {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0px 15px;
+}
+
+.wrapper {
+  min-height: 100%;
+  max-width: 1470px;
+  overflow: hidden;
+  margin: 0 auto;
+  background: #F5F5F5;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  margin: 0 auto;
+}
+
+.header {
+  background: #005BFF;
+  color: #F5F5F5;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 111%;
+}
+
+.header__container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  min-height: 70px;
+}
+
+.header__logo h1 {
+  font-weight: 800;
+  font-size: 25px;
+}
+
+.menu__items {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-column-gap: 20px;
+          column-gap: 20px;
+  row-gap: 5px;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.menu__item a {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 20px;
+  color: rgba(245, 245, 245, 0.7);
+}
+
+.auth {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-column-gap: 10px;
+          column-gap: 10px;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.auth__avatar {
+  border-radius: 50%;
+  border: 1px solid #F5F5F5;
+}
+
+.auth__settings {
+  fill: #F5F5F5;
+}
+
+.auth__exit {
+  color: #f5f5f5;
+  font-size: 15px;
+}
+
+.active-page a {
+  color: #F5F5F5;
+}
+
+.main {
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 auto;
+          flex: 1 1 auto;
+}
+
+.main__container {
+  font-size: 20px;
+  line-height: 150%;
+}
+
+.main__app-info {
+  margin: 50px auto;
+}
+
+.info-app {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-column-gap: 20px;
+          column-gap: 20px;
+}
+
+.info-app__main-info {
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 auto;
+          flex: 1 1 auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  row-gap: 10px;
+}
+
+.info-app__item {
+  position: relative;
+  color: rgba(0, 0, 0, 0.79);
+}
+
+.info-app__title {
+  font-size: 25px;
+  font-weight: 500;
+  margin-bottom: 5px;
+  color: #554bed;
+}
+
+.info-app__title:not(:last-child)::after {
+  content: '';
+  background: rgba(81, 124, 217, 0.824);
+  display: block;
+  position: absolute;
+  /* Абсолютное позиционирование */
+  left: 0;
+  /* Положение линии слева */
+  bottom: -5px;
+  /* Положение линии */
+  width: 30%;
+  /* Линия на ширину текста */
+  height: 2px;
+  /* Высота линии */
+}
+
+.info-app__detail {
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 800px;
+          flex: 1 1 800px;
+}
+
+.info-app__description {
+  line-height: 150%;
+}
+
+.footer {
+  background-color: #337afd;
+  padding: 5px;
+  text-align: center;
+  color: #fff;
+}
+
+.footer h1 {
+  color: #fff;
+  font-weight: 700;
+  font-size: 20px;
+}
