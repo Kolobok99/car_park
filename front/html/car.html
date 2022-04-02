@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/car.css" />
+    <title>A-111-EE</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <div class="header__container">
+          <div class="header__logo">
+            <h1>CAR's</h1>
+          </div>
+
+          <div class="header__menu menu">
+            <ul class="menu__items">
+              <li class="menu__item"><a href="#">Автомобили</a></li>
+              <li class="menu__item"><a href="#">Сотрудники</a></li>
+              <li class="menu__item"><a href="#">Заявки</a></li>
+              <li class="menu__item"><a href="#">Топливные карты</a></li>
+            </ul>
+          </div>
+
+          <div class="header__auth auth">
+            <img
+              class="auth__avatar"
+              src="../img/header/avatar.png"
+              alt="avatar"
+            />
+            <a href="" class="auth__settings">
+              <img src="../img/header/settings.svg" alt="" />
+            </a>
+            <a href="#" class="auth__exit"> Выход </a>
+          </div>
+        </div>
+      </header>
+
+      <div class="main">
+        <div class="main__container">
+          <div class="main__car car-area">
+            <div class="car-area__avatar">
+                <img src="../img/cars/tesla.jpg" alt="" />
+                <input type="file" name="avatar" id="image" />
+            </div>
+            <div class="car-area__info">
+              <div class="car-area__item">
+                <p>Марка:</p>
+                <span>Shkoda</span> 
+              </div>
+
+              <div class="car-area__item">
+                <p>Номер:</p>
+                <span>A-111-EE</span>  
+              </div>
+
+              <div class="car-area__item">
+                <p>Код:</p>
+                <span>86</span>  
+              </div>
+
+              <div class="car-area__item">
+                <p>Последний осмотр:</p>
+                <span>12.12.21</span>  
+              </div>
+
+              <div class="car-area__item">
+                <p>Водитель:</p>
+                <span>Золотавин И. А</span> 
+              </div>
+            </div>
+          </div>
+
+          <div class="main__tables">
+            <div class="main__table table">
+                <h1 class="table__table-title">Заявки</h1>
+                <table>
+                    <!--  -->
+    <!-- ID -->                            <col style="width:1%">
+    <!-- Дата создания -->                 <col style="width:10%">
+    <!-- Дата окнчания -->                 <col style="width:10%">
+    <!-- Срочность -->                     <col style="width:10%">
+    <!-- Статус -->                        <col style="width:10%">
+    <!-- Тип -->                           <col style="width:20%">
+    <!-- Создатель -->                     <col style="width:10%">
+
+    
+    
+                    <tr class="table__titles">
+                      <th class="table__title">ID</th>
+                      <th class="table__title">Дата</th>
+                      <th class="table__title">Срочность</th>
+                      <th class="table__title">Статус</th>
+                      <th class="table__title">Тип</th>
+                      <th class="table__title">Краткое<br> описание</th>
+                      <th class="table__title">Действия</th>
+                    </tr>
+                    <tr class="table__row">
+                        <td class="table__cell">2</td>
+                        <td class="table__cell">
+                            27.05.2022
+                            <br>-<br>
+                            05.06.2022 
+
+                        </td>
+                        <td class="table__cell">Срочно</td>
+                        <td class="table__cell">Рассмотрена</td>
+                        <td class="table__cell">Поломка</td>    
+                        <td class="table__cell">Пробило левую переднюю шину</td>
+                        <td class="table__cell">Именить заявку</td>
+                      </tr>
+                      
+                </table>
+            </div>
+
+            <div class="main__table table">
+                <h1 class="table__table-title">Документы</h1>
+                <table>
+                        
+                    <!-- ID -->                            <col style="width:5%">
+                    <!-- Дата создания -->                 <col style="width:15%">
+                    <!-- Дата окнчания -->                 <col style="width:15%">
+                
+                                        <tr class="table__titles">
+                                          <th class="table__title">Тип документа</th>
+                                          <th class="table__title">Дата получения</th>
+                                          <th class="table__title">Дата окончания</th>
+                                        </tr>
+                                        <label for="1">
+                                        <tr class="table__row">
+                                          <td class="table__cell">паспорт</td>
+                                          <td class="table__cell">22.02.2019</td>
+                                          <td class="table__cell">22.02.2024</td>
+                                        </tr>    
+                
+                                        <tr class="table__row">
+                                            <td class="table__cell">страховое</td>
+                                            <td class="table__cell">22.02.2021</td>
+                                            <td class="table__cell">22.02.2022</td>
+                                          </tr>   
+                </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <h1>CAR's</h1>
+        <p>© 2022 Все права защищены</p>
+      </footer>
+    </div>
+  </body>
+</html>
