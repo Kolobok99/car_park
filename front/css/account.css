@@ -221,6 +221,8 @@ body {
 .account-area__avatar img {
   width: auto;
   height: auto;
+  -webkit-box-shadow: 11px 9px 8px 0px rgba(28, 122, 193, 0.2);
+          box-shadow: 11px 9px 8px 0px rgba(28, 122, 193, 0.2);
 }
 
 .account-area__info {
@@ -238,6 +240,7 @@ body {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  font-size: 18px;
 }
 
 .account-area__item :first-child {
@@ -248,11 +251,14 @@ body {
 
 .account-area__item input {
   width: auto;
+  font-size: 18px;
 }
 
 .table table {
   border-collapse: collapse;
   width: 100%;
+  text-align: center;
+  line-height: 140%;
 }
 
 .table__table-title {

@@ -32,6 +32,8 @@
         img {
             width: auto;
             height: auto;
+            // border: 1px solid rgb(33, 18, 143);
+            box-shadow: 11px 9px 8px 0px rgba(28, 122, 193, 0.2);
         }
 
         input {
@@ -53,12 +55,15 @@
             flex: 1 1 auto;
         }
 
+        font-size: 18px;
+
         label {
 
         }
 
         input {
             width: auto;
+            font-size: 18px;
             
         }
     }
@@ -69,6 +74,8 @@
     table{
         border-collapse: collapse;
         width: 100%;
+        text-align: center;
+        line-height: 140%;
     }
 
     //.table__table-title
