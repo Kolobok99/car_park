@@ -264,18 +264,17 @@
                   </h1>
                   <p>Срочность:</p>
                     <div class="form-add__timing">
+                    
+                      <input type="radio" name="timing" id="noturgent">
+                      <label for="noturgent">Не срочно</label>
                       
-                      <label for="noturgent">Не срочно
-                        <input type="radio" name="timing" id="noturgent">
-                      </label>
+              
+                      <input type="radio" name="timing" id="urgent">
+                      <label for="urgent">Срочно</label>
                       
-                      <label for="urgent">Срочно
-                        <input type="radio" name="timing" id="urgent">
-                      </label>
-          
-                      <label for="veryurgent">Очень срочно
-                        <input type="radio" name="timing" id="veryurgent">
-                      </label>
+                      <input type="radio" name="timing" id="veryurgent">
+                      <label for="veryurgent">Очень срочно</label>
+  
                       <label for="new_descr">Опишите суть заявки:</label>
                       <textarea name="description" id="new_descr" cols="30" rows="10"></textarea>
                       <button type="submit">Отправить</button>
