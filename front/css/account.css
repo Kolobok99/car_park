@@ -288,6 +288,100 @@ body {
   background: #134cb6;
 }
 
+.form-add {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  row-gap: 20px;
+  max-width: 400px;
+  border: 1px solid rgba(21, 23, 178, 0);
+  border-radius: 10px;
+  padding: 10px;
+  -webkit-box-shadow: 11px 11px 35px 1px rgba(31, 128, 202, 0.3);
+          box-shadow: 11px 11px 35px 1px rgba(31, 128, 202, 0.3);
+  background: #195ac9;
+  color: white;
+}
+
+.form-add p {
+  font-size: 20px;
+  margin-bottom: -5px;
+}
+
+.form-add__title {
+  position: relative;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.form-add__title::after {
+  content: '';
+  background: rgba(49, 157, 224, 0.824);
+  display: block;
+  position: absolute;
+  /* Абсолютное позиционирование */
+  left: 1;
+  /* Положение линии слева */
+  bottom: -10px;
+  /* Положение линии */
+  width: 60%;
+  /* Линия на ширину текста */
+  height: 2px;
+  /* Высота линии */
+}
+
+.form-add__timing {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  row-gap: 8px;
+  -webkit-box-flex: 0;
+      -ms-flex: 0 1 30%;
+          flex: 0 1 30%;
+  position: relative;
+}
+
+.form-add__timing input[type="radio"] {
+  position: absolute;
+  width: auto;
+  right: 220px;
+  z-index: -1;
+  opacity: 0;
+}
+
+.form-add__timing label[for="new_descr"] {
+  font-size: 18px;
+  margin-top: 5px;
+}
+
+.form-add__timing label:not(label[for="new_descr"]) {
+  padding-left: 8px;
+}
+
+.form-add__timing textarea {
+  resize: none;
+}
+
+.form-add__timing button {
+  color: #ffffff;
+  font-size: 20px;
+  padding: 7px;
+  border-radius: 5px;
+  background-color: #2badf2;
+}
+
+.form-add__timing button:active {
+  background: rgba(43, 172, 242, 0.758);
+}
+
 .footer {
   background-color: #337afd;
   padding: 5px;

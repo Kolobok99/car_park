@@ -19,6 +19,9 @@
         row-gap: 30px;
 
     }
+
+    // .main__form-add-app
+    &__form-add-app {}
 }
 .account-area {
     display: flex;
@@ -57,9 +60,9 @@
 
         font-size: 18px;
 
-        label {
+        // label {
 
-        }
+        // }
 
         input {
             width: 70%;
@@ -124,4 +127,80 @@
         }
     }
 
+}
+
+.form-add {
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+    max-width: 400px;
+    border: 1px solid rgba(21, 23, 178, 0);
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 11px 11px 35px 1px rgba(31, 128, 202, 0.3);
+    background: #195ac9;
+    color: white;
+    
+    p {
+        font-size: 20px;
+        margin-bottom: -5px;
+        
+    }
+
+    // .form-add__title
+    &__title {
+        position: relative;
+        font-size: 22px;
+        font-weight: 600;
+        &::after {
+            content: '';
+            background: rgba(49, 157, 224, 0.824);
+            display: block;
+            position: absolute; /* Абсолютное позиционирование */
+            left: 1; /* Положение линии слева */
+            bottom: -10px; /* Положение линии */
+            width: 60%; /* Линия на ширину текста */
+            height: 2px; /* Высота линии */
+        }
+    }
+    // .form-add__timing
+    &__timing {
+        display: flex;
+        flex-direction: column;
+        row-gap: 8px;
+        flex: 0 1 30%;
+        position: relative;
+        input[type="radio"] {
+            position: absolute;
+            width: auto;
+            right: 220px;
+            z-index: -1;
+            opacity: 0;
+        }
+
+        label[for="new_descr"] {
+            font-size: 18px;
+            margin-top: 5px;
+        }
+        label:not(label[for="new_descr"]) {
+            padding-left: 8px;
+            
+        }
+
+        textarea {
+            resize: none;
+        }
+
+        button {
+            color:#ffffff;
+            font-size: 20px;
+            padding: 7px;
+            border-radius: 5px;
+            background-color: rgb(43, 173, 242);
+
+            &:active {
+                background: rgba(43, 172, 242, 0.758)
+            }
+        }
+    }
 }
