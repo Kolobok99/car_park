@@ -112,4 +112,16 @@
     // .table__cell
     &__cell {
     }
+
+    &__btn-add-app {
+        font-size: 15px;
+        color: white;
+        background: #005BFF;
+        padding: 6px;
+        border-radius: 5px;
+        &:active {
+            background: #134cb6
+        }
+    }
+
 }

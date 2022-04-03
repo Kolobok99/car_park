@@ -276,6 +276,18 @@ body {
   padding: 8px;
 }
 
+.table__btn-add-app {
+  font-size: 15px;
+  color: white;
+  background: #005BFF;
+  padding: 6px;
+  border-radius: 5px;
+}
+
+.table__btn-add-app:active {
+  background: #134cb6;
+}
+
 .footer {
   background-color: #337afd;
   padding: 5px;
