@@ -85,6 +85,11 @@
     &__table-title{
         font-size: 18px;
         margin-bottom: 10px;
+
+    }
+
+    ._doc-title {
+        display: inline-block;
     }
 
     // .table__titles
@@ -99,6 +104,10 @@
         padding: 8px;
     }
     
+    &__card-balance {
+        max-width: 30px;
+    }
+
     // .table__title
     &__title {
 
@@ -116,7 +125,7 @@
     &__cell {
     }
 
-    &__btn-add-app {
+    &__btn-add-app, &__btn-change-app, &__btn-save-balance, &__btn-add-doc {
         font-size: 15px;
         color: white;
         background: #005BFF;
@@ -129,14 +138,22 @@
 
 }
 
-.form-add {
+
+
+
+.form-app, .form-doc {
+    position: absolute;
+    left: 40%;
+    top:20%;
+    visibility: hidden;
+    min-width:400px;
+
     display: flex;
     flex-direction: column;
     row-gap: 20px;
-    max-width: 400px;
     border: 1px solid rgba(21, 23, 178, 0);
     border-radius: 10px;
-    padding: 10px;
+    padding: 10px 20px 20px 20px;
     box-shadow: 11px 11px 35px 1px rgba(31, 128, 202, 0.3);
     background: #195ac9;
     color: white;
@@ -185,11 +202,20 @@
             }
         }
 
+        input[type="date"] {
+            max-width: 35%;
+            // padding-left: 10px;
+        }
+        label[for*='date'] {
+            font-size: 18px;
+            
+        }
+
         label[for="new_descr"] {
             font-size: 18px;
             margin-top: 5px;
         }
-        label:not(label[for="new_descr"]) {
+        label[for*="rdo"] {
             padding-left: 8px;
             display: inline-flex;
             align-items: center;
@@ -229,4 +255,36 @@
             }
         }
     }
+
+        svg {
+            display: block; 
+            width: 15px;
+            // background: #195ac9;
+            position: absolute;
+            right: 2%;
+            top: 2%;
+          }
+          
+          svg line {
+            stroke: #000;
+            stroke-width: 8;
+          }
+          
+          svg:hover line {
+            stroke: #503bba;
+          }
+    
+
 }
+
+.data-show-or-hide-form{
+transition: opacity 400ms ease-in;
+visibility: visible;
+}
+
+.blackout {
+    /* Скрываем подложку  */
+    opacity: 0.5;
+    transition: .3s all;
+    pointer-events: none;
+ }
