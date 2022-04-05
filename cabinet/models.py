@@ -8,7 +8,7 @@ class Car(models.Model):
     '''машины водилетей'''
 
     brand = models.ForeignKey('CarBrand', on_delete=models.SET(1),
-                              related_name='cars', verbose_name='Марка')
+                              related_name='cars', verbose_name='Марка', null=True, blank=True)
     registration_number = models.CharField(verbose_name='Регистрационный номер',
                                            unique=True, max_length=6)
     region_code = models.SmallIntegerField(verbose_name='Код региона',
@@ -17,7 +17,9 @@ class Car(models.Model):
                                                MinValueValidator(1)
                                            ])
     owner = models.ForeignKey('Driver', on_delete=models.PROTECT,
-                              related_name='my_cars')
+                              related_name='my_cars', null=True, blank=True)
+
+    last_inspection = models.DateField("последний осмотр", null=True, blank=True)
 
     def __str__(self):
         return f"{self.registration_number} + {self.owner.user.last_name}"

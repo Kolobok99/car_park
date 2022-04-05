@@ -1,13 +1,20 @@
-from django.forms import ModelForm
+from django import forms
 
-from .models import Car
+from .models import Car, CarBrand, Driver
 
-class CarMainForm(ModelForm):
+
+class CarAddForm(forms.ModelForm):
+
+    registration_number = forms.CharField(label='Номер:')
+    brand = forms.ModelChoiceField(label='Марка:',
+                                   widget=forms.widgets.RadioSelect, queryset=CarBrand.objects.all()
+                                   )
+    region_code = forms.CharField(label='Код региона:')
+
+    last_inspection = forms.DateField(label='Последний осмотр:')
+
+    # owner = forms.ModelChoiceField(label='Закрепить за:', queryset=Driver.objects.all())
+
     class Meta:
         model = Car
-        fields = (
-            'brand',
-            # 'registration_number',
-            # 'region_code',
-            # 'owner'
-        )
+        fields = ('registration_number', 'brand', 'region_code', 'last_inspection')

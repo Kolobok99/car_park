@@ -3,10 +3,11 @@ from django.db.models import Q
 from django.shortcuts import render
 
 from .filters import CarFilter
-from .forms import CarMainForm
+from .forms import CarAddForm
 from .models import *
 
-from django.views.generic import ListView, TemplateView, FormView
+from django.views.generic import ListView, TemplateView, FormView, CreateView
+
 
 class Context():
     '''Получение контекста'''
@@ -29,6 +30,13 @@ class CarsView(Context,ListView):
     # queryset = Car.objects.all()
     context_object_name = "cars"
 
+    form_class = CarAddForm
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = CarAddForm()
+        return context
+
     def get_queryset(self):
         if len(self.request.GET) == 0:
             return Car.objects.all()
@@ -50,6 +58,18 @@ class CarsView(Context,ListView):
             return query_set.distinct()
         # print(self.request.GET)
         # return Car.objects.all()
+
+class CarCreateView(CreateView):
+    '''добавление нового автомобиля'''
+    template_name = "cars.html"
+    # queryset = Car.objects.all()
+    context_object_name = "cars"
+    form_class = CarAddForm
+
+    success_url = 'cars'
+
+
+
 
 class DriversView(Context, ListView):
     template_name = 'drivers.html'

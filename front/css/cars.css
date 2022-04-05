@@ -546,6 +546,10 @@ body {
   font-size: 18px;
 }
 
+.form-car__timing label {
+  display: inline-flexbox;
+}
+
 .form-car__timing label[for="new_descr"] {
   font-size: 18px;
   margin-top: 5px;

@@ -260,6 +260,7 @@
     color: white;
     
     p {
+        // display: inline-block;
         font-size: 20px;
         margin-bottom: -5px;
         
@@ -314,6 +315,9 @@
         label[for*='date'] {
             font-size: 18px;
             
+        }
+        label {
+            display: inline-flexbox;
         }
 
         label[for="new_descr"] {

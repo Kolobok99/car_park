@@ -155,7 +155,7 @@
 {% endblock main %}
 
 {% block forms %}
-    <form method="post">
+    <form method="post" action="{% url 'create-car' %}">
         <div class="form-car add">
           <button type="reset">
             <div class="bnt-form-car-reset-add">
@@ -169,33 +169,51 @@
             Добавление авто:
           </h1>
             <div class="form-car__timing">
-                <label for="car_number"><p>Номер:</p></label>
-                <input type="text" id="car_number">
+            {% csrf_token %}
+{#                <label for="car_number"><p>Номер:</p></label>#}
+{#                <input type="text" id="car_number">#}
+{##}
+{#                <label for=""><p>Марка:</p></label>#}
+{##}
+{#                <input type="radio" name="car_brand" id="rdo-toyota">#}
+{#                  <label for="rdo-toyota">TOYOTA</label>#}
+{##}
+{##}
+{#                <input type="radio" name="car_brand" id="rdo-kia">#}
+{#                  <label for="rdo-kia">KIA</label>#}
+{##}
+{#                <input type="radio" name="car_brand" id="rdo-bmw">#}
+{#                  <label for="rdo-bmw">BMW</label>#}
+{##}
+{##}
+{#                  <label for="car_region"><p>Регион:</p></label>#}
+{#                  <input type="text" id="car_region">#}
+{##}
+{#                <label for="car_last_inspection"><p>Последний осмотр:</p></label>#}
+{#                <input type="date">#}
+{#                <label for="car_driver"><p>Закрепить за:</p></label>#}
+{#                <input type="text" id="car_driver">#}
+{##}
+{#                <label for="car_image"><p>Прикрепить фото:</p></label>#}
+{#                <input type="file" id="car_image">#}
+                  <label for="{{ form.registration_number.id_for_label }}"><p>{{ form.registration_number.label}}</p></label>
+                    <input type="text" id="{{ form.registration_number.id_for_label }}">
 
-                <label for=""><p>Марка:</p></label>
+                  <label for=""><p> {{ form.brand.label}} </p></label>
+                        {% for radio in form.brand %}
+                            <input type="radio" name="brand" id="rdo-{{ radio.id_for_label }}">
+                             <label for="rdo-{{ radio.id_for_label }}">{{radio.choice_label}}</label>
+                        {% endfor %}
 
-                <input type="radio" name="car_brand" id="rdo-toyota">
-                  <label for="rdo-toyota">TOYOTA</label>
-
-
-                <input type="radio" name="car_brand" id="rdo-kia">
-                  <label for="rdo-kia">KIA</label>
-
-                <input type="radio" name="car_brand" id="rdo-bmw">
-                  <label for="rdo-bmw">BMW</label>
+                  <label for="{{ form.region_code.id_for_label }}"><p>{{ form.region_code.label}}</p></label>
+                    <input type="text" id="{{ form.region_code.id_for_label }}">
 
 
-                  <label for="car_region"><p>Регион:</p></label>
-                  <input type="text" id="car_region">
+                  <label for="{{ form.last_inspection.id_for_label }}"><p>{{ form.last_inspection.label }}</p></label>
+                    <input type="date" id="{{ form.last_inspection.id_for_label }}">
 
-                <label for="car_last_inspection"><p>Последний осмотр:</p></label>
-                <input type="date">
-                <label for="car_driver"><p>Закрепить за:</p></label>
-                <input type="text" id="car_driver">
-
-                <label for="car_image"><p>Прикрепить фото:</p></label>
-                <input type="file" id="car_image">
-
+{#                  <label for="{{ form.owner.id_for_label }}"><p>{{ form.owner.label }}</p></label>#}
+{#                    <input type="text" id="{{ form.owner.id_for_label }}">#}
                 <button type="submit">Отправить</button>
             </div>
         </div>
