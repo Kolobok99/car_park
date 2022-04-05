@@ -50,6 +50,7 @@
                     <h1>Автомобили</h1>
                     <p>535</p>
                 </div>
+                <button class="main__btn-add-car" type="submit">добавить авто</button>
             <form action="{% url 'cars' %}" method="get">
                 <ul class="main__filtration filtr-items">
                     <li class="filtr-items__item placeholder">
@@ -211,5 +212,53 @@
             
         </footer>
     </div>
+    <form method="post">
+        <div class="form-car add">
+          <button type="reset">
+            <div class="bnt-form-car-reset-add">
+              <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <line x1="0" x2="100" y1="0" y2="100" />
+                <line x1="0" x2="100" y1="100" y2="0" />
+              </svg>
+            </div>
+          </button>
+          <h1 class="form-car__title">
+            Добавление авто:
+          </h1>
+            <div class="form-car__timing">
+                <label for="car_number"><p>Номер:</p></label>
+                <input type="text" id="car_number">
+
+                <label for=""><p>Марка:</p></label>
+
+                <input type="radio" name="car_brand" id="rdo-toyota">
+                  <label for="rdo-toyota">TOYOTA</label>
+                  
+          
+                <input type="radio" name="car_brand" id="rdo-kia">
+                  <label for="rdo-kia">KIA</label>
+                  
+                <input type="radio" name="car_brand" id="rdo-bmw">
+                  <label for="rdo-bmw">BMW</label>
+
+
+                  <label for="car_region"><p>Регион:</p></label>
+                  <input type="text" id="car_region">
+
+                <label for="car_last_inspection"><p>Последний осмотр:</p></label>
+                <input type="date">
+                <label for="car_driver"><p>Закрепить за:</p></label>
+                <input type="text" id="car_driver">
+
+                <label for="car_image"><p>Прикрепить фото:</p></label>
+                <input type="file" id="car_image">
+
+                <button type="submit">Отправить</button>
+            </div>
+        </div>
+      </form>
+
+
+    <script src="../js/cars.js"></script>
 </body>
 </html>

@@ -89,7 +89,10 @@
                         <p class="info-app__title">Описание</p>
                         <p class="info-app__description">Lorem ipsum dolor sit, amet consectetur adipisicing elit. A explicabo beatae nisi harum laborum doloremque tempore nulla, quae ipsam, ducimus ea expedita, dolorem rerum iste iusto? Impedit ut doloribus ducimus.Lorem ipsum dolor sit, amet consectetur adipisicing elit. A explicabo beatae nisi harum laborum doloremque tempore nulla, quae ipsam, ducimus ea expedita, dolorem rerum iste iusto? Impedit ut doloribus ducimus.Lorem ipsum dolor sit, amet consectetur adipisicing elit. A explicabo beatae nisi harum laborum doloremque tempore nulla, quae ipsam, ducimus ea expedita, dolorem rerum iste iusto? Impedit ut doloribus ducimus.</p>
                     </div>
+                    <button class="info-app__btn-submit" type="submit">Изменить заявку  </button>
+                    <button class="info-app__btn-delete" type="submit">Удалить заявку  </button>
                 </div>
+                
           </div>
         </div>
       </div>
@@ -99,5 +102,40 @@
         <p>© 2022 Все права защищены</p>
       </footer>
     </div>
+
+    <form method="post">
+      <div class="form-app change">
+        <button type="reset">
+          <div class="bnt-form-app-reset-change">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <line x1="0" x2="100" y1="0" y2="100" />
+              <line x1="0" x2="100" y1="100" y2="0" />
+            </svg>
+          </div>
+        </button>
+        <h1 class="form-app__title">
+          Заявка №21
+        </h1>
+        <p>Срочность:</p>
+          <div class="form-app__timing">
+          
+            <input type="radio" checked name="timing-change" id="rdo-noturgent-c">
+            <label for="rdo-noturgent-c">Не срочно</label>
+            
+    
+            <input type="radio" name="timing-change" id="rdo-urgent-c">
+            <label for="rdo-urgent-c">Срочно</label>
+            
+            <input type="radio" name="timing-change" id="rdo-veryurgent-c">
+            <label for="rdo-veryurgent-c">Очень срочно</label>
+  
+            <label for="descr-change">Опишите суть заявки:</label>
+            <textarea name="description" id="descr-change" cols="30" rows="10"></textarea>
+            <button type="submit">Отправить</button>
+          </div>
+      </div>
+    </form>
+
+    <script src="../js/app.js"></script>
   </body>
 </html>

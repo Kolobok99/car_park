@@ -70,6 +70,17 @@
             
         }
     }
+
+    &__btn-submit {
+        margin-top: 20px;
+        padding: 10px;
+        color: #f5f5f5;
+        background-color: #005BFF;
+        font-size: 18px;
+        font-weight: 500;
+        border-radius: 7px;
+        
+    }
 }
 
 
@@ -85,6 +96,7 @@
     &__table-title{
         font-size: 18px;
         margin-bottom: 10px;
+
 
     }
 
@@ -187,6 +199,8 @@
         row-gap: 8px;
         flex: 0 1 30%;
         position: relative;
+
+
         input[type="radio"] {
             position: absolute;
             width: auto;

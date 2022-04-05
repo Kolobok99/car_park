@@ -50,6 +50,7 @@
                     <h1>Топливные карты</h1>
                     <p>205</p>
                 </div>
+                <button class="main__btn-add-card" type="submit">Добавить карту</button>
             <form action="{% url 'cars' %}" method="get">
                 <ul class="main__filtration filtr-items">
                     <li class="filtr-items__item ">
@@ -73,6 +74,8 @@
                         <img src="../img/filtr/lupa.svg" alt="поиск">
                     </button> 
                 </ul>
+                
+                
             </form>     
 
                 <div class="main__information">
@@ -118,5 +121,32 @@
             
         </footer>
     </div>
+
+    <form method="post">
+        <div class="form-card add">
+          <button type="reset">
+            <div class="bnt-form-card-reset-add">
+              <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <line x1="0" x2="100" y1="0" y2="100" />
+                <line x1="0" x2="100" y1="100" y2="0" />
+              </svg>
+            </div>
+          </button>
+          <h1 class="form-card__title">
+            Добавление карты:
+          </h1>
+          <p>Тип:</p>
+            <div class="form-card__timing">
+              <label for="card_number">Номер:</label>
+              <input type="text" id="card_number">
+
+              <label for="card_limit">Лимит:</label>
+              <input type="number" id="card_limit">
+
+              <button type="submit">Отправить</button>
+            </div>
+        </div>
+      </form>
+    <script src="../js/cards.js"></script>
 </body>
 </html>

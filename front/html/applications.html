@@ -53,10 +53,10 @@
             <form action="{% url 'cars' %}" method="get">
                 <ul class="main__filtration filtr-items">
                     <li class="filtr-items__item placeholder">
-                        <input type="text" placeholder="Дата создания">
+                        <input type="date" name="date_start">
                     </li>
                     <li class="filtr-items__item placeholder">
-                        <input type="text" placeholder="Дата окончания">
+                        <input type="date" name="date_end">
                     </li>
                     <li class="filtr-items__item">
                         <p class="filtr-items__title">Срочность</p>

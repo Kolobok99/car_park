@@ -49,15 +49,4 @@ document.addEventListener('click', function (event) {
         wrapper.classList.toggle('blackout');
     };    
 
-    
-    // if (evenClassName == 'table__btn-add-app') {
-    //     formAdd.classList.toggle('data-show-or-hide-form');
-    //     wrapper.classList.toggle('overlay');
-    // } else if (btnReset.contains(event.target)) {   
-    //     console.log('YES!');
-    //     formAdd.classList.toggle('data-form-add');
-    //     wrapper.classList.toggle('overlay');
-    // } else if (evenClassName == 'table__btn-change-app') {
-
-    // }
 });
