@@ -1,5 +1,6 @@
 import union as union
 from django.db.models import Q
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 from .filters import CarFilter
@@ -29,13 +30,32 @@ class CarsView(Context,ListView):
     template_name = "cars.html"
     # queryset = Car.objects.all()
     context_object_name = "cars"
-
+    success_url = '/cars'
     form_class = CarAddForm
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form'] = CarAddForm()
+        context['form'] = self.form_class()
         return context
+
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        # print(form)
+        print(form.changed_data)
+        if form.is_valid():
+            form.save(commit=False)
+            print(type(form.registration_number))
+            form.registration_number = form['registration_number'].value().upper()
+            # form.registration_number = str(form.registration_number).upper()
+            form.save()
+            print("SAVE!")
+            return HttpResponseRedirect(self.success_url)
+        else:
+            # print(form)
+            # print(form.errors)
+            # print("not-save(:-(")
+            return self.get(request)
 
     def get_queryset(self):
         if len(self.request.GET) == 0:
@@ -65,7 +85,6 @@ class CarCreateView(CreateView):
     # queryset = Car.objects.all()
     context_object_name = "cars"
     form_class = CarAddForm
-
     success_url = 'cars'
 
 

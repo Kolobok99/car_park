@@ -6,8 +6,7 @@ from .models import Car, CarBrand, Driver
 class CarAddForm(forms.ModelForm):
 
     registration_number = forms.CharField(label='Номер:')
-    brand = forms.ModelChoiceField(label='Марка:',
-                                   widget=forms.widgets.RadioSelect, queryset=CarBrand.objects.all()
+    brand = forms.ModelChoiceField(label='Марка:', queryset=CarBrand.objects.all()
                                    )
     region_code = forms.CharField(label='Код региона:')
 

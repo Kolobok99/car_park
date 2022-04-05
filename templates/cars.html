@@ -134,7 +134,7 @@
                           <td class="table__cell">{{ car.owner.user.last_name}} {{ car.owner.user.first_name|first}}.{{ car.owner.user.patronymic|first}}.</td>
                           <td class="table__cell">{{ car.brand }}</td>
                           <td class="table__cell">{{ car.region_code }}</td>
-                          <td class="table__cell">12.04.22</td>
+                          <td class="table__cell">{{ car.last_inspection}}</td>
                           <td class="table__cell">
                               {% for application in car.applications.all %}
                                 <table>
@@ -155,7 +155,7 @@
 {% endblock main %}
 
 {% block forms %}
-    <form method="post" action="{% url 'create-car' %}">
+    <form method="post" action="{% url 'cars' %}">
         <div class="form-car add">
           <button type="reset">
             <div class="bnt-form-car-reset-add">
@@ -170,6 +170,7 @@
           </h1>
             <div class="form-car__timing">
             {% csrf_token %}
+                {{ form.as_p }}
 {#                <label for="car_number"><p>Номер:</p></label>#}
 {#                <input type="text" id="car_number">#}
 {##}
@@ -196,22 +197,19 @@
 {##}
 {#                <label for="car_image"><p>Прикрепить фото:</p></label>#}
 {#                <input type="file" id="car_image">#}
-                  <label for="{{ form.registration_number.id_for_label }}"><p>{{ form.registration_number.label}}</p></label>
-                    <input type="text" id="{{ form.registration_number.id_for_label }}">
-
-                  <label for=""><p> {{ form.brand.label}} </p></label>
-                        {% for radio in form.brand %}
-                            <input type="radio" name="brand" id="rdo-{{ radio.id_for_label }}">
-                             <label for="rdo-{{ radio.id_for_label }}">{{radio.choice_label}}</label>
-                        {% endfor %}
-
-                  <label for="{{ form.region_code.id_for_label }}"><p>{{ form.region_code.label}}</p></label>
-                    <input type="text" id="{{ form.region_code.id_for_label }}">
-
-
-                  <label for="{{ form.last_inspection.id_for_label }}"><p>{{ form.last_inspection.label }}</p></label>
-                    <input type="date" id="{{ form.last_inspection.id_for_label }}">
-
+{#                  <label for="{{ form.registration_number.id_for_label }}"><p>{{ form.registration_number.label}}</p></label>#}
+{#                    <input type="text" name="{{ form.registration_number.html_name }}" id="{{ form.registration_number.id_for_label }}">#}
+{##}
+{#                  <label for=""><p> {{ form.brand.label}} </p></label>#}
+{#                    {{ form.brand }}#}
+{##}
+{#                  <label for="{{ form.region_code.id_for_label }}"><p>{{ form.region_code.label}}</p></label>#}
+{#                    <input type="text" name="{{ form.region_code.html_name}}"  id="{{ form.region_code.id_for_label }}">#}
+{##}
+{##}
+{#                  <label for="{{ form.last_inspection.id_for_label }}"><p>{{ form.last_inspection.label }}</p></label>#}
+{#                    <input type="date"  name="{{ form.last_inspection.html_name}}"  id="{{ form.last_inspection.id_for_label }}">#}
+{##}
 {#                  <label for="{{ form.owner.id_for_label }}"><p>{{ form.owner.label }}</p></label>#}
 {#                    <input type="text" id="{{ form.owner.id_for_label }}">#}
                 <button type="submit">Отправить</button>
