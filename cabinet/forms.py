@@ -12,8 +12,8 @@ class CarAddForm(forms.ModelForm):
 
     last_inspection = forms.DateField(label='Последний осмотр:')
 
-    # owner = forms.ModelChoiceField(label='Закрепить за:', queryset=Driver.objects.all())
+    owner = forms.ModelChoiceField(label='Закрепить за:', queryset=Driver.objects.all())
 
     class Meta:
         model = Car
-        fields = ('registration_number', 'brand', 'region_code', 'last_inspection')
+        fields = ('registration_number', 'brand', 'region_code', 'last_inspection', 'owner',)

@@ -42,12 +42,11 @@ class CarsView(Context,ListView):
     def post(self, request):
         form = self.form_class(request.POST)
         # print(form)
-        print(form.changed_data)
+        # print(form.changed_data)
         if form.is_valid():
-            form.save(commit=False)
-            print(type(form.registration_number))
-            form.registration_number = form['registration_number'].value().upper()
-            # form.registration_number = str(form.registration_number).upper()
+            form = form.save(commit=False)
+            form.registration_number = form.registration_number.upper()
+            # form.owner = Driver.objects.get(user__last_name__icontains=form.owner)
             form.save()
             print("SAVE!")
             return HttpResponseRedirect(self.success_url)
