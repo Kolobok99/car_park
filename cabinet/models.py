@@ -113,7 +113,7 @@ class Driver(models.Model):
     '''Водитель'''
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name='d_user')
-    phone = models.CharField(verbose_name='номер телефона',null=True, blank=True ,max_length=12)
+    phone = models.CharField(verbose_name='номер телефона', null=True, blank=True, max_length=12)
     unique_number = models.IntegerField(verbose_name='уникальный номер', db_index=True, validators=[
                                                validators.MaxValueValidator(9999),
                                                validators.MinValueValidator(1)

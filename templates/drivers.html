@@ -14,97 +14,44 @@
             <div class="main__container">
 
                 <div class="main__title">
-                    <h1>Сотрудники</h1>
+                    <h1>Водители</h1>
                     <p>{{ drivers.count }}</p>
                 </div>
-            <form method="get" action="{% url 'drivers' %}">
-                {#          ФИО         #}
-                {#    номер телефона    #}
-                {#                   #}
+            <form action="{% url 'drivers' %}" method="get">
                 <ul class="main__filtration filtr-items">
                     <li class="filtr-items__item placeholder">
-                        <input name="registration_number" type="text" placeholder="ФИО" value="">
+                        <input type="text" name="last_name" placeholder="ФИО">
                     </li>
-                <li class="filtr-items__item placeholder">
-                        <input name="registration_number" type="text" placeholder="ФИО" value="">
-                    </li>
-                    <li class="filtr-items__item">
-                        <p class="filtr-items__title">Марка</p>
-                        <ul class="filtr-items__sub-menu">
-                          {% for brand in view.get_car_brands %}
-                            <label for="{{ brand.id }}" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="brand" value="{{ brand.id }}" id="{{ brand.id }}">
-                                    <label for="{{ brand.id }}" class="filtr-items__check-label">{{ brand.name }}
-                                </li>
-                            </label>
-                          {% endfor %}
-
-                        </ul>
-                    </li>
-                    <li class="filtr-items__item">
-                        <p class="filtr-items__title">Водитель</p>
-                        <ul class="filtr-items__sub-menu">
-                          {% for driver in view.get_drivers %}
-                            <label for="{{ driver.user }}" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="driver" value="{{ driver.user.id}}" id="{{ driver.user }}">
-                                    <label for="{{ driver.user }}" class="filtr-items__check-label">
-                                        {{ driver.user.last_name}} {{ driver.user.first_name|first}}.{{ driver.user.patronymic|first}}.
-                                </li>
-                            </label>
-                          {% endfor %}
-
-                        </ul>
-                    </li>
-                    <li class="filtr-items__item">
-                        <p class="filtr-items__title">Регион</p>
-                        <ul class="filtr-items__sub-menu">
-                          {% for car in view.get_regions %}
-                            <label for="{{ car.region_code }}" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="region" value="{{ car.region_code }}" id="{{ car.region_code }}">
-                                    <label for="{{ car.region_code }}" class="filtr-items__check-label">{{ car.region_code }}
-                                </li>
-                            </label>
-                          {% endfor %}
-
-                        </ul>
+                    <li class="filtr-items__item placeholder">
+                        <input type="text" name="phone" placeholder="Номер телефона">
                     </li>
 
                     <li class="filtr-items__item">
                         <p class="filtr-items__title">Тип заявки</p>
                         <ul class="filtr-items__sub-menu">
-                            {% for app in view.get_types_of_app %}
-                            <label for="{{ app.title }}" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="type_of_app" value="{{ app.id }}" id="{{ app.title }}">
-                                    <label for="{{ app.title }}" class="filtr-items__check-label">{{ app.title }}
+                            {% for type_of_app in view.get_types_of_app %}
+                             <label for="{{ type_of_app.id }}"  class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="type_of_app" id="{{ type_of_app.id }}" value="{{ type_of_app.id }}">
+                                    <label for="{{ type_of_app.id }}" class="filtr-items__check-label">{{ type_of_app.title }}</label>
                                 </li>
                             </label>
                             {% endfor %}
                         </ul>
                     </li>
 
-                    <button type="submit" class="filtr-items__button">
-                        <img src="{% static 'icons/lupa.svg' %}" alt="поиск">
+                    <button  class="filtr-items__button" type="submit">
+                        <img src="{% static 'img/filtr/lupa.svg' %}" alt="поиск">
                     </button>
                 </ul>
-            <button class="btn-reset" type="reset">Сбросить</button>
             </form>
 
-              <!--
-              ID
-              ФИО
-              Дата Рождения
-              Номер телефона
-              Записаные машины
-              Активные заявки
-              Прикрепленные документы
-              -->
                 <div class="main__information">
                     <table class="main__table table">
                         <tr class="table__titles">
                           <th class="table__title">ID</th>
-                          <th class="table__title fa-maxcdn">ФИО</th>
-                          <th class="table__title">Номер <br>телефона</th>
-                          <th class="table__title">Записаные <br> машины</th>
+                          <th class="table__title">ФИО</th>
+                          <th class="table__title">Номер телефона</th>
+                          <th class="table__title">Записанные<br>Машины</th>
                           <th class="table__title">Активные <br>заявки</th>
                           <th class="table__title">Прикрепленные <br>документы</th>
                         </tr>
@@ -132,7 +79,8 @@
                               </td>
                         </tr>
 
-                         {% endfor %}
+                        {% endfor %}
+
                     </table>
                 </div>
             </div>
