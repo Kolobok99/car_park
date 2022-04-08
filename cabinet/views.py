@@ -87,9 +87,7 @@ class DocumentsView(Context, TemplateView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(DocumentsView, self).get_context_data(**kwargs)
         if len(self.request.GET) == 0:
-            # context['docs'] = get_all_docs
-            context['driver_docs'] = DriverDoc.objects.all()
-            context['car_docs'] = AutoDoc.objects.all()
-        # else:
-        #     context['documents'] = filtration_document(self.request.GET)
+            context['all_docs'] = super(DocumentsView, self).get_all_docs()
+        else:
+            context['all_docs'] = filtration_document(self.request.GET)
         return context
