@@ -59,12 +59,12 @@
                         <p class="filtr-items__title">Авто/Владелец</p>
                         <ul class="filtr-items__sub-menu">
                             <label for="auto" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="aorm" id="auto">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check data-auto-check" type="checkbox" name="aorm" id="auto">
                                     <label for="auto" class="filtr-items__check-label">Авто</label>
                                 </li>
                             </label>
                             <label for="man" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="aorm" id="man">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check data-driver-check" type="checkbox" name="aorm" id="man">
                                     <label for="man" class="filtr-items__check-label">Водитель
                                 </li>
                             </label>
@@ -73,30 +73,39 @@
                     </li>
 
                     <li class="filtr-items__item">
-                        <p class="filtr-items__title">Тип</p>
-                        <ul class="filtr-items__sub-menu">
-                            <label for="wheel" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="doc_type" id="">
-                                    <label for="wheel" class="filtr-items__check-label data-label">Отпуск (m)</label>
-                                </li>
-                            </label>
-                            <label for="engine" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="doc_type" id="engine">
-                                    <label for="engine" class="filtr-items__check-label">Больничный (m)
-                                </li>
-                            </label>
-                            <label for="glass" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="doc_type" id="glass">
-                                    <label for="glass" class="filtr-items__check-label">Карточки (c)
-                                </li>
-                            </label>
+                        <p class="filtr-items__title" id="opacity-title-car">Тип (Авто)</p>
+                        <div id="block-to_hide-car">
+                            <ul class="filtr-items__sub-menu">
+                                <label for="1car" class="filtr-items__check-label">
+                                    <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="doc_type-car" id="1car">
+                                        <label for="1car" class="filtr-items__check-label">Отпуск</label>
+                                    </li>
+                                </label>
+                                <label for="2car" class="filtr-items__check-label">
+                                    <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="doc_type-car" id="2car">
+                                        <label for="2car" class="filtr-items__check-label">Больничный
+                                    </li>
+                                </label>
+                            </ul>
+                        </div>
+                    </li>
 
-                            <label for="glass" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="type" id="glass">
-                                    <label for="glass" class="filtr-items__check-label">Другое (c)
-                                </li>
-                            </label>
-                        </ul>
+                    <li class="filtr-items__item">
+                        <p class="filtr-items__title" id="opacity-title-man">Тип (Человек)</p>
+                        <div id="block-to_hide-man">
+                            <ul class="filtr-items__sub-menu">
+                                <label for="1man" class="filtr-items__check-label">
+                                    <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="doc_type-man" id="1man">
+                                        <label for="1man" class="filtr-items__check-label">Отпуск</label>
+                                    </li>
+                                </label>
+                                <label for="2man" class="filtr-items__check-label">
+                                    <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="doc_type-man" id="2man">
+                                        <label for="2man" class="filtr-items__check-label">Больничный
+                                    </li>
+                                </label>
+                            </ul>
+                        </div>
                     </li>
                     
                     <button type="button" class="filtr-items__button">

@@ -206,7 +206,7 @@ body {
 }
 
 .main__filtration {
-  max-width: 950px;
+  max-width: 1050px;
   max-height: 85px;
 }
 
@@ -470,8 +470,12 @@ body {
   color: #005BFF;
 }
 
-.sub-item_hidy {
-  visibility: hidden;
+.class-to-hide-block {
+  display: none;
+}
+
+.class-to-hide-title {
+  opacity: 0.5;
 }
 
 .footer {
