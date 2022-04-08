@@ -159,11 +159,11 @@ class DocType(models.Model):
 
     KINDS = (
         ('m', 'Человек'),
-        ('с', 'Машина'),
+        ('a', 'Машина'),
     )
 
     name = models.CharField(verbose_name='Наименования документа', max_length=255)
-    type = models.CharField(max_length=1, choices=KINDS, default='c')
+    type = models.CharField(max_length=1, choices=KINDS, default='a')
 
     def __str__(self):
         return f'{self.name} ({self.type})'

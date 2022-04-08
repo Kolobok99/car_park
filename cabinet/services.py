@@ -21,8 +21,12 @@ class Context():
     def get_types_of_app(self):
         return TypeOfAppl.objects.all()
 
-    def get_all_types_of_docs(self):
-        return DocType.objects.all()
+    def get_car_types_of_docs(self):
+        #русская с
+        return DocType.objects.filter(type='a')
+
+    def get_man_types_of_docs(self):
+        return DocType.objects.filter(type='m')
 
     def get_all_docs(self):
         auto_doc = AutoDoc.objects.all()

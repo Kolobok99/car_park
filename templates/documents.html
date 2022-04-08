@@ -25,17 +25,16 @@
                         <p>окончание:</p>
                         <input type="date" placeholder="до.">
                     </li>
-
                     <li class="filtr-items__item">
-                        <p class="filtr-items__title">Авто/Владелец</p>
+                        <p class="filtr-items__title">Авто/Водитель</p>
                         <ul class="filtr-items__sub-menu">
                             <label for="auto" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="aorm" id="auto">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check data-auto-check" type="checkbox" name="aorm" id="auto">
                                     <label for="auto" class="filtr-items__check-label">Авто</label>
                                 </li>
                             </label>
                             <label for="man" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="aorm" id="man">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check data-driver-check" type="checkbox" name="aorm" id="man">
                                     <label for="man" class="filtr-items__check-label">Водитель
                                 </li>
                             </label>
@@ -43,35 +42,36 @@
                         </ul>
                     </li>
 
-                     <li class="filtr-items__item">
-                        <p class="filtr-items__title">Тип</p>
-                        <ul class="filtr-items__sub-menu">
-                            {% for doc_type in view.get_all_types_of_docs %}
-                                    <label for="{{ doc_type.id }}" class="filtr-items__check-label">
-                                        <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="type_of_doc" id="{{ doc_type.id }}">
-                                            <label for="{{ doc_type.id }}" class="filtr-items__check-label">{{ doc_type.name }} ({{ doc_type.type }})</label>
+                    <li class="filtr-items__item">
+                        <p class="filtr-items__title" id="opacity-title-car">Тип (Авто)</p>
+                        <div id="block-to_hide-car">
+                            <ul class="filtr-items__sub-menu">
+                                {% for man_type_of_docs in view.get_car_types_of_docs %}
+                                    <label for="{{ man_type_of_docs.id }}" class="filtr-items__check-label">
+                                        <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="doc_type-car" id="{{ man_type_of_docs.id }}">
+                                            <label for="{{ man_type_of_docs.id }}" class="filtr-items__check-label">{{ man_type_of_docs.name }}</label>
                                         </li>
                                     </label>
-                            {% endfor %}
-{#                            <label for="engine" class="filtr-items__check-label">#}
-{#                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="type" id="engine">#}
-{#                                    <label for="engine" class="filtr-items__check-label">Больничный#}
-{#                                </li>#}
-{#                            </label>#}
-{#                            <label for="glass" class="filtr-items__check-label">#}
-{#                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="type" id="glass">#}
-{#                                    <label for="glass" class="filtr-items__check-label">Карточки#}
-{#                                </li>#}
-{#                            </label>#}
-{##}
-{#                            <label for="glass" class="filtr-items__check-label">#}
-{#                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="type" id="glass">#}
-{#                                    <label for="glass" class="filtr-items__check-label">Другое#}
-{#                                </li>#}
-{#                            </label>#}
-                        </ul>
+                               {% endfor %}
+
+                            </ul>
+                        </div>
                     </li>
 
+                    <li class="filtr-items__item">
+                        <p class="filtr-items__title" id="opacity-title-man">Тип (Человек)</p>
+                        <div id="block-to_hide-man">
+                            <ul class="filtr-items__sub-menu">
+                                {% for man_type_docs in view.get_man_types_of_docs %}
+                                    <label for="{{ man_type_docs.id }}" class="filtr-items__check-label">
+                                        <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="doc_type-man" id="{{ man_type_docs.id }}">
+                                            <label for="{{ man_type_docs.id }}" class="filtr-items__check-label">{{ man_type_docs.name }}</label>
+                                        </li>
+                                    </label>
+                                {% endfor %}
+
+                        </div>
+                    </li>
                     <button type="button" class="filtr-items__button">
                         <img src="{% static 'img/filtr/lupa.svg' %}" alt="поиск">
                     </button>
@@ -123,5 +123,9 @@
             </div>
         </div>
 {% endblock main %}
+
+{% block js_script %}
+     <script src="{% static 'js/documents.js' %}"></script>
+{% endblock js_script %}
 
 
