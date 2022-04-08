@@ -49,32 +49,6 @@
             <form action="{% url 'cars' %}" method="get">
                 <ul class="main__filtration filtr-items">
                     <li class="filtr-items__item">
-                        <p class="filtr-items__title">Тип</p>
-                        <ul class="filtr-items__sub-menu">
-                            <label for="wheel" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="type" id="wheel ">
-                                    <label for="wheel " class="filtr-items__check-label">Отпуск</label>
-                                </li>
-                            </label>
-                            <label for="engine" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="type" id="engine">
-                                    <label for="engine" class="filtr-items__check-label">Больничный
-                                </li>
-                            </label>
-                            <label for="glass" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="type" id="glass">
-                                    <label for="glass" class="filtr-items__check-label">Карточки
-                                </li>
-                            </label>
-
-                            <label for="glass" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="type" id="glass">
-                                    <label for="glass" class="filtr-items__check-label">Другое
-                                </li>
-                            </label>
-                        </ul>
-                    </li>
-                    <li class="filtr-items__item">
                         <p>получение:</p>
                         <input type="date" placeholder="от.">
                         <p>окончание:</p>
@@ -84,17 +58,44 @@
                     <li class="filtr-items__item">
                         <p class="filtr-items__title">Авто/Владелец</p>
                         <ul class="filtr-items__sub-menu">
-                            <label for="a" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="aord" id="a">
-                                    <label for="a" class="filtr-items__check-label">Авто</label>
+                            <label for="auto" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="aorm" id="auto">
+                                    <label for="auto" class="filtr-items__check-label">Авто</label>
                                 </li>
                             </label>
-                            <label for="d" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="aord" id="d">
-                                    <label for="d" class="filtr-items__check-label">Водитель
+                            <label for="man" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="aorm" id="man">
+                                    <label for="man" class="filtr-items__check-label">Водитель
                                 </li>
                             </label>
                     
+                        </ul>
+                    </li>
+
+                    <li class="filtr-items__item">
+                        <p class="filtr-items__title">Тип</p>
+                        <ul class="filtr-items__sub-menu">
+                            <label for="wheel" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="doc_type" id="">
+                                    <label for="wheel" class="filtr-items__check-label data-label">Отпуск (m)</label>
+                                </li>
+                            </label>
+                            <label for="engine" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="doc_type" id="engine">
+                                    <label for="engine" class="filtr-items__check-label">Больничный (m)
+                                </li>
+                            </label>
+                            <label for="glass" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="doc_type" id="glass">
+                                    <label for="glass" class="filtr-items__check-label">Карточки (c)
+                                </li>
+                            </label>
+
+                            <label for="glass" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="type" id="glass">
+                                    <label for="glass" class="filtr-items__check-label">Другое (c)
+                                </li>
+                            </label>
                         </ul>
                     </li>
                     
@@ -145,8 +146,9 @@
         <footer class="footer">
             <h1>CAR's</h1>
             <p>© 2022 Все права защищены</p>
-            
         </footer>
+
+        <script src="../js/documents.js"></script>
     </div>
 </body>
 </html>

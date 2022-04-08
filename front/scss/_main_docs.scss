@@ -30,7 +30,7 @@
     }
     // .main__filtration
     &__filtration {
-        max-width: 850px;
+        max-width: 950px;
         max-height: 85px;
     }
 
@@ -47,7 +47,7 @@
     border: 1px solid #D6DDEB;
 	border-radius: 10px;
     
-    > :not(:last-child):not(:nth-child(2)) {
+    > :not(:last-child):not(:first-child) {
         padding-left: 20px;
         &::after{
             content: url(../img/filtr/arrow-down.svg);
@@ -244,4 +244,8 @@
   font-size: 18px;
   line-height: 144%;
   color: #005BFF;
+}
+
+.sub-item_hidy {
+    visibility: hidden;
 }

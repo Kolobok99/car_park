@@ -19,5 +19,7 @@ document.addEventListener('click', function (event) {
     if (evenClassName == btnAddDoc.className || btnResetDocAdd.contains(event.target)) {
         formAddDoc.classList.toggle('data-show-or-hide-form');
         wrapper.classList.toggle('blackout');
-    };    
+    };
+
 });
+

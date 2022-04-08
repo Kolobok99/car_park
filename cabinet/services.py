@@ -3,7 +3,7 @@ from itertools import chain
 
 from django.db.models import Q
 
-from .models import Car, Driver, AutoDoc, DriverDoc, TypeOfAppl, CarBrand
+from .models import Car, Driver, AutoDoc, DriverDoc, TypeOfAppl, CarBrand, DocType
 
 
 class Context():
@@ -21,8 +21,8 @@ class Context():
     def get_types_of_app(self):
         return TypeOfAppl.objects.all()
 
-    def get_drivers_type(self):
-        ...
+    def get_all_types_of_docs(self):
+        return DocType.objects.all()
 
     def get_all_docs(self):
         auto_doc = AutoDoc.objects.all()
