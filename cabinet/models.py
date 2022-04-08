@@ -1,28 +1,61 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core import validators
 
 from datetime import timedelta
+
+from django.db.models import Q
+
 
 class Car(models.Model):
     '''машины водилетей'''
 
     brand = models.ForeignKey('CarBrand', on_delete=models.SET(1),
-                              related_name='cars', verbose_name='Марка', null=True, blank=True)
+                              related_name='cars', verbose_name='Марка')
     registration_number = models.CharField(verbose_name='Регистрационный номер',
-                                           unique=True, max_length=6)
-    region_code = models.SmallIntegerField(verbose_name='Код региона',
-                                           validators=[
-                                               MaxValueValidator(200),
-                                               MinValueValidator(1)
-                                           ])
+                                           unique=True, max_length=6, validators=[
+                                                                    validators.RegexValidator(
+                                                                        regex='\w{1}\d{3}\w{2}',
+                                                                        message='Введите номер правильно!'
+                                                                    )],)
+    region_code = models.PositiveSmallIntegerField(verbose_name='Код региона',
+                                           validators=[validators.MaxValueValidator(200, message='Укажите меньше 200!')]
+                                           )
     owner = models.ForeignKey('Driver', on_delete=models.PROTECT,
                               related_name='my_cars', null=True, blank=True)
 
     last_inspection = models.DateField("последний осмотр", null=True, blank=True)
 
+    # def clean(self):
+    #     errors = {}
+    #     if self.region_code > 200:
+    #         raise ValidationError('Укажите меньше!')
+
+
     def __str__(self):
         return f"{self.registration_number} + {self.owner.user.last_name}"
+
+    def filtration(self):
+        reg_number = self.request.GET.get('registration_number')
+        if reg_number == '': reg_number = '`'
+        # print(f"{reg_number=}")
+
+        query_set = Car.objects.filter(
+            Q(registration_number__icontains=reg_number) |
+            Q(brand__in=self.request.GET.getlist('brand')) |
+            Q(owner__in=self.request.GET.getlist('driver')) |
+            Q(region_code__in=self.request.GET.getlist('region')) |
+            (Q(applications__type_of_id__in=self.request.GET.getlist('type_of_app')) & Q(
+                applications__is_active=True))
+
+        )
+
+        return query_set.distinct()
+
+
+
+
     class Meta:
         verbose_name = 'Автомобиль'
         verbose_name_plural = 'Автомобили'
@@ -82,8 +115,8 @@ class Driver(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name='d_user')
     phone = models.CharField(verbose_name='номер телефона',null=True, blank=True ,max_length=12)
     unique_number = models.IntegerField(verbose_name='уникальный номер', db_index=True, validators=[
-                                               MaxValueValidator(9999),
-                                               MinValueValidator(1)
+                                               validators.MaxValueValidator(9999),
+                                               validators.MinValueValidator(1)
                                            ], null=True, blank=True)
 
     def __str__(self):

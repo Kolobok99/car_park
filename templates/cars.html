@@ -198,16 +198,16 @@
 {#                <label for="car_image"><p>Прикрепить фото:</p></label>#}
 {#                <input type="file" id="car_image">#}
 
-
+                  <p style="color: red">{{ form.errors.registration_number.as_text }}</p>
                   <label for="{{ form.registration_number.id_for_label }}"><p>{{ form.registration_number.label}}</p></label>
-                    <input type="text" name="{{ form.registration_number.html_name }}" id="{{ form.registration_number.id_for_label }}">
+                    <input type="text"  value="{{ form.registration_number.initial }}" name="{{ form.registration_number.html_name }}" id="{{ form.registration_number.id_for_label }}">
 
                   <label for=""><p> {{ form.brand.label}} </p></label>
                     {{ form.brand }}
 
+                <p style="color: red">{{ form.errors.region_code.as_text }}</p>
                   <label for="{{ form.region_code.id_for_label }}"><p>{{ form.region_code.label}}</p></label>
                     <input type="text" name="{{ form.region_code.html_name}}"  id="{{ form.region_code.id_for_label }}">
-
 
                   <label for="{{ form.last_inspection.id_for_label }}"><p>{{ form.last_inspection.label }}</p></label>
                     <input type="date"  name="{{ form.last_inspection.html_name}}"  id="{{ form.last_inspection.id_for_label }}">

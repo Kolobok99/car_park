@@ -2,12 +2,15 @@ import union as union
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse, reverse_lazy
 
 from .filters import CarFilter
 from .forms import CarAddForm
 from .models import *
 
 from django.views.generic import ListView, TemplateView, FormView, CreateView
+
+from .services import filtration_car
 
 
 class Context():
@@ -28,71 +31,58 @@ class Context():
 class CarsView(Context,ListView):
     """Вывод всех автомобилей"""
     template_name = "cars.html"
-    # queryset = Car.objects.all()
     context_object_name = "cars"
     success_url = '/cars'
-    form_class = CarAddForm
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form'] = self.form_class()
+        context['form'] = CarAddForm(initial={
+            'registration_number': 'G155PP'
+        })
         return context
 
-
-    def post(self, request):
-        form = self.form_class(request.POST)
-        # print(form)
-        # print(form.changed_data)
-        if form.is_valid():
-            form = form.save(commit=False)
-            form.registration_number = form.registration_number.upper()
-            # form.owner = Driver.objects.get(user__last_name__icontains=form.owner)
-            form.save()
-            print("SAVE!")
-            return HttpResponseRedirect(self.success_url)
-        else:
-            # print(form)
-            # print(form.errors)
-            # print("not-save(:-(")
-            return self.get(request)
+    # def post(self, request):
+    #     form = self.form_class(request.POST)
+    #     if form.is_valid():
+    #         form = form.save(commit=False)
+    #         form.registration_number = form.registration_number.upper()
+    #         form.save()
+    #         print("SAVE!")
+    #         return HttpResponseRedirect(self.success_url)
+    #     else:
+    #         return
 
     def get_queryset(self):
         if len(self.request.GET) == 0:
             return Car.objects.all()
         else:
-            reg_number = self.request.GET.get('registration_number')
-            if reg_number == '': reg_number = '`'
-            # print(f"{reg_number=}")
+            return filtration_car(self.request.GET)
 
-            query_set = Car.objects.filter(
-                Q(registration_number__icontains=reg_number) |
-                Q(brand__in=self.request.GET.getlist('brand')) |
-                Q(owner__in=self.request.GET.getlist('driver')) |
-                Q(region_code__in=self.request.GET.getlist('region')) |
-                (Q(applications__type_of_id__in=self.request.GET.getlist('type_of_app')) & Q(
-                    applications__is_active=True))
 
-            )
-
-            return query_set.distinct()
-        # print(self.request.GET)
-        # return Car.objects.all()
-
-class CarCreateView(CreateView):
+class CarCreateView(Context, CreateView):
     '''добавление нового автомобиля'''
     template_name = "cars.html"
-    # queryset = Car.objects.all()
-    context_object_name = "cars"
+    # context_object_name = "cars"
+    success_url = '/cars'
     form_class = CarAddForm
-    success_url = 'cars'
 
-
-
-
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if len(self.request.GET) == 0:
+            context['cars'] = Car.objects.all()
+        else:
+            context['cars'] = filtration_car(self.request.GET)
+        return context
+    
+    # def form_invalid(self, form):
+    #     print(form.errors)
+    #     return super(CarCreateView, self).form_invalid(form)
+    
 class DriversView(Context, ListView):
     template_name = 'drivers.html'
     queryset = Driver.objects.all()
     context_object_name = "drivers"
+    
 
     # def setup(self, request, *args, **kwargs):
     #     print(self.queryset)
