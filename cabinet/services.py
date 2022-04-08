@@ -1,6 +1,57 @@
+import random
+from itertools import chain
+
 from django.db.models import Q
 
-from .models import Car, Driver
+from .models import Car, Driver, AutoDoc, DriverDoc, TypeOfAppl, CarBrand
+
+
+class Context():
+    '''Получение контекста'''
+
+    def get_car_brands(self):
+        return CarBrand.objects.all()
+
+    def get_drivers(self):
+        return Driver.objects.all()
+
+    def get_regions(self):
+        return Car.objects.all().values('region_code').distinct()
+
+    def get_types_of_app(self):
+        return TypeOfAppl.objects.all()
+
+    def get_drivers_type(self):
+        ...
+
+    def get_all_docs(self):
+        auto_doc = AutoDoc.objects.all()
+        driver_doc = DriverDoc.objects.all()
+        query_set = list(chain(auto_doc, driver_doc))
+        # print(query_set)
+        def sort_by_date_start(list_to_sort):
+            if len(list_to_sort) <= 1:
+                return list_to_sort
+            else:
+                q = random.choice(list_to_sort)
+                s_nums = []  # [меньше q]
+                m_nums = []  # [больше q]
+                e_nums = []  # [q]
+                for elem in list_to_sort:
+                    print(elem.date_start)
+                    if elem.date_start < q.date_start:
+                        print("Меньше!")
+                        s_nums.append(elem)
+                    elif elem.date_start > q.date_start:
+                        m_nums.append(elem)
+                        print("БОЛЬШЕ!")
+                    else:
+                        e_nums.append(elem)
+                return sort_by_date_start(s_nums) + e_nums + sort_by_date_start(m_nums)
+
+        sorting_queryset = sort_by_date_start(query_set)
+        return sorting_queryset
+
 
 
 def filtration_car(get_params):
@@ -35,3 +86,8 @@ def filtration_driver(get_params):
     )
 
     return query_set.distinct()
+
+def filtration_document(get_params):
+    """Возвращает отфильтрованный queryset модели document"""
+
+    pass

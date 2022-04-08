@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block static_href %}
+    {% static 'css/documents.css' %}
+{% endblock static_href %}
+
+{% block title %} Документы11 {% endblock title%}
+
+{% block document_active %} active-page   {% endblock document_active %}
+
+{% block main %}
+ <div class="main">
+            <div class="main__container">
+
+                <div class="main__title">
+                    <h1>Документы</h1>
+                    <p>{{ car_docs.count|add:driver_docs.count}}</p>
+                </div>
+            <form action="{% url 'cars' %}" method="get">
+                <ul class="main__filtration filtr-items">
+                    <li class="filtr-items__item">
+                        <p class="filtr-items__title">Тип</p>
+                        <ul class="filtr-items__sub-menu">
+                            <label for="wheel" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="type" id="wheel ">
+                                    <label for="wheel " class="filtr-items__check-label">Отпуск</label>
+                                </li>
+                            </label>
+                            <label for="engine" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="type" id="engine">
+                                    <label for="engine" class="filtr-items__check-label">Больничный
+                                </li>
+                            </label>
+                            <label for="glass" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="type" id="glass">
+                                    <label for="glass" class="filtr-items__check-label">Карточки
+                                </li>
+                            </label>
+
+                            <label for="glass" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="type" id="glass">
+                                    <label for="glass" class="filtr-items__check-label">Другое
+                                </li>
+                            </label>
+                        </ul>
+                    </li>
+                    <li class="filtr-items__item">
+                        <p>получение:</p>
+                        <input type="date" placeholder="от.">
+                        <p>окончание:</p>
+                        <input type="date" placeholder="до.">
+                    </li>
+
+                    <li class="filtr-items__item">
+                        <p class="filtr-items__title">Авто/Владелец</p>
+                        <ul class="filtr-items__sub-menu">
+                            <label for="a" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="aord" id="a">
+                                    <label for="a" class="filtr-items__check-label">Авто</label>
+                                </li>
+                            </label>
+                            <label for="d" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="aord" id="d">
+                                    <label for="d" class="filtr-items__check-label">Водитель
+                                </li>
+                            </label>
+
+                        </ul>
+                    </li>
+
+                    <button type="button" class="filtr-items__button">
+                        <img src="{% static 'img/filtr/lupa.svg' %}" alt="поиск">
+                    </button>
+                </ul>
+            </form>
+
+                <div class="main__information">
+                    <table class="main__table table">
+
+    <!-- ID -->                            <col style="width:5%">
+    <!-- Дата создания -->                 <col style="width:15%">
+    <!-- Дата окнчания -->                 <col style="width:15%">
+    <!-- Срочность -->                     <col style="width:15%">
+    <!-- Статус -->                        <col style="width:15%">
+    <!-- Тип -->                           <col style="width:2%">
+
+                        <tr class="table__titles">
+                          <th class="table__title">Тип документа</th>
+                          <th class="table__title">Дата получения</th>
+                          <th class="table__title">Дата окончания</th>
+                          <th class="table__title">Авто/Водитель</th>
+                          <th class="table__title">Владелец</th>
+                        </tr>
+                    {% for doc in view.get_all_docs %}
+                        <tr class="table__row">
+                          <td class="table__cell">{{ doc.type }}</td>
+                          <td class="table__cell">{{ doc.date_start}}</td>
+                          <td class="table__cell">{{ doc.date_end}}</td>
+                          <td class="table__cell">
+                              {% if doc.type.type == 'm' %}
+                                   Водитель
+                               {% else %}
+                                  Авто
+                              {% endif %}
+                          </td>
+
+                          <td class="table__cell">{{ doc.owner }}</td>
+                        </tr>
+                    {% endfor %}
+{#                        <tr class="table__row">#}
+{#                            <td class="table__cell">страховое</td>#}
+{#                            <td class="table__cell">22.02.2021</td>#}
+{#                            <td class="table__cell">22.02.2022</td>#}
+{#                            <td class="table__cell">машина</td>#}
+{#                            <td class="table__cell">A-111-EE</td>#}
+{#                          </tr>#}
+                    </table>
+                </div>
+            </div>
+        </div>
+{% endblock main %}
+
+

@@ -1,3 +1,5 @@
+import datetime
+
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -34,27 +36,7 @@ class Car(models.Model):
 
 
     def __str__(self):
-        return f"{self.registration_number} + {self.owner.user.last_name}"
-
-    def filtration(self):
-        reg_number = self.request.GET.get('registration_number')
-        if reg_number == '': reg_number = '`'
-        # print(f"{reg_number=}")
-
-        query_set = Car.objects.filter(
-            Q(registration_number__icontains=reg_number) |
-            Q(brand__in=self.request.GET.getlist('brand')) |
-            Q(owner__in=self.request.GET.getlist('driver')) |
-            Q(region_code__in=self.request.GET.getlist('region')) |
-            (Q(applications__type_of_id__in=self.request.GET.getlist('type_of_app')) & Q(
-                applications__is_active=True))
-
-        )
-
-        return query_set.distinct()
-
-
-
+        return f"{self.registration_number}"
 
     class Meta:
         verbose_name = 'Автомобиль'
@@ -139,7 +121,8 @@ class Document(models.Model):
     type = None
     created_at = models.DateField(verbose_name='Дата создания',
                                   auto_now_add=True)
-    expiration_date = models.DateField(verbose_name='Дата окончания')
+    date_start = models.DateField(verbose_name='Дата выдачи')
+    date_end = models.DateField(verbose_name='Дата окончания')
 
 
     class Meta:
@@ -179,8 +162,11 @@ class DocType(models.Model):
         ('с', 'Машина'),
     )
 
-    name = models.CharField(verbose_name='Наименования документа', max_length=20)
+    name = models.CharField(verbose_name='Наименования документа', max_length=255)
     type = models.CharField(max_length=1, choices=KINDS, default='c')
+
+    def __str__(self):
+        return f'{self.name} ({self.type})'
 
     class Meta:
         verbose_name = 'Тип документа'

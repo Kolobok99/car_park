@@ -1,32 +1,19 @@
+import random
+
 import union as union
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
-
+from itertools import chain
 from .filters import CarFilter
 from .forms import CarAddForm
 from .models import *
 
 from django.views.generic import ListView, TemplateView, FormView, CreateView
 
-from .services import filtration_car, filtration_driver
+from .services import filtration_car, filtration_driver, filtration_document, Context
 
-
-class Context():
-    '''Получение контекста'''
-
-    def get_car_brands(self):
-        return CarBrand.objects.all()
-
-    def get_drivers(self):
-        return Driver.objects.all()
-
-    def get_regions(self):
-        return Car.objects.all().values('region_code').distinct()
-
-    def get_types_of_app(self):
-        return TypeOfAppl.objects.all()
 
 class CarsView(Context,ListView):
     """Вывод всех автомобилей"""
@@ -92,3 +79,17 @@ class DriversView(Context, TemplateView):
     # def setup(self, request, *args, **kwargs):
     #     print(self.)
     #     super(DriversView, self).setup(request, *args, **kwargs)
+
+
+class DocumentsView(Context, TemplateView):
+    template_name = 'documents.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(DocumentsView, self).get_context_data(**kwargs)
+        if len(self.request.GET) == 0:
+            # context['docs'] = get_all_docs
+            context['driver_docs'] = DriverDoc.objects.all()
+            context['car_docs'] = AutoDoc.objects.all()
+        # else:
+        #     context['documents'] = filtration_document(self.request.GET)
+        return context
