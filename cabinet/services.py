@@ -151,31 +151,33 @@ def filtration_document(get_params):
         elif car_docs_type is None:
             return car_docs_date
         else:
-            # print(f"end -> {(car_docs_type & car_docs_date)}")
-            # print(f"end -> {(car_docs_type & car_docs_date).first().date_start}")
             return (car_docs_type & car_docs_date)
 
     #ТОЛЬКО ВОДИТЕЛИ
-    # if man_or_car[0] == 'man':
-    #     if (start_date is not None) or (end_date is not None):
-    #         man_docs_date = get_docs_between_date(model=DriverDoc, start_date=start_date, end_date=end_date)
-    #     else:
-    #         man_docs_date = None
-    #
-    #     if doc_type_car is not None:
-    #         car_docs_type = get_docs_with_types(model=AutoDoc, **get_params['doc_type-car'])
-    #         # print(f'{car_docs_type=}')
-    #     else:
-    #         car_docs_type = None
-    #
-    #     if car_docs_date is None and car_docs_type is None:
-    #         return AutoDoc.objects.all()
-    #     elif car_docs_date is None:
-    #         return car_docs_type
-    #     elif car_docs_type is None:
-    #         return car_docs_date
-    #     else:
-    #         return car_docs_type | car_docs_date
+    if man_or_car[0] == 'man':
+        if (start_date is not None) or (end_date is not None):
+            man_docs_date = get_docs_between_date(model=DriverDoc, start_date=start_date, end_date=end_date)
+        else:
+            man_docs_date = None
+
+        if len(doc_type_man) != 0:
+            man_docs_type = get_docs_with_types(model=DriverDoc, list_with_type_id=doc_type_man)
+            print(man_docs_type)
+        else:
+            man_docs_type = None
+
+        if man_docs_date is None and man_docs_type is None:
+            print(1)
+            return DriverDoc.objects.all()
+        elif man_docs_date is None:
+            print(2)
+            return man_docs_type
+        elif man_docs_type is None:
+            print(3)
+            return man_docs_date
+        else:
+            print(f'{(man_docs_type & man_docs_date)=}')
+            return (man_docs_type & man_docs_date)
 
 
     # if list(man_or_car) == 2 or list(man_or_car) == 0:
