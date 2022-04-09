@@ -42,7 +42,7 @@
 
     // .main__filtration
     &__filtration {
-        max-width: 600px;
+        max-width: 650px;
         max-height: 85px;
     }
 
@@ -67,6 +67,11 @@
     > :first-child {
         flex: 1 1 60%;
     }
+
+    >:nth-child(2){
+        padding: 5px;
+        font-weight: 550;
+    }
     // .filtr-items__item
     &__item {
         display: flex;
@@ -74,6 +79,7 @@
         justify-content: flex-start;
         align-items: center;
         position: relative;
+
 
         p {
             font-weight: 400;
@@ -178,7 +184,7 @@
     left: 40%;
     top:20%;
     visibility: hidden;
-    min-width:400px;
+    max-width: 300px;
 
     display: flex;
     flex-direction: column;
@@ -220,10 +226,13 @@
         flex: 0 1 30%;
         position: relative;
         input {
-            max-width: 45%;
+            max-width: 60%;
             padding: 5px;
         }
 
+        #id_owner {
+            max-width: 60%;
+        }        
     //     input[type="radio"] {
     //         position: absolute;
     //         width: auto;

@@ -4,7 +4,7 @@ from itertools import chain
 
 from django.db.models import Q
 
-from .models import Car, Driver, AutoDoc, DriverDoc, TypeOfAppl, CarBrand, DocType
+from .models import Car, Driver, AutoDoc, DriverDoc, TypeOfAppl, CarBrand, DocType, FuelCard
 
 
 class Context():
@@ -37,6 +37,8 @@ class Context():
         sorting_list_of_querysets = sort_by_date_start(query_set)
         return sorting_list_of_querysets
 
+    def get_all_cards(self):
+        return FuelCard.objects.all()
 
 
 def filtration_car(get_params):
@@ -53,7 +55,6 @@ def filtration_car(get_params):
 
     )
     return query_set.distinct()
-
 
 def filtration_driver(get_params):
     """Возвращает отфильтрованный queryset"""
@@ -252,6 +253,38 @@ def filtration_document(get_params):
     #            DriverDoc.objects.all()
     #        else:
     #            man_docs_date = get_docs_between_date(model=DriverDoc, start_date=start_date, end_date=end_date)
+
+def filtration_cards(get_params):
+    """Возвращает QuerySet отфильтрованных данных карт"""
+
+    number = get_params.get('number')
+
+    limit_max = get_params.get('limit_max')
+    limit_min = get_params.get('limit_min')
+
+    balance_max = get_params.get('balance_max')
+    balance_min = get_params.get('balance_min')
+
+    print('-----Start Cards Filtration')
+    print(f'{number=}')
+    print(f'{limit_max=}')
+    print(f'{limit_min=}')
+    print(f'{balance_max=}')
+    print(f'{balance_min=}')
+
+
+    if number == '': number = '`'
+    if limit_max == '': limit_max = 100000
+    if limit_min == '': limit_min = -9999
+    if balance_max == '': balance_max = 100000
+    if balance_min == '': balance_min = -9999
+
+    querySet = FuelCard.objects.filter(
+        Q(number__icontains=number)
+        | (Q(limit__gte=limit_min) & Q(limit__lte=limit_max))
+        & (Q(balance__gte=balance_min) & Q(balance__lte=balance_max))
+    )
+    return querySet
 
 
 

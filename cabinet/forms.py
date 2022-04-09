@@ -1,7 +1,7 @@
 from django import forms
 from django.core import validators
 
-from .models import Car, CarBrand, Driver
+from .models import Car, CarBrand, Driver, FuelCard
 
 
 class CarAddForm(forms.ModelForm):
@@ -34,3 +34,9 @@ class CarAddForm(forms.ModelForm):
             'owner': 'Закрепить за',
 
         }
+
+class FuelCardForm(forms.ModelForm):
+
+    class Meta:
+        model = FuelCard
+        exclude = ('balance', )

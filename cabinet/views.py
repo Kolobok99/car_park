@@ -7,12 +7,12 @@ from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from itertools import chain
 from .filters import CarFilter
-from .forms import CarAddForm
+from .forms import CarAddForm, FuelCardForm
 from .models import *
 
 from django.views.generic import ListView, TemplateView, FormView, CreateView
 
-from .services import filtration_car, filtration_driver, filtration_document, Context
+from .services import filtration_car, filtration_driver, filtration_document, Context, filtration_cards
 
 
 class CarsView(Context,ListView):
@@ -91,3 +91,21 @@ class DocumentsView(Context, TemplateView):
         else:
             context['all_docs'] = filtration_document(self.request.GET)
         return context
+
+class CardCreateView(Context, CreateView):
+    """Создание и вывод топилвных карт"""
+
+    template_name = 'cards.html'
+    success_url = '/cards'
+    form_class = FuelCardForm
+
+    def get_context_data(self, **kwargs):
+        context = super(CardCreateView, self).get_context_data(**kwargs)
+        if len(self.request.GET) == 0:
+            context['all_cards'] = FuelCard.objects.all()
+        else:
+            context['all_cards'] = filtration_cards(self.request.GET)
+
+
+        return context
+

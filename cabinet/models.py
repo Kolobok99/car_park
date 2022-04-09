@@ -57,10 +57,18 @@ class FuelCard(models.Model):
     '''топливаня карта'''
 
     limit = models.PositiveIntegerField(verbose_name='лимит')
-    number = models.IntegerField(verbose_name='номер', unique=True)
+    number = models.CharField(verbose_name='номер', unique=True, max_length=16, validators=[validators.MinLengthValidator(16)])
 
-    onwer = models.ForeignKey('Driver', on_delete=models.PROTECT,
+    owner = models.ForeignKey('Driver', on_delete=models.PROTECT,
                               related_name='my_cards', blank=True, null=True)
+
+    balance = models.PositiveIntegerField(verbose_name='остаток',default=None, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.balance is None:
+            self.balance = self.limit
+        super().save(*args, **kwargs)
     class Meta:
         verbose_name = 'Топливная карта'
         verbose_name_plural = 'Топливные карты'
