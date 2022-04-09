@@ -7,10 +7,10 @@ from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from itertools import chain
 from .filters import CarFilter
-from .forms import CarAddForm, FuelCardForm
+from .forms import CarAddForm, FuelCardAddForm
 from .models import *
 
-from django.views.generic import ListView, TemplateView, FormView, CreateView
+from django.views.generic import ListView, TemplateView, FormView, CreateView, UpdateView
 
 from .services import filtration_car, filtration_driver, filtration_document, Context, filtration_cards
 
@@ -97,15 +97,18 @@ class CardCreateView(Context, CreateView):
 
     template_name = 'cards.html'
     success_url = '/cards'
-    form_class = FuelCardForm
+    form_class = FuelCardAddForm
 
     def get_context_data(self, **kwargs):
         context = super(CardCreateView, self).get_context_data(**kwargs)
         if len(self.request.GET) == 0:
-            context['all_cards'] = FuelCard.objects.all()
+            context['all_cards'] = FuelCard.objects.exclude(owner=None)
         else:
             context['all_cards'] = filtration_cards(self.request.GET)
-
-
         return context
+
+# class CartUpdateView(UpdateView):
+#     template_name = 'cards.html'
+#     success_url = '/cards'
+#     form_class =
 

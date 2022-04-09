@@ -1,5 +1,6 @@
 from django import forms
 from django.core import validators
+from django.forms import modelformset_factory
 
 from .models import Car, CarBrand, Driver, FuelCard
 
@@ -35,8 +36,20 @@ class CarAddForm(forms.ModelForm):
 
         }
 
-class FuelCardForm(forms.ModelForm):
+class FuelCardAddForm(forms.ModelForm):
 
     class Meta:
         model = FuelCard
         exclude = ('balance', )
+
+class FuelCardSaltForm(forms.ModelForm):
+
+    class Meta:
+        model = FuelCard
+        fields = ('has_owner', )
+
+FuelCardSaltSetForm = modelformset_factory(
+    FuelCard,
+    fields=('has_owner',)
+
+)

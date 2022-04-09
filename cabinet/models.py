@@ -64,11 +64,16 @@ class FuelCard(models.Model):
 
     balance = models.PositiveIntegerField(verbose_name='остаток',default=None, null=True, blank=True)
 
+    has_owner = models.BooleanField('Есть владелец?', default=False)
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         if self.balance is None:
             self.balance = self.limit
         super().save(*args, **kwargs)
+        if self.owner is not None:
+            self.has_owner = True
+
     class Meta:
         verbose_name = 'Топливная карта'
         verbose_name_plural = 'Топливные карты'
