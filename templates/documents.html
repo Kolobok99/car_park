@@ -29,12 +29,12 @@
                         <p class="filtr-items__title">Авто/Водитель</p>
                         <ul class="filtr-items__sub-menu">
                             <label for="auto" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check data-auto-check" type="checkbox" name="aorm" id="auto">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check data-auto-check" type="checkbox" name="aorm" id="auto" value="car">
                                     <label for="auto" class="filtr-items__check-label">Авто</label>
                                 </li>
                             </label>
                             <label for="man" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check data-driver-check" type="checkbox" name="aorm" id="man">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check data-driver-check" type="checkbox" name="aorm" id="man" value="man">
                                     <label for="man" class="filtr-items__check-label">Водитель
                                 </li>
                             </label>
@@ -46,10 +46,10 @@
                         <p class="filtr-items__title" id="opacity-title-car">Тип (Авто)</p>
                         <div id="block-to_hide-car">
                             <ul class="filtr-items__sub-menu">
-                                {% for man_type_of_docs in view.get_car_types_of_docs %}
-                                    <label for="{{ man_type_of_docs.id }}" class="filtr-items__check-label">
-                                        <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="doc_type-car" id="{{ man_type_of_docs.id }}">
-                                            <label for="{{ man_type_of_docs.id }}" class="filtr-items__check-label">{{ man_type_of_docs.name }}</label>
+                                {% for car_type_of_docs in view.get_car_types_of_docs %}
+                                    <label for="{{ car_type_of_docs.id }}" class="filtr-items__check-label">
+                                        <li class="filtr-items__sub-item"><input class="filtr-items__check" value="{{ car_type_of_docs.id }}" type="checkbox" name="doc_type-car" id="{{ car_type_of_docs.id }}">
+                                            <label for="{{ car_type_of_docs.id }}" class="filtr-items__check-label">{{ car_type_of_docs.name }}</label>
                                         </li>
                                     </label>
                                {% endfor %}
@@ -62,10 +62,10 @@
                         <p class="filtr-items__title" id="opacity-title-man">Тип (Человек)</p>
                         <div id="block-to_hide-man">
                             <ul class="filtr-items__sub-menu">
-                                {% for man_type_docs in view.get_man_types_of_docs %}
-                                    <label for="{{ man_type_docs.id }}" class="filtr-items__check-label">
-                                        <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="doc_type-man" id="{{ man_type_docs.id }}">
-                                            <label for="{{ man_type_docs.id }}" class="filtr-items__check-label">{{ man_type_docs.name }}</label>
+                                {% for man_type_of_docs in view.get_man_types_of_docs %}
+                                    <label for="{{ man_type_of_docs.id }}" class="filtr-items__check-label">
+                                        <li class="filtr-items__sub-item"><input class="filtr-items__check"  value="{{ man_type_of_docs.id }}" type="checkbox" name="doc_type-man" id="{{ man_type_of_docs.id }}">
+                                            <label for="{{ man_type_of_docs.id }}" class="filtr-items__check-label">{{ man_type_of_docs.name }}</label>
                                         </li>
                                     </label>
                                 {% endfor %}

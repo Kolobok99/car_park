@@ -77,27 +77,71 @@ def filtration_document(get_params):
     date_end = get_params.get('date_end')
     man_or_car = get_params.getlist('aorm')
 
-    def get_docs_between_date(model, start_date, end_date):
+    def get_docs_between_date(model, start_date=None, end_date=None):
         '''Возвращает queryset model с фильтрацией по дате'''
-        query_set = model.objects.filer(
-            Q(date_start__qte=date_start)
-            & Q(date_end__lte=date_end)
-        )
 
+        if start_date is None:
+            query_set = model.objects.filer(
+                date_end__lte=date_end
+            )
+        elif end_date is None:
+            query_set = model.objects.filer(
+                date_start__qte=date_start
+            )
+        else:
+            query_set = model.objects.filer(
+                Q(date_start__qte=date_start)
+                & Q(date_end__lte=date_end)
+            )
         return query_set
 
     def get_docs_with_types(model, **args):
         """Возвращает queryset model с переданными типами"""
+        last_query = None
+        for type_of_doc_id in args:
+            new_query = model.objects.filter(type__pk=type_of_doc_id)
+            if last_query is None:
+                last_query = new_query
+            else:
+                last_query = last_query and new_query
+        return last_query
 
-        query_set = model.objects.filter(
+    # ТОЛЬКО АВТО:
+    if man_or_car[0] == 'car':
+        if (date_start is not None) or (date_end is not None):
+            car_docs_date = get_docs_between_date(model=AutoDoc, start_date=date_start, end_date=date_end)
+        else:
+            car_docs_date = None
 
-        )
+        if get_params['doc_type-car'] != 0:
+            car_docs_type = get_docs_with_types(model=AutoDoc, **get_params['doc_type-car'])
+        else:
+            car_docs_type  = None
 
-        return query_set
+        if car_docs_date is None and car_docs_type is None:
+            return AutoDoc.objects.all()
+        elif car_docs_date is None:
+            return car_docs_type
+        elif car_docs_type is None:
+            return car_docs_date
+        else:
+            return car_docs_type | car_docs_date
 
-    if list(man_or_car) == 2:
-        man_docs = get_docs_between_date(model=DriverDoc, start_date=date_start, end_date=date_end)
-        car_docs = get_docs_between_date(model=AutoDoc, start_date=date_start, end_date=date_end)
+    # if list(man_or_car) == 2 or list(man_or_car) == 0:
+    #     man_docs_date = get_docs_between_date(model=DriverDoc, start_date=date_start, end_date=date_end)
+    #     car_docs_date = get_docs_between_date(model=AutoDoc, start_date=date_start, end_date=date_end)
+    #
+    # elif man_or_car[0] == 'auto':
+    #     if get_params['doc_type-car'] == 0:
+    #        if date_start is None and date_end is None:
+    #            AutoDoc.objects.all()
+    # elif man_or_car[0] == 'man':
+    #     if get_params['doc_type-man'] == 0:
+    #        if date_start is None and date_end is None:
+    #            DriverDoc.objects.all()
+    #        else:
+    #            man_docs_date = get_docs_between_date(model=DriverDoc, start_date=date_start, end_date=date_end)
+
 
 
 def sort_by_date_start(list_to_sort):
