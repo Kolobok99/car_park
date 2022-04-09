@@ -23,7 +23,7 @@
                         <p>получение:</p>
                         <input type="date" name="start_date" placeholder="от.">
                         <p>окончание:</p>
-                        <input type="date" placeholder="до.">
+                        <input type="date" name="end_date" placeholder="до.">
                     </li>
                     <li class="filtr-items__item">
                         <p class="filtr-items__title">Авто/Водитель</p>
@@ -76,6 +76,8 @@
                         <img src="{% static 'img/filtr/lupa.svg' %}" alt="поиск">
                     </button>
                 </ul>
+                <a class="btn-reset" href="">Сбросить</a>
+
             </form>
 
                 <div class="main__information">
@@ -98,8 +100,8 @@
                     {% for doc in all_docs %}
                         <tr class="table__row">
                           <td class="table__cell">{{ doc.type }}</td>
-                          <td class="table__cell">{{ doc.date_start}}</td>
-                          <td class="table__cell">{{ doc.date_end}}</td>
+                          <td class="table__cell">{{ doc.date_start|date:"d-m-Y"}}</td>
+                          <td class="table__cell">{{ doc.date_end|date:"d-m-Y"}}</td>
                           <td class="table__cell">
                               {% if doc.type.type == 'm' %}
                                    Водитель
