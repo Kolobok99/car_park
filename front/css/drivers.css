@@ -208,7 +208,7 @@ body {
 }
 
 .main__filtration {
-  max-width: 650px;
+  max-width: 750px;
 }
 
 .main__information {
@@ -226,11 +226,11 @@ body {
   border-radius: 10px;
 }
 
-.filtr-items > :nth-child(3) {
+.filtr-items > :nth-child(3), .filtr-items > :nth-child(4) {
   padding-left: 20px;
 }
 
-.filtr-items > :nth-child(3)::after {
+.filtr-items > :nth-child(3)::after, .filtr-items > :nth-child(4)::after {
   content: url(../img/filtr/arrow-down.svg);
   padding-right: 15px;
 }

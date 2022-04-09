@@ -33,7 +33,7 @@
     }
     // .main__filtration
     &__filtration {
-        max-width: 650px;
+        max-width: 750px;
         
     }
     // .main__information
@@ -51,7 +51,7 @@
     border: 1px solid #D6DDEB;
 	border-radius: 10px;
     
-    > :nth-child(3) {
+    > :nth-child(3), >:nth-child(4) {
         padding-left: 20px;
         &::after{
             content: url(../img/filtr/arrow-down.svg);
