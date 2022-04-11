@@ -2,7 +2,7 @@ from django import forms
 from django.core import validators
 from django.forms import modelformset_factory
 
-from .models import Car, CarBrand, Driver, FuelCard
+from .models import Car, CarBrand, Driver, FuelCard, User
 
 
 class CarAddForm(forms.ModelForm):
@@ -51,5 +51,41 @@ class FuelCardSaltForm(forms.ModelForm):
 FuelCardSaltSetForm = modelformset_factory(
     FuelCard,
     fields=('has_owner',)
-
 )
+
+
+class DriverCreateForm(forms.ModelForm):
+    '''Форма регистрации пользователя'''
+    #
+    #
+    #
+    #
+    #
+    # password_repeat = forms.CharField(label='Повторите пароль',
+    #                                   widget=forms.widgets.PasswordInput(attrs={
+    #                                       'placeholder': "повторите пароль"
+    #                                   })
+    #                                   )
+    #
+    #
+    # class Meta:
+    #     model = Driver
+    #     fields = (
+    #         'user.login',
+    #         'user.email',
+    #         'user.password',
+    #         'password_repeat',
+    #
+    #         'user.first_name',
+    #         'user.last_name',
+    #         'user.patronymic',
+    #     )
+    #
+    #     widgets = {
+    #         'login': forms.widgets.TextInput(),
+    #         'email': forms.widgets.EmailInput(),
+    #         'password': forms.widgets.PasswordInput(),
+    #         'first_name': forms.widgets.TextInput(),
+    #         'last_name': forms.widgets.TextInput(),
+    #         'patronymic': forms.widgets.TextInput(),
+    #     }

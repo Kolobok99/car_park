@@ -1,13 +1,14 @@
 import random
 
 import union as union
+from django.contrib.auth.views import LoginView
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from itertools import chain
 from .filters import CarFilter
-from .forms import CarAddForm, FuelCardAddForm
+from .forms import CarAddForm, FuelCardAddForm, DriverCreateForm
 from .models import *
 
 from django.views.generic import ListView, TemplateView, FormView, CreateView, UpdateView
@@ -111,4 +112,11 @@ class CardCreateView(Context, CreateView):
 #     template_name = 'cards.html'
 #     success_url = '/cards'
 #     form_class =
+
+class RegistrationView(CreateView):
+    '''Регистрация пользователя'''
+
+    template_name = 'registration.html'
+    form_class = DriverCreateForm
+    success_url = '/cars'
 

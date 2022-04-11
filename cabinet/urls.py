@@ -1,12 +1,16 @@
 from django.contrib import admin
+from django.contrib.auth.views import LoginView
 from django.urls import path
 
-from cabinet.views import CarsView, DriversView, CarCreateView, DocumentsView, CardCreateView
+from cabinet.views import CarsView, DriversView, CarCreateView, DocumentsView, CardCreateView, RegistrationView
 
 urlpatterns = [
-    # path('car/create', CarCreateView.as_view(), name='car-create'),
     path('cars/', CarCreateView.as_view(), name='cars'),
     path('drivers/', DriversView.as_view(), name='drivers'),
     path('documents/', DocumentsView.as_view(), name='documents'),
     path('cards/', CardCreateView.as_view(), name='cards'),
+    path('registration/', RegistrationView.as_view(), name='registration'),
+    path('login/', LoginView.as_view(
+        template_name='login.html'
+    ), name='login'),
 ]

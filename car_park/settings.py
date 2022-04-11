@@ -82,7 +82,7 @@ WSGI_APPLICATION = 'car_park.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'cabinet_db',
+        'NAME': 'db_car_park',
         'USER': 'django_car',
         'PASSWORD': 'Sobaka2111!',
         'HOST': 'localhost',
@@ -141,3 +141,4 @@ AUTH_USER_MODEL = 'cabinet.User'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+LOGIN_REDIRECT_URL = '/cars'

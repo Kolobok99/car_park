@@ -48,15 +48,22 @@ body {
 			font-size: 20px;
 			text-align: center;
 		}
-		// .main__item
-		&__item {
-			border-radius:10px;
-  			margin-bottom:-10px;
-  			padding:10px 20px;
-			border: 1px solid rgb(183, 193, 211);
-			  &::placeholder{
-				  font-size: 15px;
-			  }
+		// .main__items
+		&__items {
+			display: flex;
+            flex-direction: column;
+			row-gap: 20px;
+
+			input {
+				border-radius:10px;
+				margin-bottom:-10px;
+				padding:10px 20px;
+				border: 1px solid rgb(183, 193, 211);
+				margin-top: -15px;
+				&::placeholder{
+					font-size: 15px;
+				}
+			}
 		}
 		// .main__button
 		&__button {
@@ -69,7 +76,7 @@ body {
 			border:none;
 			color:white;
 			margin-top:20px;
-			max-width: 100px;
+			
 			margin-top: -5px;
 		}
 }

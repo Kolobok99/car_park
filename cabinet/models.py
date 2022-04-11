@@ -1,5 +1,6 @@
 import datetime
 
+from django.contrib.auth.base_user import AbstractBaseUser
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -90,14 +91,16 @@ class User(AbstractUser):
     def upload_path(self):
         return f'{self.username}'
 
+
     first_name = models.CharField(verbose_name='Имя', max_length=20, null=True, blank=True)
     last_name = models.CharField(verbose_name='Фамилия', max_length=20, null=True, blank=True)
     patronymic = models.CharField(verbose_name='Отчество', max_length=20, null=True, blank=True)
 
-    birthdate = models.DateField(verbose_name='Дата рождения', null=True, blank=True)
     image = models.ImageField(verbose_name='Аватарка',
                               null=True, blank=True, upload_to=f'avatars/')
+    login = models.CharField("логин", max_length=128, unique=True)
     email = models.EmailField(verbose_name='Почта', unique=True, null=True, blank=True)
+    password = models.CharField("Пароль", max_length=128,)
 
     role = models.CharField(verbose_name='Роль', max_length=1, choices=KINDES, default='d')
     is_staff = models.BooleanField(
