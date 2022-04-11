@@ -2,8 +2,25 @@ from django import forms
 from django.core import validators
 from django.forms import modelformset_factory
 
-from .models import Car, CarBrand, Driver, FuelCard, User
+from .models import *
 
+
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from .models import MyUser
+class MyUserCreationForm(UserCreationForm):
+    class Meta(UserCreationForm):
+        model = MyUser
+        fields = ('email',
+                  'first_name',
+                  'last_name',
+                  'patronymic',
+                  'phone',
+                  'role',
+                  )
+class MyUserChangeForm(UserChangeForm):
+    class Meta:
+        model = MyUser
+        fields = ('email',)
 
 class CarAddForm(forms.ModelForm):
 

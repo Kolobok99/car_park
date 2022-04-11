@@ -4,7 +4,7 @@ from itertools import chain
 
 from django.db.models import Q
 
-from .models import Car, Driver, AutoDoc, DriverDoc, TypeOfAppl, CarBrand, DocType, FuelCard
+from .models import *
 
 
 class Context():

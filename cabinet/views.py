@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from itertools import chain
 from .filters import CarFilter
-from .forms import CarAddForm, FuelCardAddForm, DriverCreateForm
+from .forms import *
 from .models import *
 
 from django.views.generic import ListView, TemplateView, FormView, CreateView, UpdateView
@@ -71,7 +71,7 @@ class DriversView(Context, TemplateView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(DriversView, self).get_context_data(**kwargs)
         if len(self.request.GET) == 0:
-            context['drivers'] = Driver.objects.all()
+            context['drivers'] = MyUser.objects.filter(role='d')
         else:
             context['drivers'] = filtration_driver(self.request.GET)
         return context
