@@ -15,13 +15,18 @@
                 <form class="main__form" action="{% url 'login' %}" method="post">
                     {% csrf_token %}
                     <div class="main__title">
-                        <h1>Регистрация</h1>
+                        <h1>Авторизация</h1>
                     </div>
-
-                    <div class="main__items">
-                        {{ form }}
-                    </div>
-                     <input class="main__button" type="submit" value="Отправить">
+                   {% if user.is_authenticated %}
+                        <div class="main__items">
+                            <h1>Вы уже выполнили вход!</h1>
+                        </div>
+                   {% else %}
+                       <div class="main__items">
+                            {{ form }}
+                       </div>
+                        <input class="main__button" type="submit" value="Отправить">
+                   {% endif %}
                 </form>
 
             </div>

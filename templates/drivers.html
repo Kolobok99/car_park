@@ -12,6 +12,7 @@
 {% block main %}
 <div class="main">
             <div class="main__container">
+            {% if user.is_manager %}
 
                 <div class="main__title">
                     <h1>Водители</h1>
@@ -80,7 +81,7 @@
 
                         <tr class="table__row">
                           <td class="table__cell">{{ driver.pk }}</td>
-                          <td class="table__cell">{{ driver.user.last_name}} {{ driver.user.first_name|first}}.{{ driver.user.patronymic|first}}.</td>
+                          <td class="table__cell">{{ driver.last_name}} {{ driver.first_name|first}}.{{ driver.patronymic|first}}.</td>
                           <td class="table__cell">{{ driver.phone}}</td>
                           <td class="table__cell">{% for car in driver.my_cars.all %}
                                     {{ car.registration_number }}<br>
@@ -104,6 +105,9 @@
 
                     </table>
                 </div>
+            {% else %}
+            <h1>Страница недоступна</h1>
+            {% endif %}
             </div>
         </div>
 {% endblock main %}

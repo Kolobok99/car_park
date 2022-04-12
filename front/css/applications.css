@@ -254,7 +254,20 @@ body {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  padding-left: 10px;
   position: relative;
+}
+
+.filtr-items__item p {
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 144%;
+  color: #5f5b5b;
+}
+
+.filtr-items__item input[type="date"] {
+  padding-left: 5px;
+  background-color: inherit;
 }
 
 .filtr-items .placeholder input {

@@ -2,7 +2,7 @@ import datetime
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.contrib.auth.models import AbstractUser, PermissionsMixin
+from django.contrib.auth.models import AbstractUser, PermissionsMixin, UserManager
 from django.core import validators
 
 from datetime import timedelta
@@ -30,10 +30,13 @@ class Car(models.Model):
 
     last_inspection = models.DateField("последний осмотр", null=True, blank=True)
 
-    # def clean(self):
-    #     errors = {}
-    #     if self.region_code > 200:
-    #         raise ValidationError('Укажите меньше!')
+    def save(self, *args, **kwargs):
+        # self.slug = self.registration_number
+        self.registration_number = self.registration_number.upper()
+        super(Car, self).save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return f"/cars/{self.registration_number}"
 
     def __str__(self):
         return f"{self.registration_number}"
@@ -141,6 +144,11 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
 
     objects = MyUserManager()
 
+    def is_manager(self):
+        if self.role == 'm':
+            return True
+        else:
+            return False
 
     def __str__(self):
         return self.email
@@ -170,8 +178,8 @@ class UserDoc(Document):
     owner = models.ForeignKey(MyUser, on_delete=models.CASCADE,
                               related_name='doc_owner')
 
-    # def __str__(self):
-    #     return f"{self.owner.first_name}"
+    def __str__(self):
+        return f"{self.type} - {self.owner}"
 
     class Meta:
         verbose_name = 'Водительский документ'
@@ -185,6 +193,8 @@ class AutoDoc(Document):
                              related_name='auto_docs', null=True, blank=True)
     owner = models.ForeignKey(Car, on_delete=models.CASCADE,
                               related_name='doc_owner')
+    def __str__(self):
+        return f"{self.type} - {self.owner}"
 
     class Meta:
         verbose_name = 'Документ машины'
@@ -213,6 +223,19 @@ class DocType(models.Model):
 class Application(models.Model):
     """Заявки на ремонт"""
 
+    STATUS_CHOISES = (
+        ('O', 'Ожидает рассмотрения'),
+        ('R', 'Рассмотрена'),
+        ('V', 'Выполнена'),
+        ('P', 'Просрочена'),
+    )
+
+    URGENCY_CHOISES = (
+        ('N', 'Не срочно'),
+        ('U', 'Срочно'),
+        ('V', 'Очень срочно'),
+    )
+
     type_of = models.ForeignKey("TypeOfAppl", on_delete=models.SET_NULL, blank=True, null=True)
     owner = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name='my_apps')
     car = models.ForeignKey(Car, on_delete=models.CASCADE, related_name='applications', null=True, blank=True)
@@ -220,19 +243,30 @@ class Application(models.Model):
     time_to_execute = models.PositiveIntegerField(verbose_name='время на выполнение',
                                                   default=7)
     end_date = models.DateField(verbose_name='дата окончания', null=True, blank=True)
+
     is_active = models.BooleanField(verbose_name="Активность заявки", default=True)
+    status = models.CharField(verbose_name='Статус', max_length=1, choices=STATUS_CHOISES, default='o')
+    urgency = models.CharField(verbose_name='Cрочность', max_length=1, choices=URGENCY_CHOISES, default='N')
+
+    description = models.TextField(verbose_name="Описание")
 
     def __str__(self):
-        return f"{self.user.last_name} + " \
+        return f"{self.owner.last_name} + " \
                f"{self.start_date} + {self.type_of} + {self.car.registration_number}"
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        self.end_date = self.start_date + timedelta(days=self.time_to_execute)
+        if self.time_to_execute == 0:
+            if self.urgency == 'N':
+                self.end_date = self.start_date + timedelta(days=10)
+            elif self.urgency == 'U':
+                self.end_date = self.start_date + timedelta(days=7)
+            elif self.urgency == 'V':
+                self.end_date = self.start_date + timedelta(days=3)
+        else:
+            self.end_date = self.start_date + timedelta(days=self.time_to_execute)
         super().save(*args, **kwargs)
 
-    # def __str__(self):
-    #     return
     class Meta:
         verbose_name = 'Заявка'
         verbose_name_plural = 'Заявки'

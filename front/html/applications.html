@@ -42,7 +42,6 @@
         
         
         
-        
         <div class="main">
             <div class="main__container">
                 
@@ -52,11 +51,11 @@
                 </div>
             <form action="{% url 'cars' %}" method="get">
                 <ul class="main__filtration filtr-items">
-                    <li class="filtr-items__item placeholder">
-                        <input type="date" name="date_start">
-                    </li>
-                    <li class="filtr-items__item placeholder">
-                        <input type="date" name="date_end">
+                    <li class="filtr-items__item">
+                        <p>получение:</p>
+                        <input type="date" placeholder="от.">
+                        <p>окончание:</p>
+                        <input type="date" placeholder="до.">
                     </li>
                     <li class="filtr-items__item">
                         <p class="filtr-items__title">Срочность</p>
@@ -71,11 +70,6 @@
                                     <label for="kia" class="filtr-items__check-label">Не срочно
                                 </li>
                             </label>
-                            <!-- <label for="bmw" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="mark" id="bmw">
-                                    <label for="bmw" class="filtr-items__check-label">BMW
-                                </li>
-                            </label> -->
                         </ul>
                     </li>
                     <li class="filtr-items__item">
@@ -124,27 +118,7 @@
                             </label>
                         </ul>
                     </li>
-
-                    <li class="filtr-items__item">
-                        <p class="filtr-items__title">Тип заявки</p>
-                        <ul class="filtr-items__sub-menu">
-                            <label for="wheel" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="region" id="wheel ">
-                                    <label for="wheel " class="filtr-items__check-label">Колеса</label>
-                                </li>
-                            </label>
-                            <label for="engine" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="driver" id="engine">
-                                    <label for="engine" class="filtr-items__check-label">Двигатель
-                                </li>
-                            </label>
-                            <label for="glass" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="mark" id="glass">
-                                    <label for="glass" class="filtr-items__check-label">Стекла
-                                </li>
-                            </label>
-                        </ul>
-                    </li>
+                    
 
                     <button type="button" class="filtr-items__button">
                         <img src="../img/filtr/lupa.svg" alt="поиск">

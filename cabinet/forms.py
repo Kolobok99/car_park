@@ -41,6 +41,7 @@ class CarAddForm(forms.ModelForm):
 
     # owner = forms.ModelChoiceField(label='Закрепить за:', queryset=Driver.objects.all())
 
+
     class Meta:
         model = Car
         fields = ('registration_number', 'brand', 'region_code', 'last_inspection', 'owner',)
@@ -73,36 +74,36 @@ FuelCardSaltSetForm = modelformset_factory(
 
 class DriverCreateForm(forms.ModelForm):
     '''Форма регистрации пользователя'''
-    #
-    #
-    #
-    #
-    #
-    # password_repeat = forms.CharField(label='Повторите пароль',
-    #                                   widget=forms.widgets.PasswordInput(attrs={
-    #                                       'placeholder': "повторите пароль"
-    #                                   })
-    #                                   )
-    #
-    #
-    # class Meta:
-    #     model = Driver
-    #     fields = (
-    #         'user.login',
-    #         'user.email',
-    #         'user.password',
-    #         'password_repeat',
-    #
-    #         'user.first_name',
-    #         'user.last_name',
-    #         'user.patronymic',
-    #     )
-    #
-    #     widgets = {
-    #         'login': forms.widgets.TextInput(),
-    #         'email': forms.widgets.EmailInput(),
-    #         'password': forms.widgets.PasswordInput(),
-    #         'first_name': forms.widgets.TextInput(),
-    #         'last_name': forms.widgets.TextInput(),
-    #         'patronymic': forms.widgets.TextInput(),
-    #     }
+    password_repeat = forms.CharField(label='Повторите пароль',
+                                      widget=forms.widgets.PasswordInput()
+                                      )
+
+    def clean(self):
+        cleaned_data = super(DriverCreateForm, self).clean()
+        pass1 = cleaned_data.get('password')
+        pass2 = cleaned_data.get('password_repeat')
+
+        if pass1 != pass2:
+            raise ValidationError('Пароли не совпадают!')
+
+
+    class Meta:
+        model = MyUser
+        fields = (
+            'email',
+            'password',
+            'password_repeat',
+            'first_name',
+            'last_name',
+            'patronymic',
+
+        )
+
+        widgets = {
+            'login': forms.widgets.TextInput(),
+            'email': forms.widgets.EmailInput(),
+            'password': forms.widgets.PasswordInput(),
+            'first_name': forms.widgets.TextInput(),
+            'last_name': forms.widgets.TextInput(),
+            'patronymic': forms.widgets.TextInput(),
+        }

@@ -14,7 +14,7 @@ class Context():
         return CarBrand.objects.all()
 
     def get_drivers(self):
-        return Driver.objects.all()
+        return MyUser.objects.filter(role='d')
 
     def get_regions(self):
         return Car.objects.all().values('region_code').distinct()
@@ -31,7 +31,7 @@ class Context():
 
     def get_all_docs(self):
         auto_doc = AutoDoc.objects.all()
-        driver_doc = DriverDoc.objects.all()
+        driver_doc = UserDoc.objects.all()
         query_set = list(chain(auto_doc, driver_doc))
 
         sorting_list_of_querysets = sort_by_date_start(query_set)
@@ -64,11 +64,12 @@ def filtration_driver(get_params):
     if last_name == '': last_name = '`'
     if phone == '': phone = '`'
 
-    query_set = Driver.objects.filter(
-        Q(user__last_name__icontains=last_name)
+    query_set = MyUser.objects.filter(
+        Q(role='d') &
+        (Q(last_name__icontains=last_name)
         | Q(phone__icontains=phone)
         | (Q(my_apps__type_of_id__in=get_params.getlist('type_of_app')) & Q(
-           my_apps__is_active=True))
+           my_apps__is_active=True)))
     )
 
     return query_set.distinct()
@@ -174,7 +175,7 @@ def filtration_document(get_params):
     #ТОЛЬКО ДАТА:
     if len(man_or_car) == 0:
         car_docs_date = get_docs_between_date(model=AutoDoc, start_date=start_date, end_date=end_date)
-        man_docs_date = get_docs_between_date(model=DriverDoc, start_date=start_date, end_date=end_date)
+        man_docs_date = get_docs_between_date(model=UserDoc, start_date=start_date, end_date=end_date)
 
         return list(chain(car_docs_date, man_docs_date))
 
@@ -182,7 +183,7 @@ def filtration_document(get_params):
     elif len(man_or_car) == 2:
         # ['car','man']
         query_set_cars = query_set_with_filters(model=AutoDoc, doc_types=doc_type_car)
-        query_set_mens = query_set_with_filters(model=DriverDoc, doc_types=doc_type_man)
+        query_set_mens = query_set_with_filters(model=UserDoc, doc_types=doc_type_man)
 
         return list(chain(query_set_cars, query_set_mens))
 
@@ -212,7 +213,7 @@ def filtration_document(get_params):
 
     #ТОЛЬКО ВОДИТЕЛИ
     elif man_or_car[0] == 'man':
-        return query_set_with_filters(model=DriverDoc, doc_types=doc_type_man)
+        return query_set_with_filters(model=UserDoc, doc_types=doc_type_man)
         # if (start_date is not None) or (end_date is not None):
         #     man_docs_date = get_docs_between_date(model=DriverDoc, start_date=start_date, end_date=end_date)
         # else:

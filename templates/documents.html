@@ -12,7 +12,7 @@
 {% block main %}
  <div class="main">
             <div class="main__container">
-
+            {% if user.is_manager %}
                 <div class="main__title">
                     <h1>Документы</h1>
                     <p>{{ all_docs|length}}</p>
@@ -122,6 +122,9 @@
 {#                          </tr>#}
                     </table>
                 </div>
+            {% else %}
+            <h1>Страница недсотупна</h1>
+            {% endif %}
             </div>
         </div>
 {% endblock main %}

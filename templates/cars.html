@@ -14,11 +14,10 @@
     active-page
 {% endblock car_active %}
 
-
 {% block main %}
     <div class="main">
             <div class="main__container">
-
+{% if user.is_manager %}
                 <div class="main__title">
                     <h1>Автомобили</h1>
                     <p>{{ cars.count }}</p>
@@ -39,39 +38,20 @@
                                 </li>
                             </label>
                           {% endfor %}
-{#                            <label for="kia" class="filtr-items__check-label">#}
-{#                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="mark" id="kia">#}
-{#                                    <label for="kia" class="filtr-items__check-label">КИА#}
-{#                                </li>#}
-{#                            </label>#}
-{#                            <label for="bmw" class="filtr-items__check-label">#}
-{#                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="mark" id="bmw">#}
-{#                                    <label for="bmw" class="filtr-items__check-label">BMW#}
-{#                                </li>#}
-{#                            </label>#}
+
                         </ul>
                     </li>
                     <li class="filtr-items__item">
                         <p class="filtr-items__title">Водитель</p>
                         <ul class="filtr-items__sub-menu">
                           {% for driver in view.get_drivers %}
-                            <label for="{{ driver.user }}" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="driver" value="{{ driver.user.id}}" id="{{ driver.user }}">
-                                    <label for="{{ driver.user }}" class="filtr-items__check-label">
-                                        {{ driver.user.last_name}} {{ driver.user.first_name|first}}.{{ driver.user.patronymic|first}}.
+                            <label for="{{ driver }}" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="driver" value="{{ driver.id}}" id="{{ myuser }}">
+                                    <label for="{{ driver }}" class="filtr-items__check-label">
+                                        {{ driver.last_name}} {{ driver.first_name|first}}.{{ driver.patronymic|first}}.
                                 </li>
                             </label>
                           {% endfor %}
-{#                            <label for="ivanov_i_i" class="filtr-items__check-label">#}
-{#                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="driver" id="ivanov_i_i">#}
-{#                                    <label for="ivanov_i_i" class="filtr-items__check-label">Иванов И.И.#}
-{#                                </li>#}
-{#                            </label>#}
-{#                            <label for="degtyrev_k_k" class="filtr-items__check-label">#}
-{#                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="driver" id="degtyrev_k_k">#}
-{#                                    <label for="degtyrev_k_k" class="filtr-items__check-label">Дегтярев К.К.#}
-{#                                </li>#}
-{#                            </label>#}
                         </ul>
                     </li>
                     <li class="filtr-items__item">
@@ -84,16 +64,6 @@
                                 </li>
                             </label>
                           {% endfor %}
-{#                            <label for="87" class="filtr-items__check-label">#}
-{#                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="region" id="87">#}
-{#                                    <label for="87" class="filtr-items__check-label">87#}
-{#                                </li>#}
-{#                            </label>#}
-{#                            <label for="89" class="filtr-items__check-label">#}
-{#                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="region" id="89">#}
-{#                                    <label for="89" class="filtr-items__check-label">89#}
-{#                                </li>#}
-{#                            </label>#}
                         </ul>
                     </li>
 
@@ -128,10 +98,13 @@
                           <th class="table__title">Активные <br>заявки</th>
                         </tr>
                         {% for car in cars %}
-{#                        A-111-EE#}
                         <tr class="table__row">
-                          <td class="table__cell">{{ car.registration_number|slice:'0:1'}}-{{ car.registration_number|slice:'1:4'}}-{{ car.registration_number|slice:'4:6'}}</td>
-                          <td class="table__cell">{{ car.owner.user.last_name}} {{ car.owner.user.first_name|first}}.{{ car.owner.user.patronymic|first}}.</td>
+                          <td class="table__cell">
+                              <a href="{% url 'choose-car' car.registration_number %}">
+                                  {{ car.registration_number|slice:'0:1'}}-{{ car.registration_number|slice:'1:4'}}-{{ car.registration_number|slice:'4:6'}}
+                              </a>
+                          </td>
+                          <td class="table__cell">{{ car.owner.last_name}} {{ car.owner.first_name|first}}.{{ car.owner.patronymic|first}}.</td>
                           <td class="table__cell">{{ car.brand }}</td>
                           <td class="table__cell">{{ car.region_code }}</td>
                           <td class="table__cell">{{ car.last_inspection}}</td>
@@ -150,11 +123,16 @@
                          {% endfor %}
                     </table>
                 </div>
+{% else %}
+                <h1>Страница недоступна</h1>
+{% endif %}
             </div>
         </div>
+
 {% endblock main %}
 
 {% block forms %}
+    {% if user.is_manager %}
     <form method="post" action="{% url 'cars' %}">
         <div class="form-car add">
           <button type="reset">
@@ -170,33 +148,33 @@
           </h1>
             <div class="form-car__timing">
             {% csrf_token %}
-{#                {{ form.as_p }}#}
-{#                <label for="car_number"><p>Номер:</p></label>#}
-{#                <input type="text" id="car_number">#}
-{##}
-{#                <label for=""><p>Марка:</p></label>#}
-{##}
-{#                <input type="radio" name="car_brand" id="rdo-toyota">#}
-{#                  <label for="rdo-toyota">TOYOTA</label>#}
-{##}
-{##}
-{#                <input type="radio" name="car_brand" id="rdo-kia">#}
-{#                  <label for="rdo-kia">KIA</label>#}
-{##}
-{#                <input type="radio" name="car_brand" id="rdo-bmw">#}
-{#                  <label for="rdo-bmw">BMW</label>#}
-{##}
-{##}
-{#                  <label for="car_region"><p>Регион:</p></label>#}
-{#                  <input type="text" id="car_region">#}
-{##}
-{#                <label for="car_last_inspection"><p>Последний осмотр:</p></label>#}
-{#                <input type="date">#}
-{#                <label for="car_driver"><p>Закрепить за:</p></label>#}
-{#                <input type="text" id="car_driver">#}
-{##}
-{#                <label for="car_image"><p>Прикрепить фото:</p></label>#}
-{#                <input type="file" id="car_image">#}
+                {{ form.as_p }}
+                <label for="car_number"><p>Номер:</p></label>
+                <input type="text" id="car_number">
+
+                <label for=""><p>Марка:</p></label>
+
+                <input type="radio" name="car_brand" id="rdo-toyota">
+                  <label for="rdo-toyota">TOYOTA</label>
+
+
+                <input type="radio" name="car_brand" id="rdo-kia">
+                  <label for="rdo-kia">KIA</label>
+
+                <input type="radio" name="car_brand" id="rdo-bmw">
+                  <label for="rdo-bmw">BMW</label>
+
+
+                  <label for="car_region"><p>Регион:</p></label>
+                  <input type="text" id="car_region">
+
+                <label for="car_last_inspection"><p>Последний осмотр:</p></label>
+                <input type="date">
+                <label for="car_driver"><p>Закрепить за:</p></label>
+                <input type="text" id="car_driver">
+
+                <label for="car_image"><p>Прикрепить фото:</p></label>
+                <input type="file" id="car_image">
 
                   <p style="color: red">{{ form.errors.registration_number.as_text }}</p>
                   <label for="{{ form.registration_number.id_for_label }}"><p>{{ form.registration_number.label}}</p></label>
@@ -218,8 +196,12 @@
             </div>
         </div>
       </form>
+    {% endif %}
 {% endblock forms %}
 
 {% block js_script %}
+    {% if user.is_manager %}
 <script src="{% static 'js/cars.js' %}"></script>
+    {% endif %}
 {% endblock js_script %}
+

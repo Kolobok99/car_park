@@ -12,7 +12,7 @@
 {% block main %}
     <div class="main">
             <div class="main__container">
-
+            {% if user.is_manager %}
                 <div class="main__title">
                     <h1>Топливные карты</h1>
                     <p>{{ all_cards.count }}</p>
@@ -71,7 +71,7 @@
                           <td class="table__cell">{{ card.number|slice:"0:4"}} - {{ card.number|slice:"4:8"}} - {{ card.number|slice:"8:12"}} - {{ card.number|slice:"12:16"}}</td>
                           <td class="table__cell">{{ card.limit }} л.</td>
                           <td class="table__cell">{{ card.balance }} л.</td>
-                          <td class="table__cell">{{ card.owner.user.last_name}} {{ card.owner.user.first_name|first}}.{{ card.owner.user.patronymic|first}}.</td>
+                          <td class="table__cell">{{ card.owner.last_name}} {{ card.owner.first_name|first}}.{{ card.owner.patronymic|first}}.</td>
 {#                            {{ card.owner.user.first_name|first}}.{{ card.owner.user.patronymic|first}}.#}
                           <td class="table__cell">
                             <label class="table__check-label">
@@ -82,11 +82,15 @@
                     {% endfor %}
                     </table>
                 </div>
+            {% else %}
+            <h1>Страница недоступна<h1>
+            {% endif %}
             </div>
         </div>
 {% endblock main %}
 
 {% block forms %}
+    {% if user.is_manager %}
      <form method="post" action="{% url 'cards' %}">
      {% csrf_token %}
         <div class="form-card add">
@@ -113,6 +117,7 @@
             </div>
         </div>
       </form>
+    {% endif %}
 {% endblock forms %}
 
 {% block js_script %}

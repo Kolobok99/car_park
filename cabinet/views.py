@@ -1,6 +1,8 @@
 import random
 
 import union as union
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.db.models import Q
 from django.http import HttpResponseRedirect
@@ -11,13 +13,15 @@ from .filters import CarFilter
 from .forms import *
 from .models import *
 
-from django.views.generic import ListView, TemplateView, FormView, CreateView, UpdateView
+from django.views.generic import ListView, TemplateView, FormView, CreateView, UpdateView, DetailView
 
 from .services import filtration_car, filtration_driver, filtration_document, Context, filtration_cards
 
 
-class CarsView(Context,ListView):
+
+class CarsView(Context, ListView):
     """Вывод всех автомобилей"""
+
     template_name = "cars.html"
     context_object_name = "cars"
     success_url = '/cars'
@@ -47,7 +51,7 @@ class CarsView(Context,ListView):
 #             return filtration_car(self.request.GET)
 
 
-class CarCreateView(Context, CreateView):
+class CarCreateView(Context,  CreateView):
     '''добавление нового автомобиля'''
     template_name = "cars.html"
     # context_object_name = "cars"
@@ -63,7 +67,7 @@ class CarCreateView(Context, CreateView):
         return context
 
     
-class DriversView(Context, TemplateView):
+class DriversView(Context, LoginRequiredMixin, TemplateView):
     template_name = 'drivers.html'
     # queryset = Driver.objects.all()
     # context_object_name = 'drivers'
@@ -82,7 +86,7 @@ class DriversView(Context, TemplateView):
     #     super(DriversView, self).setup(request, *args, **kwargs)
 
 
-class DocumentsView(Context, TemplateView):
+class DocumentsView(Context, LoginRequiredMixin, TemplateView):
     template_name = 'documents.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -93,7 +97,7 @@ class DocumentsView(Context, TemplateView):
             context['all_docs'] = filtration_document(self.request.GET)
         return context
 
-class CardCreateView(Context, CreateView):
+class CardCreateView(Context, LoginRequiredMixin, CreateView):
     """Создание и вывод топилвных карт"""
 
     template_name = 'cards.html'
@@ -108,6 +112,8 @@ class CardCreateView(Context, CreateView):
             context['all_cards'] = filtration_cards(self.request.GET)
         return context
 
+class AplicationsView(ListView):
+    """Вывод заявок"""
 # class CartUpdateView(UpdateView):
 #     template_name = 'cards.html'
 #     success_url = '/cards'
@@ -120,3 +126,9 @@ class RegistrationView(CreateView):
     form_class = DriverCreateForm
     success_url = '/cars'
 
+class CarView(DetailView):
+    '''Отображение страницы машины'''
+
+    template_name = 'car.html'
+    model = Car
+    slug_field = 'registration_number'
