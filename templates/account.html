@@ -1,0 +1,388 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block static_href %}
+    {% static 'css/account.css' %}
+{% endblock static_href %}
+
+{% block title %} Личный кабинет {% endblock title%}
+
+
+{% block main %}
+      <div class="main">
+        <div class="main__container">
+          <div class="main__account account-area">
+            <div class="account-area__avatar">
+              <img src="{% static '/img/account/full-avatar.jpeg' %}" alt="" />
+              <input type="file" name="avatar" id="image" />
+            </div>
+            <form method="post" action="#">
+              <div class="account-area__info">
+                <div class="account-area__item">
+                  <label for="first_name">Имя:</label>
+                  <input
+                    type="text"
+                    name="user-info"
+                    id="first_name"
+                    value="Иван"
+                    placeholder="Иван"
+                  />
+                </div>
+
+                <div class="account-area__item">
+                  <label for="last_name">Фамилия:</label>
+                  <input
+                    type="text"
+                    name="user-info"
+                    id="last_name"
+                    value="Золотавин"
+                    placeholder="Золотавин"
+                  />
+                </div>
+
+                <div class="account-area__item">
+                  <label for="patronymic">Отчество:</label>
+                  <input
+                    type="text"
+                    name="user-info"
+                    id="patronymic"
+                    value="Александрович"
+                    placeholder="Александрович"
+                  />
+                </div>
+               <div class="account-area__item">
+                    <label for="birthdate">Дата рождения:</label>
+                    <input
+                      type="date"
+                      name="user-info"
+                      id="birthdate"
+                      value="28.09.1999"
+                      placeholder="28.09.1999"
+                    />
+               </div>
+
+                <div class="account-area__item">
+                    <label for="phone">Телефон:</label>
+                    <input
+                      type="tel"
+                      name="user-info"
+                      id="phone"
+                      value="79227776370"
+                      placeholder="+7-922-777-6370"
+                    />
+                </div>
+
+                <div class="account-area__item">
+                    <label for="email">Email::</label>
+                    <input
+                      type="email"
+                      name="user-info"
+                      id="email"
+                      value="izolotavin99@gmail.com"
+                      placeholder="izolotavin99@gmail.com"
+                    />
+                  </div>
+                </div>
+                <button class="account-area__btn-submit" type="submit">Изменить данные</button>
+            </div>
+          </form>
+
+          <div class="main__tables">
+            <div class="main__table table">
+                <h1 class="table__table-title">Автомобили</h1>
+                <table>
+                    <tr class="table__titles">
+                      <th class="table__title">Номер</th>
+                      <th class="table__title">Марка</th>
+                      <th class="table__title">регион</th>
+                      <th class="table__title">Последний <br>осмотр</th>
+                      <th class="table__title">Активные <br>заявки</th>
+                      <th class="table__title">Действия</th>
+                    </tr>
+                {% for car in user.my_cars.all %}
+                    <tr class="table__row">
+                      <td class="table__cell">
+                          <a href="{% url 'choose-car' car.registration_number %}">
+                                  {{ car.registration_number|slice:'0:1'}}-{{ car.registration_number|slice:'1:4'}}-{{ car.registration_number|slice:'4:6'}}
+                          </a>
+                      </td>
+                      <td class="table__cell">{{ car.brand }}</td>
+                      <td class="table__cell">{{ car.region_code }}</td>
+                      <td class="table__cell">{{ car.last_inspection }}</td>
+                      <td class="table__cell">
+                          {% for app in car.applications.all %}
+                          {{ app.type_of }}<br>
+                          {% endfor %}
+                      </td>
+                      <td class="table__cell">
+                        <button class="table__btn-add-app">Добавить заявку</button>
+                    </td>
+                    </tr>
+                {% endfor %}
+
+
+                </table>
+            </div>
+
+            <div class="main__table table">
+                <h1 class="table__table-title">Заявки</h1>
+                <table>
+                    <!--  -->
+    <!-- ID -->                            <col style="width:1%">
+    <!-- Дата создания -->                 <col style="width:10%">
+    <!-- Дата окнчания -->                 <col style="width:10%">
+    <!-- Срочность -->                     <col style="width:10%">
+    <!-- Статус -->                        <col style="width:10%">
+    <!-- Тип -->                           <col style="width:20%">
+    <!-- Создатель -->                     <col style="width:10%">
+    <!-- Авто -->                           <col style="width: 10%">
+
+
+
+                    <tr class="table__titles">
+                      <th class="table__title">ID</th>
+                      <th class="table__title">Дата</th>
+                      <th class="table__title">Срочность</th>
+                      <th class="table__title">Статус</th>
+                      <th class="table__title">Тип</th>
+                      <th class="table__title">Авто</th>
+                      <th class="table__title">Краткое<br> описание</th>
+                      <th class="table__title">Действия</th>
+                    </tr>
+                    <tr class="table__row">
+                        <td class="table__cell">2</td>
+                        <td class="table__cell">
+                            27.05.2022
+                            <br>-<br>
+                            05.06.2022
+
+                        </td>
+                        <td class="table__cell">Срочно</td>
+                        <td class="table__cell">Рассмотрена</td>
+                        <td class="table__cell">Поломка</td>
+                        <td class="table__cell">A<br>-111-<br>EE</td>
+                        <td class="table__cell">Пробило левую переднюю шину</td>
+                        <td class="table__cell">
+                          <button class="table__btn-change-app">изменить заявку</button>
+                      </td>
+                      </tr>
+
+                </table>
+            </div>
+
+            <div class="main__table table">
+                <h1 class="table__table-title">Топливные карты</h1>
+                <table>
+
+                    <!-- ID -->                            <col style="width:5%">
+                    <!-- Дата создания -->                 <col style="width:15%">
+                    <!-- Дата окнчания -->                 <col style="width:15%">
+                    <!-- Срочность -->                     <col style="width:15%">
+                    <!-- действия -->                     <col style="width:15%">
+
+
+                                        <tr class="table__titles">
+                                          <th class="table__title">ID</th>
+                                          <th class="table__title">Номер</th>
+                                          <th class="table__title">Лимит</th>
+                                          <th class="table__title">Остаток</th>
+                                          <th class="table__title">Действия</th>
+                                        </tr>
+                                        <!-- <label for="1"> -->
+                                        <form method="post">
+                                          <tr class="table__row">
+                                            <td class="table__cell">1</td>
+                                            <td class="table__cell">4264-3231</td>
+                                            <td class="table__cell">800 л.</td>
+                                            <td class="table__cell">
+                                            <input class="table__card-balance" type="text" name="balance" id="1" value="200" placeholder="200">л
+                                            </td>
+                                            <td class="table__cell">
+                                              <button class="table__btn-save-balance">изменить баланс</button>
+                                          </td>
+                                        </form>
+                                        <!-- </label> -->
+                                        </tr>
+                                        <!-- </label> -->
+                </table>
+            </div>
+
+            <div class="main__table table">
+                <h1 class="table__table-title _doc-title">Документы</h1>
+                <button class="table__btn-add-doc">Добавить</button>
+                <table>
+
+                    <!-- ID -->                            <col style="width:5%">
+                    <!-- Дата создания -->                 <col style="width:15%">
+                    <!-- Дата окнчания -->                 <col style="width:15%">
+
+
+                                        <tr class="table__titles">
+                                          <th class="table__title">Тип документа</th>
+                                          <th class="table__title">Дата получения</th>
+                                          <th class="table__title">Дата окончания</th>
+
+                                        </tr>
+                                        <label for="1">
+                                        <tr class="table__row">
+                                          <td class="table__cell">паспорт</td>
+                                          <td class="table__cell">22.02.2019</td>
+                                          <td class="table__cell">22.02.2024</td>
+                                        </tr>
+
+                                        <tr class="table__row">
+                                            <td class="table__cell">страховое</td>
+                                            <td class="table__cell">22.02.2021</td>
+                                            <td class="table__cell">22.02.2022</td>
+                                          </tr>
+                </table>
+                <br>
+                <br>
+
+                <br>
+                <br>
+                <!-- <form method="post">
+                <div class="main__form-add-app form-add">
+                  <h1 class="form-add__title">
+                    Заявка на авто #A-111-EE
+                  </h1>
+                  <p>Срочность:</p>
+                    <div class="form-add__timing">
+
+                      <input type="radio" name="timing" id="noturgent">
+                      <label for="noturgent">Не срочно</label>
+
+
+                      <input type="radio" name="timing" id="urgent">
+                      <label for="urgent">Срочно</label>
+
+                      <input type="radio" name="timing" id="veryurgent">
+                      <label for="veryurgent">Очень срочно</label>
+
+                      <label for="new_descr">Опишите суть заявки:</label>
+                      <textarea name="description" id="new_descr" cols="30" rows="10"></textarea>
+                      <button type="submit">Отправить</button>
+                    </div>
+                  </form>
+              </div> -->
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+{% endblock main %}
+
+{% block forms %}
+           <form method="post">
+            <div class="form-app add">
+              <button type="reset">
+                <div class="bnt-form-app-reset-add">
+                  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="0" x2="100" y1="0" y2="100" />
+                    <line x1="0" x2="100" y1="100" y2="0" />
+                  </svg>
+                </div>
+              </button>
+              <h1 class="form-app__title">
+                Заявка на авто #A-111-EE
+              </h1>
+              <p>Срочность:</p>
+                <div class="form-app__timing">
+
+                  <input type="radio" name="timing" id="rdo-noturgent">
+                  <label for="rdo-noturgent">Не срочно</label>
+
+
+                  <input type="radio" name="timing" id="rdo-urgent">
+                  <label for="rdo-urgent">Срочно</label>
+
+                  <input type="radio" name="timing" id="rdo-veryurgent">
+                  <label for="rdo-veryurgent">Очень срочно</label>
+
+                  <label for="new_descr">Опишите суть заявки:</label>
+                  <textarea name="description" id="new_descr" cols="30" rows="10"></textarea>
+                  <button type="submit">Отправить</button>
+                </div>
+           </div>
+          </form>
+
+
+          <form method="post">
+            <div class="form-app change">
+              <button type="reset">
+                <div class="bnt-form-app-reset-change">
+                  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="0" x2="100" y1="0" y2="100" />
+                    <line x1="0" x2="100" y1="100" y2="0" />
+                  </svg>
+                </div>
+              </button>
+              <h1 class="form-app__title">
+                Заявка №21
+              </h1>
+              <p>Срочность:</p>
+                <div class="form-app__timing">
+
+                  <input type="radio" checked name="timing-change" id="rdo-noturgent-c">
+                  <label for="rdo-noturgent-c">Не срочно</label>
+
+
+                  <input type="radio" name="timing-change" id="rdo-urgent-c">
+                  <label for="rdo-urgent-c">Срочно</label>
+
+                  <input type="radio" name="timing-change" id="rdo-veryurgent-c">
+                  <label for="rdo-veryurgent-c">Очень срочно</label>
+
+                  <label for="descr-change">Опишите суть заявки:</label>
+                  <textarea name="description" id="descr-change" cols="30" rows="10"></textarea>
+                  <button type="submit">Отправить</button>
+                </div>
+            </div>
+          </form>
+
+          <form method="post">
+            <div class="form-doc add">
+              <button type="reset">
+                <div class="bnt-form-doc-reset-add">
+                  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="0" x2="100" y1="0" y2="100" />
+                    <line x1="0" x2="100" y1="100" y2="0" />
+                  </svg>
+                </div>
+              </button>
+              <h1 class="form-app__title">
+                Добавление документов:
+              </h1>
+              <p>Тип:</p>
+                <div class="form-app__timing">
+
+                  <input type="radio" checked name="type_doc" id="rdo-passport">
+                  <label for="rdo-passport">Паспорт</label>
+
+
+                  <input type="radio" name="type_doc" id="rdo-snils">
+                  <label for="rdo-snils">Снился</label>
+
+                  <input type="radio" name="type_doc" id="rdo-insurance">
+                  <label for="rdo-insurance">Строховой полис</label>
+
+                  <label for="date-start">Дата получения:</label>
+                  <input type="date" id="date-start">
+
+                  <label for="date-end">Дата получения:</label>
+                  <input type="date" id="date-end">
+
+                  <label for="doc-copy">Прикрепите документа</label>
+                  <input type="file">
+
+                  <button type="submit">Отправить</button>
+                </div>
+            </div>
+          </form>
+
+{% endblock forms %}
+
+{% block js_script %}
+<script src="{% static 'js/account.js' %}"></script>
+{% endblock js_script %}

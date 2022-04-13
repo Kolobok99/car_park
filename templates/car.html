@@ -69,23 +69,23 @@
                       <th class="table__title">Краткое<br> описание</th>
                       <th class="table__title">Действия</th>
                     </tr>
+                    {% for app in car.applications.all %}
                     <tr class="table__row">
-                        <td class="table__cell">2</td>
+                        <td class="table__cell">{{ app.id }}</td>
                         <td class="table__cell">
-                            27.05.2022
+                            {{ app.start_date}}
                             <br>-<br>
-                            05.06.2022
-
+                            {{ app.end_date}}
                         </td>
-                        <td class="table__cell">Срочно</td>
-                        <td class="table__cell">Рассмотрена</td>
-                        <td class="table__cell">Поломка</td>
-                        <td class="table__cell">Пробило левую переднюю шину</td>
+                        <td class="table__cell">{{ app.urgency }}</td>
+                        <td class="table__cell">{{ app.status }}</td>
+                        <td class="table__cell">{{ app.type_of }}</td>
+                        <td class="table__cell">{{ app.description|truncatechars:10 }}</td>
                         <td class="table__cell">
                           <button class="table__btn-change-app">изменить заявку</button>
                         </td>
                       </tr>
-
+                    {% endfor %}
                 </table>
             </div>
 
@@ -123,7 +123,8 @@
 {% endblock main %}
 
 {% block forms %}
-    <form method="post">
+    <form method="post" action="{% url 'choose-car' car.registration_number %}">
+    {% csrf_token %}
       <div class="form-app add">
         <button type="reset">
           <div class="bnt-form-app-reset-add">
@@ -134,23 +135,34 @@
           </div>
         </button>
         <h1 class="form-app__title">
-          Заявка на авто #A-111-EE
+          Заявка на авто {{ car.registration_number }}
         </h1>
-        <p>Срочность:</p>
           <div class="form-app__timing">
+              {{ form.errors }}
+              {{ form.type_of.label }}
+              {{ form.type_of }}
 
-            <input type="radio" name="timing" id="rdo-noturgent">
-            <label for="rdo-noturgent">Не срочно</label>
+              {{ form.urgency.label }}
+              {{ form.urgency }}
 
+              {{ form.description.label }}
+              {{ form.description }}
 
-            <input type="radio" name="timing" id="rdo-urgent">
-            <label for="rdo-urgent">Срочно</label>
-
-            <input type="radio" name="timing" id="rdo-veryurgent">
-            <label for="rdo-veryurgent">Очень срочно</label>
-
-            <label for="new_descr">Опишите суть заявки:</label>
-            <textarea name="description" id="new_descr" cols="30" rows="10"></textarea>
+              <input type="hidden" name="car" id="id_car" value="{{ car.pk }}">
+              <input type="hidden" name="owner" id="id_owner" value="{{ user.pk }}">
+              <input type="hidden" name="status" value="O" id="id_status">
+    {#            <input type="radio" name="timing" id="rdo-noturgent">#}
+{#            <label for="rdo-noturgent">Не срочно</label>#}
+{##}
+{##}
+{#            <input type="radio" name="timing" id="rdo-urgent">#}
+{#            <label for="rdo-urgent">Срочно</label>#}
+{##}
+{#            <input type="radio" name="timing" id="rdo-veryurgent">#}
+{#            <label for="rdo-veryurgent">Очень срочно</label>#}
+{##}
+{#            <label for="new_descr">Опишите суть заявки:</label>#}
+{#            <textarea name="description" id="new_descr" cols="30" rows="10"></textarea>#}
             <button type="submit">Отправить</button>
           </div>
      </div>

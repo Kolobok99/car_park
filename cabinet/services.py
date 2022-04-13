@@ -40,6 +40,11 @@ class Context():
     def get_all_cards(self):
         return FuelCard.objects.all()
 
+    def get_all_urgecny_types(self):
+        return Application.URGENCY_CHOISES
+
+    def get_all_status_types(self):
+        return Application.STATUS_CHOISES
 
 def filtration_car(get_params):
     reg_number = get_params.get('registration_number')
@@ -287,7 +292,66 @@ def filtration_cards(get_params):
     )
     return querySet
 
+def filtration_apps(get_params):
+    '''Возвращает отфильтрованный набор заявок'''
 
+
+    # GET-параметры
+
+    start_date = get_params.get('start_date')
+    end_date = get_params.get('end_date')
+
+    urgency_types = get_params.getlist('urgency_types')
+    status_types = get_params.getlist('status_types')
+    types_of_apps = get_params.getlist('types_of_apps')
+
+    print("----ПОЛУЧЕНЫЕ ПАРАМЕТРЫ------")
+    print(f'{start_date=}')
+    print(f'{end_date=}')
+    print(f'{urgency_types=}')
+    print(f'{status_types=}')
+    print(f'{types_of_apps=}')
+
+    if start_date == '': start_date = '1999-01-01'
+    if end_date == '': end_date = '2050-01-01'
+    if len(urgency_types) == 0: urgency_types = [urg[0] for urg in Application.URGENCY_CHOISES]
+    if len(status_types) == 0:  status_types = [stat[0] for stat in Application.STATUS_CHOISES]
+    if len(types_of_apps) == 0: types_of_apps = TypeOfAppl.objects.all()
+
+    print("----МОДИФИЦИРОВАННЫЕ------")
+    print(f'{start_date=}')
+    print(f'{end_date=}')
+    print(f'{urgency_types=}')
+    print(f'{status_types=}')
+    print(f'{types_of_apps=}')
+
+    return_set = Application.objects.filter(
+          Q(start_date__gte=start_date)
+        & Q(end_date__lte=end_date)
+        & Q(urgency__in=urgency_types)
+        & Q(status__in=status_types)
+        & Q(type_of__in=types_of_apps)
+    )
+
+    return return_set
+
+def get_docs_between_date(model, start_date=None, end_date=None):
+    '''Возвращает queryset model с фильтрацией по дате'''
+    print(f'{end_date=}')
+    if start_date is None:
+        query_set = model.objects.filter(
+            date_end__lte=end_date
+        )
+    elif end_date is None:
+        query_set = model.objects.filter(
+            date_start__gte=start_date
+        )
+    else:
+        query_set = model.objects.filter(
+            Q(date_start__gte=start_date)
+            & Q(date_end__lte=end_date)
+        )
+    return query_set
 
 def sort_by_date_start(list_to_sort):
     if len(list_to_sort) <= 1:

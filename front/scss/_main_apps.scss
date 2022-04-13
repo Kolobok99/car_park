@@ -47,7 +47,7 @@
     border: 1px solid #D6DDEB;
 	border-radius: 10px;
     
-    > :not(:first-child):not(:last-child):not(:nth-child(2)) {
+    > :not(:first-child):not(:last-child){
         padding-left: 20px;
         &::after{
             content: url(../img/filtr/arrow-down.svg);

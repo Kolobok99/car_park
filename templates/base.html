@@ -27,22 +27,22 @@
                       <li class="menu__item {% block driver_active %}    {% endblock driver_active %}"><a href="{% url 'drivers' %}">Водители</a></li>
                       <li class="menu__item {% block document_active %}    {% endblock document_active %}"><a href="{% url 'documents' %}">Документы</a></li>
                       <li class="menu__item {% block cards_active %}    {% endblock cards_active %}"><a href="{% url 'cards' %}">Топливные карты</a></li>
-                      <li class="menu__item {% block cards_active %}    {% endblock cards_active %}"><a href="{% url 'cards' %}">Заявки</a></li>
+                      <li class="menu__item {% block apps_active %}    {% endblock apps_active %}"><a href="{% url 'applications' %}">Заявки</a></li>
                     </ul>
                 </div>
 
                 <div class="header__auth auth">
 
-                    <img class="auth__avatar" src="../img/header/avatar.png" alt="avatar">
-                    <a href="" class="auth__settings">
-                        <img src="../img/header/settings.svg" alt="">
+                    <img class="auth__avatar" src="{% static '/img/header/avatar.png' %}" alt="avatar">
+                    <a href="{% url 'account' %}" class="auth__settings">
+                        <img src="{% static 'img/header/settings.svg' %}" alt="">
                     </a>
                     <a href="{% url 'logout' %}" class="auth__exit">
                         Выход {{ user.role }}
                     </a>
-                    {% if user.is_authenticated %}
-                        <p>{{ user.email }}</p>
-                    {% endif %}
+{#                    {% if user.is_authenticated %}#}
+{#                        <p>{{ user.email }}</p>#}
+{#                    {% endif %}#}
                 </div>
 
             </div>

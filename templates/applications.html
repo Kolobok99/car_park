@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block static_href %}
+    {% static 'css/applications.css' %}
+{% endblock static_href %}
+
+{% block title %} Заявки {% endblock title%}
+
+{% block apps_active %}  active-page  {% endblock apps_active %}
+
+{% block main %}
+ <div class="main">
+            <div class="main__container">
+
+                <div class="main__title">
+                    <h1>Заявок</h1>
+                    <p>{{ all_apps.count }}</p>
+                </div>
+            <form action="{% url 'applications' %}" method="get">
+                <ul class="main__filtration filtr-items">
+                    <li class="filtr-items__item">
+                        <p>получение:</p>
+                        <input type="date" name="start_date" placeholder="от.">
+                        <p>окончание:</p>
+                        <input type="date" name="end_date" placeholder="до.">
+                    </li>
+                    <li class="filtr-items__item">
+                        <p class="filtr-items__title">Срочность</p>
+                        <ul class="filtr-items__sub-menu">
+                            {% for urgency_type in view.get_all_urgecny_types %}
+                                <label for="{{ urgency_type.0 }}" class="filtr-items__check-label">
+                                    <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="urgency_types" value="{{ urgency_type.0 }}" id="{{ urgency_type.0 }}">
+                                        <label for="{{ urgency_type.0 }}" class="filtr-items__check-label">{{ urgency_type.1 }} </label>
+                                    </li>
+                                </label>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    <li class="filtr-items__item">
+                        <p class="filtr-items__title">Статус</p>
+                        <ul class="filtr-items__sub-menu">
+                            {% for status_type in view.get_all_status_types %}
+                                 <label for="{{ status_type.0 }}" class="filtr-items__check-label">
+                                    <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="status_types" value="{{ status_type.0 }}" id="{{ status_type.0 }}">
+                                        <label for="{{ status_type.0 }}" class="filtr-items__check-label">{{ status_type.1 }}
+                                    </li>
+                                 </label>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    <li class="filtr-items__item">
+                        <p class="filtr-items__title">Тип</p>
+                        <ul class="filtr-items__sub-menu">
+                            {% for type_of_app in view.get_types_of_app %}
+                                <label for="{{ type_of_app.id }}" class="filtr-items__check-label">
+                                    <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="types_of_apps" value="{{ type_of_app.id }}" id="{{ type_of_app.id }}">
+                                        <label for="{{ type_of_app.id }}" class="filtr-items__check-label">{{ type_of_app.title }}</label>
+                                    </li>
+                                </label>
+                            {% endfor %}
+                        </ul>
+                    </li>
+
+
+                    <button type="submit" class="filtr-items__button">
+                        <img src="{% static 'img/filtr/lupa.svg' %}" alt="поиск">
+                    </button>
+                </ul>
+            </form>
+
+                <div class="main__information">
+                    <table class="main__table table">
+                        <!--  -->
+    <!-- ID -->                            <col style="width:5%">
+    <!-- Дата создания -->                 <col style="width:10%">
+    <!-- Дата окнчания -->                 <col style="width:10%">
+    <!-- Срочность -->                     <col style="width:10%">
+    <!-- Статус -->                        <col style="width:10%">
+    <!-- Тип -->                           <col style="width:10%">
+    <!-- Создатель -->                     <col style="width:10%">
+    <!-- Авто -->                           <col style="width: 10%">
+    <!-- описание -->                      <col style="width: 30%">
+
+
+                        <tr class="table__titles">
+                          <th class="table__title">ID</th>
+                          <th class="table__title">Дата создания</th>
+                          <th class="table__title">Дата окнчания</th>
+                          <th class="table__title">Срочность</th>
+                          <th class="table__title">Статус <br> выполнения</th>
+                          <th class="table__title">Тип</th>
+                          <th class="table__title">Создатель</th>
+                          <th class="table__title">Авто</th>
+                          <th class="table__title">Краткое<br> описание</th>
+                        </tr>
+                        {% for app in all_apps %}
+                            <tr class="table__row">
+                              <td class="table__cell">{{ app.id }}</td>
+                              <td class="table__cell">{{ app.start_date|date:"d-m-Y" }}</td>
+                              <td class="table__cell">{{ app.end_date|date:"d-m-Y" }}</td>
+                              <td class="table__cell">
+                                  {% if app.urgency == 'N' %}
+                                  Не срочно
+                                  {% elif app.urgency == 'U' %}
+                                  Срочно
+                                  {% else %}
+                                  Очень срочно
+                                  {% endif %}
+                              </td>
+                              <td class="table__cell">
+                                  {% if app.status == 'O' %}
+                                  Ожидает рассмотрения
+                                  {% elif app.status == 'R' %}
+                                  Рассмотрена
+                                  {% elif app.status == 'V' %}
+                                  Выполнена
+                                  {% else %}
+                                  Просрочена
+                                  {% endif %}
+                              </td>
+                              <td class="table__cell">{{ app.type_of }}</td>
+                              <td class="table__cell">{{ app.owner.last_name}} {{ app.owner.first_name|first}}.{{ app.owner.patronymic|first}}.</td>
+                              <td class="table__cell">
+                                  <a href="{% url 'choose-car' app.car.registration_number %}">
+                                  {{ app.car.registration_number|slice:'0:1'}}-{{ app.car.registration_number|slice:'1:4'}}-{{ app.car.registration_number|slice:'4:6'}}
+                              </a>
+                              </td>
+                              <td class="table__cell"> {{ app.description |truncatechars:50}}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+{% endblock main %}
+
+{% block forms %}
+    {% if user.is_manager %}
+
+    {% endif %}
+{% endblock forms %}
+
+{% block js_script %}
+{#<script src="{% static 'js/applications.js' %}"></script>#}
+{% endblock js_script %}

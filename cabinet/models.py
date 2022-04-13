@@ -233,7 +233,7 @@ class Application(models.Model):
     URGENCY_CHOISES = (
         ('N', 'Не срочно'),
         ('U', 'Срочно'),
-        ('V', 'Очень срочно'),
+        ('S', 'Очень срочно'),
     )
 
     type_of = models.ForeignKey("TypeOfAppl", on_delete=models.SET_NULL, blank=True, null=True)

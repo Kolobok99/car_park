@@ -7,6 +7,7 @@ from .models import *
 
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import MyUser
+
 class MyUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm):
         model = MyUser
@@ -66,12 +67,6 @@ class FuelCardSaltForm(forms.ModelForm):
         model = FuelCard
         fields = ('has_owner', )
 
-FuelCardSaltSetForm = modelformset_factory(
-    FuelCard,
-    fields=('has_owner',)
-)
-
-
 class DriverCreateForm(forms.ModelForm):
     '''Форма регистрации пользователя'''
     password_repeat = forms.CharField(label='Повторите пароль',
@@ -79,7 +74,7 @@ class DriverCreateForm(forms.ModelForm):
                                       )
 
     def clean(self):
-        cleaned_data = super(DriverCreateForm, self).clean()
+        cleaned_data = super().clean()
         pass1 = cleaned_data.get('password')
         pass2 = cleaned_data.get('password_repeat')
 
@@ -107,3 +102,23 @@ class DriverCreateForm(forms.ModelForm):
             'last_name': forms.widgets.TextInput(),
             'patronymic': forms.widgets.TextInput(),
         }
+
+class AppCreateForm(forms.ModelForm):
+
+    class Meta:
+        model = Application
+        fields = ('type_of',
+                  'urgency',
+                  'description',
+                  'car',
+                  'owner',
+                  'status'
+                  )
+        widgets = {
+            'car': forms.widgets.HiddenInput(),
+            'owner': forms.widgets.HiddenInput(),
+            'status': forms.widgets.HiddenInput(),
+        }
+
+
+

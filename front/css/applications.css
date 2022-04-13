@@ -220,11 +220,11 @@ body {
   border-radius: 10px;
 }
 
-.filtr-items > :not(:first-child):not(:last-child):not(:nth-child(2)) {
+.filtr-items > :not(:first-child):not(:last-child) {
   padding-left: 20px;
 }
 
-.filtr-items > :not(:first-child):not(:last-child):not(:nth-child(2))::after {
+.filtr-items > :not(:first-child):not(:last-child)::after {
   content: url(../img/filtr/arrow-down.svg);
   padding-right: 15px;
 }
