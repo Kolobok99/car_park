@@ -135,13 +135,17 @@
         </h1>
           <div class="form-app__timing">
               {{ app_create_form.errors }}
-              {{ app_create_form.type_of.label }}
-              {{ app_create_form.type_of }}
 
-              {{ app_create_form.urgency.label }}
-              {{ app_create_form.urgency }}
+              <p>{{ app_create_form.type_of.label }}:</p>
+                {{ app_create_form.type_of }}
+              <p>Срочность:</p>
+                <br>
+                {% for radio in app_create_form.urgency %}
+                      {{ radio.tag }}
+                      <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                {% endfor %}
 
-              {{ app_create_form.description.label }}
+               <label for="new_descr">Опишите суть заявки:</label>
               {{ app_create_form.description }}
 
               <input type="hidden" name="car" id="id_car" value="{{ car.pk }}">
@@ -182,6 +186,7 @@
             <label for="rdo-veryurgent-c">Очень срочно</label>
 
             <label for="descr-change">Опишите суть заявки:</label>
+            <input type="hidden" name="action" value="doc_create">
             <textarea name="description" id="descr-change" cols="30" rows="10"></textarea>
             <button type="submit">Отправить</button>
           </div>
@@ -205,13 +210,17 @@
           <div class="form-app__timing">
             {{ doc_create_form.errors }}
            {% for radio in doc_create_form.type %}
+               {% if 'a' in radio.choice_label %}
                   {{ radio.tag }}
                   <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+               {% endif %}
+{#                   {{ radio.tag }}#}
+{#                  <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>#}
            {% endfor %}
-          {{ doc_create_form.date_start.label }}
+          {{ doc_create_form.date_start.label }}:
           {{ doc_create_form.date_start }}
 
-          {{ doc_create_form.date_end.label }}
+          {{ doc_create_form.date_end.label }}:
           {{ doc_create_form.date_end }}
 
             <input type="hidden" name="owner" id="id_owner" value="{{ car.pk }}">

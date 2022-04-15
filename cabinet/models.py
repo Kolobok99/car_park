@@ -237,7 +237,7 @@ class Application(models.Model):
         ('S', 'Очень срочно'),
     )
 
-    type_of = models.ForeignKey("TypeOfAppl", on_delete=models.SET_NULL, blank=True, null=True)
+    type_of = models.ForeignKey("TypeOfAppl", on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Тип заявки')
     owner = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name='my_apps')
     car = models.ForeignKey(Car, on_delete=models.CASCADE, related_name='applications', null=True, blank=True)
     start_date = models.DateField(verbose_name='время создания', auto_now_add=True)

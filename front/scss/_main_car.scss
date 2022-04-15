@@ -190,9 +190,12 @@
             }
         }
 
-        input[type="date"] {
+        input[type="date"], select {
             max-width: 35%;
             // padding-left: 10px;
+        }
+        select {
+            padding: 3  px;
         }
         label[for*='date'] {
             font-size: 18px;
@@ -203,7 +206,7 @@
             font-size: 18px;
             margin-top: 5px;
         }
-        label[for*="rdo"], label[for*="id_type_"] {
+        label[for*="rdo"], label[for*="id_type_"], label[for*="id_urgency"] {
             padding-left: 8px;
             display: inline-flex;
             align-items: center;
@@ -267,9 +270,6 @@
 
 }
 
-label[for="id_type_0"]{
-    display: block;
-}
 
 .data-show-or-hide-form{
 transition: opacity 400ms ease-in;

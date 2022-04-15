@@ -105,6 +105,10 @@ class DriverCreateForm(forms.ModelForm):
 
 class AppCreateForm(forms.ModelForm):
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['type_of'].empty_label = "Не выбран"
+
     action = forms.CharField(widget=forms.widgets.HiddenInput())
 
     class Meta:
@@ -120,6 +124,7 @@ class AppCreateForm(forms.ModelForm):
             'car': forms.widgets.HiddenInput(),
             'owner': forms.widgets.HiddenInput(),
             'status': forms.widgets.HiddenInput(),
+            'urgency': forms.widgets.RadioSelect(),
         }
 
 
