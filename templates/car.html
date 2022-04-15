@@ -138,31 +138,21 @@
           Заявка на авто {{ car.registration_number }}
         </h1>
           <div class="form-app__timing">
-              {{ form.errors }}
-              {{ form.type_of.label }}
-              {{ form.type_of }}
+              {{ app_create_form.errors }}
+              {{ app_create_form.type_of.label }}
+              {{ app_create_form.type_of }}
 
-              {{ form.urgency.label }}
-              {{ form.urgency }}
+              {{ app_create_form.urgency.label }}
+              {{ app_create_form.urgency }}
 
-              {{ form.description.label }}
-              {{ form.description }}
+              {{ app_create_form.description.label }}
+              {{ app_create_form.description }}
 
               <input type="hidden" name="car" id="id_car" value="{{ car.pk }}">
               <input type="hidden" name="owner" id="id_owner" value="{{ user.pk }}">
               <input type="hidden" name="status" value="O" id="id_status">
-    {#            <input type="radio" name="timing" id="rdo-noturgent">#}
-{#            <label for="rdo-noturgent">Не срочно</label>#}
-{##}
-{##}
-{#            <input type="radio" name="timing" id="rdo-urgent">#}
-{#            <label for="rdo-urgent">Срочно</label>#}
-{##}
-{#            <input type="radio" name="timing" id="rdo-veryurgent">#}
-{#            <label for="rdo-veryurgent">Очень срочно</label>#}
-{##}
-{#            <label for="new_descr">Опишите суть заявки:</label>#}
-{#            <textarea name="description" id="new_descr" cols="30" rows="10"></textarea>#}
+              <input type="hidden" name="action" value="app_create">
+
             <button type="submit" value="TRueForm">Отправить</button>
           </div>
      </div>
@@ -202,7 +192,7 @@
       </div>
     </form>
 
-    <form method="post">
+    <form method="post">{% csrf_token %}
       <div class="form-doc add">
         <button type="reset">
           <div class="bnt-form-doc-reset-add">
@@ -215,29 +205,31 @@
         <h1 class="form-app__title">
           Добавление документов:
         </h1>
-        <p>Тип:</p>
-          <div class="form-app__timing">
+{#        <p>Тип:</p>#}
+{#          <div class="form-app__timing">#}
+{##}
+{#            <input type="radio" checked name="type_doc" id="rdo-passport">#}
+{#            <label for="rdo-passport">Паспорт</label>#}
+{##}
+{##}
+{#            <input type="radio" name="type_doc" id="rdo-snils">#}
+{#            <label for="rdo-snils">Снился</label>#}
+{##}
+{#            <input type="radio" name="type_doc" id="rdo-insurance">#}
+{#            <label for="rdo-insurance">Строховой полис</label>#}
+{##}
+{#            <label for="date-start">Дата получения:</label>#}
+{#            <input type="date" id="date-start">#}
+{##}
+{#            <label for="date-end">Дата получения:</label>#}
+{#            <input type="date" id="date-end">#}
+{##}
+{#            <label for="doc-copy">Прикрепите документа</label>#}
+{#            <input type="file">#}
 
-            <input type="radio" checked name="type_doc" id="rdo-passport">
-            <label for="rdo-passport">Паспорт</label>
-
-
-            <input type="radio" name="type_doc" id="rdo-snils">
-            <label for="rdo-snils">Снился</label>
-
-            <input type="radio" name="type_doc" id="rdo-insurance">
-            <label for="rdo-insurance">Строховой полис</label>
-
-            <label for="date-start">Дата получения:</label>
-            <input type="date" id="date-start">
-
-            <label for="date-end">Дата получения:</label>
-            <input type="date" id="date-end">
-
-            <label for="doc-copy">Прикрепите документа</label>
-            <input type="file">
-
-            <button type="submit">Отправить</button>
+            {{ doc_create_form }}
+            <input type="hidden" name="action" value="app_create">
+          <button type="submit">Отправить</button>
           </div>
       </div>
     </form>

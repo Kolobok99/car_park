@@ -105,6 +105,8 @@ class DriverCreateForm(forms.ModelForm):
 
 class AppCreateForm(forms.ModelForm):
 
+    action = forms.CharField(widget=forms.widgets.HiddenInput())
+
     class Meta:
         model = Application
         fields = ('type_of',
@@ -121,4 +123,21 @@ class AppCreateForm(forms.ModelForm):
         }
 
 
+class AutoDocForm(forms.ModelForm):
+    action = forms.CharField(widget=forms.widgets.HiddenInput())
+    class Meta:
+        model = AutoDoc
+        fields = '__all__'
+
+        widgets = {
+            'owner': forms.widgets.HiddenInput(),
+            'date_start': forms.widgets.DateInput(attrs={
+                "type": 'date',
+
+            }),
+            'date_end': forms.widgets.DateInput(attrs={
+                "type": 'date',
+
+            })
+        }
 
