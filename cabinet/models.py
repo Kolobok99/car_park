@@ -170,13 +170,14 @@ class Document(models.Model):
         abstract = True
 
 
+
 class UserDoc(Document):
     '''Документа водителя'''
 
     type = models.ForeignKey('DocType', on_delete=models.SET_NULL,
                              related_name='people_docs', null=True, blank=True)
     owner = models.ForeignKey(MyUser, on_delete=models.CASCADE,
-                              related_name='doc_owner')
+                              related_name='my_docs')
 
     def __str__(self):
         return f"{self.type} - {self.owner}"
@@ -192,7 +193,7 @@ class AutoDoc(Document):
     type = models.ForeignKey('DocType', on_delete=models.SET_NULL,
                              related_name='auto_docs', null=True, blank=True)
     owner = models.ForeignKey(Car, on_delete=models.CASCADE,
-                              related_name='doc_owner')
+                              related_name='my_docs')
     def __str__(self):
         return f"{self.type} - {self.owner}"
 

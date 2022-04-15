@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.http import HttpResponseRedirect, HttpResponse
+from django.urls import reverse
 from django.views.generic.edit import FormMixin
 
 from .forms import *
@@ -187,4 +188,4 @@ class CarView(TemplateView):
             form.save()
             messages.success(request, 'Запись добавлена!')
 
-        return self.render_to_response(self.get_context_data(**kwargs))
+        return HttpResponseRedirect("")

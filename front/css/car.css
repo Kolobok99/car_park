@@ -380,7 +380,7 @@ body {
   margin-top: 5px;
 }
 
-.form-app__timing label[for*="rdo"], .form-doc__timing label[for*="rdo"] {
+.form-app__timing label[for*="rdo"], .form-app__timing label[for*="id_type_"], .form-doc__timing label[for*="rdo"], .form-doc__timing label[for*="id_type_"] {
   padding-left: 8px;
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
@@ -394,7 +394,7 @@ body {
           user-select: none;
 }
 
-.form-app__timing label[for*="rdo"]::before, .form-doc__timing label[for*="rdo"]::before {
+.form-app__timing label[for*="rdo"]::before, .form-app__timing label[for*="id_type_"]::before, .form-doc__timing label[for*="rdo"]::before, .form-doc__timing label[for*="id_type_"]::before {
   content: '';
   display: inline-block;
   width: 15px;
@@ -443,6 +443,10 @@ body {
 
 .form-app svg:hover line, .form-doc svg:hover line {
   stroke: #503bba;
+}
+
+label[for="id_type_0"] {
+  display: block;
 }
 
 .data-show-or-hide-form {

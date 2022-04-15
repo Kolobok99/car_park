@@ -124,6 +124,11 @@ class AppCreateForm(forms.ModelForm):
 
 
 class AutoDocForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['type'].empty_label = "Не выбран"
+
     action = forms.CharField(widget=forms.widgets.HiddenInput())
     class Meta:
         model = AutoDoc
@@ -138,6 +143,9 @@ class AutoDocForm(forms.ModelForm):
             'date_end': forms.widgets.DateInput(attrs={
                 "type": 'date',
 
-            })
+            }),
+            'type': forms.widgets.RadioSelect(
+
+            )
         }
 

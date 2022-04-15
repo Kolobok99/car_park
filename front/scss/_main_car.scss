@@ -203,7 +203,7 @@
             font-size: 18px;
             margin-top: 5px;
         }
-        label[for*="rdo"] {
+        label[for*="rdo"], label[for*="id_type_"] {
             padding-left: 8px;
             display: inline-flex;
             align-items: center;
@@ -223,9 +223,11 @@
                 background-repeat: no-repeat;
                 background-position: center center;
                 background-size: 50% 50%;
-
+        
                
         }
+
+
     }
         textarea {
             resize: none;
@@ -263,6 +265,10 @@
           }
     
 
+}
+
+label[for="id_type_0"]{
+    display: block;
 }
 
 .data-show-or-hide-form{

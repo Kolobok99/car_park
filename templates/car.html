@@ -103,18 +103,14 @@
                                           <th class="table__title">Дата получения</th>
                                           <th class="table__title">Дата окончания</th>
                                         </tr>
-                                        <label for="1">
-                                        <tr class="table__row">
-                                          <td class="table__cell">паспорт</td>
-                                          <td class="table__cell">22.02.2019</td>
-                                          <td class="table__cell">22.02.2024</td>
+                                {% for doc in car.my_docs.all %}
+                                    <tr class="table__row">
+                                          <td class="table__cell">{{ doc.type }}</td>
+                                          <td class="table__cell">{{ doc.date_start|date:"d-m-Y"}}</td>
+                                          <td class="table__cell">{{ doc.date_end|date:"d-m-Y"}}</td>
                                         </tr>
-
-                                        <tr class="table__row">
-                                            <td class="table__cell">страховое</td>
-                                            <td class="table__cell">22.02.2021</td>
-                                            <td class="table__cell">22.02.2022</td>
-                                          </tr>
+                                {% endfor %}
+                                            
                 </table>
             </div>
           </div>
@@ -192,7 +188,7 @@
       </div>
     </form>
 
-    <form method="post">{% csrf_token %}
+        <form method="post"> {% csrf_token %}
       <div class="form-doc add">
         <button type="reset">
           <div class="bnt-form-doc-reset-add">
@@ -205,34 +201,28 @@
         <h1 class="form-app__title">
           Добавление документов:
         </h1>
-{#        <p>Тип:</p>#}
-{#          <div class="form-app__timing">#}
-{##}
-{#            <input type="radio" checked name="type_doc" id="rdo-passport">#}
-{#            <label for="rdo-passport">Паспорт</label>#}
-{##}
-{##}
-{#            <input type="radio" name="type_doc" id="rdo-snils">#}
-{#            <label for="rdo-snils">Снился</label>#}
-{##}
-{#            <input type="radio" name="type_doc" id="rdo-insurance">#}
-{#            <label for="rdo-insurance">Строховой полис</label>#}
-{##}
-{#            <label for="date-start">Дата получения:</label>#}
-{#            <input type="date" id="date-start">#}
-{##}
-{#            <label for="date-end">Дата получения:</label>#}
-{#            <input type="date" id="date-end">#}
-{##}
+        <p>Тип:</p>
+          <div class="form-app__timing">
+            {{ doc_create_form.errors }}
+           {% for radio in doc_create_form.type %}
+                  {{ radio.tag }}
+                  <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+           {% endfor %}
+          {{ doc_create_form.date_start.label }}
+          {{ doc_create_form.date_start }}
+
+          {{ doc_create_form.date_end.label }}
+          {{ doc_create_form.date_end }}
+
+            <input type="hidden" name="owner" id="id_owner" value="{{ car.pk }}">
+            <input type="hidden" name="action" value="doc_create">
 {#            <label for="doc-copy">Прикрепите документа</label>#}
 {#            <input type="file">#}
-
-            {{ doc_create_form }}
-            <input type="hidden" name="action" value="app_create">
-          <button type="submit">Отправить</button>
+            <button type="submit">Отправить</button>
           </div>
       </div>
     </form>
+
 {% endblock forms %}
 
 {% block js_script %}
