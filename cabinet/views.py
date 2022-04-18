@@ -209,7 +209,6 @@ class CarView(TemplateView):
         car = Car.objects.get(registration_number=self.kwargs['slug'])
         app_create_form = AppCreateForm()
         doc_create_form = AutoDocForm()
-
         context = super().get_context_data(**kwargs)
         context['car'] = car
         context['app_create_form'] = app_create_form
@@ -222,8 +221,14 @@ class CarView(TemplateView):
         form = None
         if action_type == 'app_create':
             form = AppCreateForm(self.request.POST)
+            form.instance.car = Car.objects.get(registration_number=self.kwargs['slug'])
+            form.instance.status = 'O'
+            form.instance.owner = self.request.user
+            # print(form.instance.owner)
+            print(form.errors)
         elif action_type == 'doc_create':
             form = AutoDocForm(self.request.POST)
+            form.instance.owner = Car.objects.get(registration_number=self.kwargs['slug'])
         elif "doc-" in action_type:
             doc_pk_to_delete = "".join([i for i in action_type if i.isdigit()])
             doc_to_delete = AutoDoc.objects.get(pk=doc_pk_to_delete)

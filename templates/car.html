@@ -175,9 +175,9 @@
                <label for="new_descr">Опишите суть заявки:</label>
               {{ app_create_form.description }}
 
-              <input type="hidden" name="car" id="id_car" value="{{ car.pk }}">
-              <input type="hidden" name="owner" id="id_owner" value="{{ user.pk }}">
-              <input type="hidden" name="status" value="O" id="id_status">
+{#              <input type="hidden" name="car" id="id_car" value="{{ car.pk }}">#}
+{#              <input type="hidden" name="owner" id="id_owner" value="{{ user.pk }}">#}
+{#              <input type="hidden" name="status" value="O" id="id_status">#}
               <input type="hidden" name="action" value="app_create">
 
             <button type="submit" value="TRueForm">Отправить</button>
@@ -250,7 +250,7 @@
           {{ doc_create_form.date_end.label }}:
           {{ doc_create_form.date_end }}
 
-            <input type="hidden" name="owner" id="id_owner" value="{{ car.pk }}">
+{#            <input type="hidden" name="owner" id="id_owner" value="{{ car.pk }}">#}
             <input type="hidden" name="action" value="doc_create">
 {#            <label for="doc-copy">Прикрепите документа</label>#}
 {#            <input type="file">#}

@@ -136,16 +136,17 @@ class AppCreateForm(forms.ModelForm):
         fields = ('type_of',
                   'urgency',
                   'description',
-                  'car',
-                  'owner',
-                  'status'
+                  # 'car',
+                  # 'owner',
+                  # 'status'
                   )
         widgets = {
-            'car': forms.widgets.HiddenInput(),
-            'owner': forms.widgets.HiddenInput(),
-            'status': forms.widgets.HiddenInput(),
+            # 'car': forms.widgets.HiddenInput(),
+            # 'owner': forms.widgets.HiddenInput(),
+            # 'status': forms.widgets.HiddenInput(),
             'urgency': forms.widgets.RadioSelect(),
         }
+
 
 
 class AutoDocForm(forms.ModelForm):
@@ -157,10 +158,10 @@ class AutoDocForm(forms.ModelForm):
     action = forms.CharField(widget=forms.widgets.HiddenInput())
     class Meta:
         model = AutoDoc
-        fields = '__all__'
-
+        # fields = '__all__'
+        exclude = ('owner',)
         widgets = {
-            'owner': forms.widgets.HiddenInput(),
+            # 'owner': forms.widgets.HiddenInput(),
             'date_start': forms.widgets.DateInput(attrs={
                 "type": 'date',
 
