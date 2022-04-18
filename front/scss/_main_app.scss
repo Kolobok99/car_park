@@ -184,7 +184,7 @@
         row-gap: 8px;
         flex: 0 1 30%;
         position: relative;
-        input[type="radio"] {
+        input[type="radio"], input[id*="id_urgency"] {
             position: absolute;
             width: auto;
             right: 220px;
@@ -212,7 +212,7 @@
             font-size: 18px;
             margin-top: 5px;
         }
-        label[for*="rdo"] {
+        label[for*="rdo"], label[for*="id_urgency"] {
             padding-left: 8px;
             display: inline-flex;
             align-items: center;

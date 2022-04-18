@@ -148,33 +148,33 @@
           </h1>
             <div class="form-car__timing">
             {% csrf_token %}
-                {{ form.as_p }}
-                <label for="car_number"><p>Номер:</p></label>
-                <input type="text" id="car_number">
-
-                <label for=""><p>Марка:</p></label>
-
-                <input type="radio" name="car_brand" id="rdo-toyota">
-                  <label for="rdo-toyota">TOYOTA</label>
-
-
-                <input type="radio" name="car_brand" id="rdo-kia">
-                  <label for="rdo-kia">KIA</label>
-
-                <input type="radio" name="car_brand" id="rdo-bmw">
-                  <label for="rdo-bmw">BMW</label>
-
-
-                  <label for="car_region"><p>Регион:</p></label>
-                  <input type="text" id="car_region">
-
-                <label for="car_last_inspection"><p>Последний осмотр:</p></label>
-                <input type="date">
-                <label for="car_driver"><p>Закрепить за:</p></label>
-                <input type="text" id="car_driver">
-
-                <label for="car_image"><p>Прикрепить фото:</p></label>
-                <input type="file" id="car_image">
+{#                {{ form.as_p }}#}
+{#                <label for="car_number"><p>Номер:</p></label>#}
+{#                <input type="text" id="car_number">#}
+{##}
+{#                <label for=""><p>Марка:</p></label>#}
+{##}
+{#                <input type="radio" name="car_brand" id="rdo-toyota">#}
+{#                  <label for="rdo-toyota">TOYOTA</label>#}
+{##}
+{##}
+{#                <input type="radio" name="car_brand" id="rdo-kia">#}
+{#                  <label for="rdo-kia">KIA</label>#}
+{##}
+{#                <input type="radio" name="car_brand" id="rdo-bmw">#}
+{#                  <label for="rdo-bmw">BMW</label>#}
+{##}
+{##}
+{#                  <label for="car_region"><p>Регион:</p></label>#}
+{#                  <input type="text" id="car_region">#}
+{##}
+{#                <label for="car_last_inspection"><p>Последний осмотр:</p></label>#}
+{#                <input type="date">#}
+{#                <label for="car_driver"><p>Закрепить за:</p></label>#}
+{#                <input type="text" id="car_driver">#}
+{##}
+{#                <label for="car_image"><p>Прикрепить фото:</p></label>#}
+{#                <input type="file" id="car_image">#}
 
                   <p style="color: red">{{ form.errors.registration_number.as_text }}</p>
                   <label for="{{ form.registration_number.id_for_label }}"><p>{{ form.registration_number.label}}</p></label>

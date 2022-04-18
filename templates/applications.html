@@ -96,7 +96,7 @@
                         </tr>
                         {% for app in all_apps %}
                             <tr class="table__row">
-                              <td class="table__cell"><a href="{% url 'app'  app.pk %}">{{ app.id }}</a></td>
+                              <td class="table__cell"><a href="{% url 'app'  app.pk %}">{{ app.pk }}</a></td>
                               <td class="table__cell">{{ app.start_date|date:"d-m-Y" }}</td>
                               <td class="table__cell">{{ app.end_date|date:"d-m-Y" }}</td>
                               <td class="table__cell">
@@ -123,8 +123,8 @@
                               <td class="table__cell">{{ app.owner.last_name}} {{ app.owner.first_name|slice:'0:1' }}. {{ app.owner.patronymic|slice:"0:1" }}.</td>
                               <td class="table__cell">
                                   <a href="{% url 'choose-car' app.car.registration_number %}">
-                                  {{ app.car.registration_number|slice:'0:1'}}-{{ app.car.registration_number|slice:'1:4'}}-{{ app.car.registration_number|slice:'4:6'}}
-                              </a>
+                                    {{ app.car.registration_number|slice:'0:1'}}-{{ app.car.registration_number|slice:'1:4'}}-{{ app.car.registration_number|slice:'4:6'}}
+                                  </a>
                               </td>
                               <td class="table__cell"> {{ app.description |truncatechars:50}}</td>
                             </tr>

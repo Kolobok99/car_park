@@ -324,7 +324,7 @@ body {
   position: relative;
 }
 
-.form-app__timing input[type="radio"], .form-doc__timing input[type="radio"] {
+.form-app__timing input[type="radio"], .form-app__timing input[id*="id_urgency"], .form-doc__timing input[type="radio"], .form-doc__timing input[id*="id_urgency"] {
   position: absolute;
   width: auto;
   right: 220px;
@@ -332,7 +332,7 @@ body {
   opacity: 0;
 }
 
-.form-app__timing input[type="radio"]:checked + label::before, .form-doc__timing input[type="radio"]:checked + label::before {
+.form-app__timing input[type="radio"]:checked + label::before, .form-app__timing input[id*="id_urgency"]:checked + label::before, .form-doc__timing input[type="radio"]:checked + label::before, .form-doc__timing input[id*="id_urgency"]:checked + label::before {
   border-color: #0b76ef;
   background-color: #0b76ef;
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
@@ -352,7 +352,7 @@ body {
   margin-top: 5px;
 }
 
-.form-app__timing label[for*="rdo"], .form-doc__timing label[for*="rdo"] {
+.form-app__timing label[for*="rdo"], .form-app__timing label[for*="id_urgency"], .form-doc__timing label[for*="rdo"], .form-doc__timing label[for*="id_urgency"] {
   padding-left: 8px;
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
@@ -366,7 +366,7 @@ body {
           user-select: none;
 }
 
-.form-app__timing label[for*="rdo"]::before, .form-doc__timing label[for*="rdo"]::before {
+.form-app__timing label[for*="rdo"]::before, .form-app__timing label[for*="id_urgency"]::before, .form-doc__timing label[for*="rdo"]::before, .form-doc__timing label[for*="id_urgency"]::before {
   content: '';
   display: inline-block;
   width: 15px;
