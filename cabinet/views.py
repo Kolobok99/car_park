@@ -22,7 +22,7 @@ class CarsView(Context, ListView):
     success_url = '/cars'
 
 
-class CarCreateView(Context, CreateView):
+class CarCreateView(Context, LoginRequiredMixin, CreateView):
     '''добавление нового автомобиля'''
     template_name = "cars.html"
     # context_object_name = "cars"
@@ -78,7 +78,7 @@ class CardCreateView(Context, LoginRequiredMixin, CreateView):
         return context
 
 
-class AplicationsView(Context, TemplateView):
+class AplicationsView(Context, LoginRequiredMixin, TemplateView):
     """Вывод заявок"""
     template_name = 'applications.html'
 
@@ -195,7 +195,7 @@ class RegistrationView(CreateView):
 #         print(0)
 #         return self.form_invalid(form)
 
-class AccountView(TemplateView):
+class AccountView(LoginRequiredMixin, TemplateView):
     '''Обработка страницы ЛК'''
 
     template_name = 'account.html'
@@ -207,7 +207,7 @@ class AccountView(TemplateView):
         return context
 
 
-class CarView(TemplateView):
+class CarView(LoginRequiredMixin, TemplateView):
     template_name = 'car.html'
 
     def get_context_data(self, **kwargs):
