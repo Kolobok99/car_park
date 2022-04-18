@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.http import HttpResponseRedirect, HttpResponse
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views.generic.edit import FormMixin, DeletionMixin, UpdateView
 
 from .forms import *
@@ -97,8 +97,13 @@ class AppView(LoginRequiredMixin,UpdateView, DeletionMixin):
     model = Application
     form_class = AppCreateForm
     template_name = 'app.html'
-    success_url = "/applications"
+    # success_url = "/applications"
 
+    def get_success_url(self):
+        if self.request.POST['action'] == 'delete-yes':
+            return "/applications"
+        elif self.request.POST['action'] == 'app_update':
+            return ""
     def get_context_data(self, **kwargs):
         context = super(AppView, self).get_context_data(**kwargs)
         context['app'] = Application.objects.get(pk=self.kwargs['pk'])

@@ -46,8 +46,8 @@
                         <ul class="filtr-items__sub-menu">
                           {% for driver in view.get_drivers %}
                             <label for="{{ driver }}" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="driver" value="{{ driver.id}}" id="{{ driver.myuser }}">
-                                    <label for="{{ driver }}" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="driver" value="{{ driver.id}}" id="{{ driver}}">
+                                    <label for="{{ driver}}" class="filtr-items__check-label">
                                         {{ driver.last_name}} {{ driver.first_name|first}}.{{ driver.patronymic|first}}.
                                 </li>
                             </label>
@@ -124,7 +124,12 @@
                     </table>
                 </div>
 {% else %}
-                <h1>Страница недоступна</h1>
+                <h1 style="
+                text-align: center;
+                margin-top: 20%;
+                font-size: 30px;
+                opacity: 0.7;
+                            ">Страница недоступна</h1>
 {% endif %}
             </div>
         </div>
