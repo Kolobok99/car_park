@@ -91,7 +91,7 @@ class AplicationsView(Context, TemplateView):
 
         return context
 
-class AppView(LoginRequiredMixin, DeletionMixin, UpdateView):
+class AppView(LoginRequiredMixin,UpdateView, DeletionMixin):
     '''Просмотр, изменение и удаление заявки'''
 
     model = Application
@@ -107,6 +107,30 @@ class AppView(LoginRequiredMixin, DeletionMixin, UpdateView):
     def post(self, request, *args, **kwargs):
         if self.request.POST['action'] == 'delete-yes':
             return self.delete(request, *args, **kwargs)
+        else:
+            return super(AppView, self).post(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        print("form_valid")
+        print(self.request.POST['action'])
+        if self.request.POST['action'] == 'app_update':
+            if form.is_valid():
+                return super(AppView, self).form_valid(form)
+        # if self.request.POST['action'] == 'delete-yes':
+        #     app_to_delete
+        # print(self.request.POST['action'])
+        # print(self.kwargs)
+        # if self.request.POST['action'] == 'app_update':
+        #     form = AppCreateForm(self.request.POST, instance=self.kwargs['pk'])
+        #     return super(AppView, self).form_valid(form)
+
+
+
+        # if self.request.POST['action'] == 'delete-yes':
+        #     print("del-yes!")
+        #     app_to_delete = Application.objects.get(pk=self.kwargs['slug'])
+        #     app_to_delete.delete()
+        #     return super(AppView, self).form_valid(form)
 
 
 class RegistrationView(CreateView):
@@ -195,14 +219,12 @@ class CarView(TemplateView):
 
     def post(self, request, *args, **kwargs):
         action_type = self.request.POST.get('action')
-        print(action_type)
         form = None
         if action_type == 'app_create':
             form = AppCreateForm(self.request.POST)
         elif action_type == 'doc_create':
             form = AutoDocForm(self.request.POST)
         elif "doc-" in action_type:
-            print("YES!")
             doc_pk_to_delete = "".join([i for i in action_type if i.isdigit()])
             doc_to_delete = AutoDoc.objects.get(pk=doc_pk_to_delete)
             doc_to_delete.delete()

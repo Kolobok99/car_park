@@ -48,6 +48,7 @@
             <div class="main__table table">
                 <h1 class="table__table-title">Заявки</h1>
                 <button class="table__btn-add-app">Добавить</button>
+            {% if car.applications.count != 0 %}
                 <table>
                     <!--  -->
     <!-- ID -->                            <col style="width:1%">
@@ -101,11 +102,15 @@
                       </tr>
                     {% endfor %}
                 </table>
+            {% else %}
+                Заявок нет!
+            {% endif %}
             </div>
 
             <div class="main__table table">
                 <h1 class="table__table-title">Документы</h1>
                 <button class="table__btn-add-doc">Добавить</button>
+            {% if car.my_docs.count != 0 %}
                 <table>
 
                     <!-- ID -->                            <col style="width:5%">
@@ -131,6 +136,9 @@
                                 {% endfor %}
                                             
                 </table>
+            {% else %}
+                Документов нет!
+            {% endif %}
             </div>
           </div>
         </div>

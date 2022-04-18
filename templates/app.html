@@ -91,7 +91,7 @@
 {% endblock main %}
 
 {% block forms %}
-<form method="post" action="{% url 'choose-car' app.pk %}">
+<form method="post">
     {% csrf_token %}
       <div class="form-app change">
         <button type="reset">
@@ -120,20 +120,20 @@
                <label for="new_descr">Опишите суть заявки:</label>
               {{ form.description }}
 
-              <input type="hidden" name="car" id="id_car" value="{{ car.pk }}">
-              <input type="hidden" name="owner" id="id_owner" value="{{ user.pk }}">
+              <input type="hidden" name="car" id="id_car" value="{{ app.car.pk }}">
+              <input type="hidden" name="owner" id="id_owner" value="{{ app.owner.pk }}">
               <input type="hidden" name="status" value="O" id="id_status">
-              <input type="hidden" name="action" value="app_create">
+              <input type="hidden" name="action" value="app_update">
 
             <button type="submit" value="TRueForm">Отправить</button>
           </div>
      </div>
     </form>
 
-     <form method="post" action="{% url 'app' app.pk %}">
+     <form method="post">
      {% csrf_token %}
       <div class="confirm-delete">
-        <h1>Удалить заявку №21</h1>
+        <h1>Удалить заявку №{{ application.pk }}</h1>
         <input type="hidden" name="action" value="delete-yes">
 
         <button type="submit">Да</button>
