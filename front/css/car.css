@@ -449,6 +449,38 @@ body {
   stroke: #503bba;
 }
 
+.confirm-delete {
+  position: absolute;
+  left: 72%;
+  top: 60%;
+  font-size: 20px;
+  text-align: center;
+  padding: 10px 20px 20px 20px;
+  border-radius: 10px;
+  padding: 10px 20px 20px 20px;
+  -webkit-box-shadow: 11px 11px 35px 1px rgba(31, 128, 202, 0.3);
+          box-shadow: 11px 11px 35px 1px rgba(31, 128, 202, 0.3);
+  z-index: 5;
+  visibility: hidden;
+  background-color: #657ff2;
+}
+
+.confirm-delete button {
+  margin-top: 10px;
+  font-size: 20px;
+  padding: 10px;
+  border-radius: 5px;
+  color: whitesmoke;
+}
+
+.confirm-delete button[type="submit"] {
+  background-color: #dd3c1c;
+}
+
+.confirm-delete button[id="btn-refuse-delete"] {
+  background-color: #3636b2;
+}
+
 .data-show-or-hide-form {
   -webkit-transition: opacity 400ms ease-in;
   -o-transition: opacity 400ms ease-in;

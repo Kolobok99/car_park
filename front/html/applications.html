@@ -49,83 +49,100 @@
                     <h1>Заявок</h1>
                     <p>205</p>
                 </div>
-            <form action="{% url 'cars' %}" method="get">
+           
                 <ul class="main__filtration filtr-items">
                     <li class="filtr-items__item">
                         <p>получение:</p>
-                        <input type="date" placeholder="от.">
+                        <input type="date" name="start_date" placeholder="от.">
                         <p>окончание:</p>
-                        <input type="date" placeholder="до.">
+                        <input type="date" name="end_date" placeholder="до.">
                     </li>
                     <li class="filtr-items__item">
                         <p class="filtr-items__title">Срочность</p>
                         <ul class="filtr-items__sub-menu">
-                            <label for="toyota" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="mark" id="toyota">
-                                    <label for="toyota" class="filtr-items__check-label">Срочно
-                                </li>
-                            </label>
-                            <label for="kia" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="mark" id="kia">
-                                    <label for="kia" class="filtr-items__check-label">Не срочно
-                                </li>
-                            </label>
+                            
+                                <label for="N" class="filtr-items__check-label">
+                                    <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="urgency_types" value="N" id="N">
+                                        <label for="N" class="filtr-items__check-label">Не срочно </label>
+                                    </li>
+                                </label>
+                            
+                                <label for="U" class="filtr-items__check-label">
+                                    <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="urgency_types" value="U" id="U">
+                                        <label for="U" class="filtr-items__check-label">Срочно </label>
+                                    </li>
+                                </label>
+                            
+                                <label for="S" class="filtr-items__check-label">
+                                    <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="urgency_types" value="S" id="S">
+                                        <label for="S" class="filtr-items__check-label">Очень срочно </label>
+                                    </li>
+                                </label>
+                            
                         </ul>
                     </li>
                     <li class="filtr-items__item">
                         <p class="filtr-items__title">Статус</p>
                         <ul class="filtr-items__sub-menu">
-                            <label for="petrov_a_a" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="driver" id="petrov_a_a">
-                                    <label for="petrov_a_a" class="filtr-items__check-label">Ожидает рассмотрения
-                                </li>
-                            </label>
-                            <label for="ivanov_i_i" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="driver" id="ivanov_i_i">
-                                    <label for="ivanov_i_i" class="filtr-items__check-label">Рассмотрена
-                                </li>
-                            </label>
-                            <label for="degtyrev_k_k" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="driver" id="degtyrev_k_k">
-                                    <label for="degtyrev_k_k" class="filtr-items__check-label">Выполнена
-                                </li>
-                            </label>
-
-                            <label for="degtyrev_k_k" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="driver" id="degtyrev_k_k">
-                                    <label for="degtyrev_k_k" class="filtr-items__check-label">Просрочена
-                                </li>
-                            </label>
+                            
+                                 <label for="O" class="filtr-items__check-label">
+                                    <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="status_types" value="O" id="O">
+                                        <label for="O" class="filtr-items__check-label">Ожидает рассмотрения
+                                    </label></li>
+                                 </label>
+                            
+                                 <label for="R" class="filtr-items__check-label">
+                                    <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="status_types" value="R" id="R">
+                                        <label for="R" class="filtr-items__check-label">Рассмотрена
+                                    </label></li>
+                                 </label>
+                            
+                                 <label for="V" class="filtr-items__check-label">
+                                    <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="status_types" value="V" id="V">
+                                        <label for="V" class="filtr-items__check-label">Выполнена
+                                    </label></li>
+                                 </label>
+                            
+                                 <label for="P" class="filtr-items__check-label">
+                                    <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="status_types" value="P" id="P">
+                                        <label for="P" class="filtr-items__check-label">Просрочена
+                                    </label></li>
+                                 </label>
+                            
                         </ul>
                     </li>
                     <li class="filtr-items__item">
                         <p class="filtr-items__title">Тип</p>
                         <ul class="filtr-items__sub-menu">
-                            <label for="86" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="region" id="86">
-                                    <label for="86" class="filtr-items__check-label">Колесо
-                                </li>
-                            </label>
-                            <label for="87" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="region" id="87">
-                                    <label for="87" class="filtr-items__check-label">ТЕХ. осмотр
-                                </li>
-                            </label>
-                            <label for="89" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="region" id="89">
-                                    <label for="89" class="filtr-items__check-label">Шина
-                                </li>
-                            </label>
+                            
+                                <label for="1" class="filtr-items__check-label">
+                                    <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="types_of_apps" value="1" id="1">
+                                        <label for="1" class="filtr-items__check-label">колеса</label>
+                                    </li>
+                                </label>
+                            
+                                <label for="2" class="filtr-items__check-label">
+                                    <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="types_of_apps" value="2" id="2">
+                                        <label for="2" class="filtr-items__check-label">стекла</label>
+                                    </li>
+                                </label>
+                            
+                                <label for="3" class="filtr-items__check-label">
+                                    <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="types_of_apps" value="3" id="3">
+                                        <label for="3" class="filtr-items__check-label">тех. осмотр</label>
+                                    </li>
+                                </label>
+                            
                         </ul>
                     </li>
-                    
 
-                    <button type="button" class="filtr-items__button">
-                        <img src="../img/filtr/lupa.svg" alt="поиск">
-                    </button> 
+
+                    <button type="submit" class="filtr-items__button">
+                        <img src="/home/john/PycharmProjects/djangoProject/car_park/front/img/filtr/lupa.svg" alt="поиск">
+                    </button>
                 </ul>
-            </form>     
-
+            <a class="btn-reset" href="/applications">Сбросить</a>
+            
                 <div class="main__information">
                     <table class="main__table table">
                         <!--  -->
@@ -216,5 +233,6 @@
             
         </footer>
     </div>
+    <script src="../js/applications.js"></script>
 </body>
 </html>

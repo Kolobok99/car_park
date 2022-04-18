@@ -19,27 +19,27 @@
             <div class="car-area__info">
               <div class="car-area__item">
                 <p>Марка:</p>
-                <span>Shkoda</span>
+                <span>{{ car.brand }}</span>
               </div>
 
               <div class="car-area__item">
                 <p>Номер:</p>
-                <span>A-111-EE</span>
+                <span>{{ car.registration_number|slice:'0:1'}}-{{ car.registration_number|slice:'1:4'}}-{{ car.registration_number|slice:'4:6'}}</span>
               </div>
 
               <div class="car-area__item">
                 <p>Код:</p>
-                <span>86</span>
+                <span>{{ car.region_code }}</span>
               </div>
 
               <div class="car-area__item">
                 <p>Последний осмотр:</p>
-                <span>12.12.21</span>
+                <span>{{ car.last_inspection|date:"d-m-Y" }}</span>
               </div>
 
               <div class="car-area__item">
                 <p>Водитель:</p>
-                <span>Золотавин И. А</span>
+                <span>{{ car.owner.last_name}} {{ car.owner.first_name|first}}.{{ car.owner.patronymic|first}}.</span>
               </div>
             </div>
           </div>
@@ -125,7 +125,7 @@
                                           <td class="table__cell">{{ doc.date_start|date:"d-m-Y"}}</td>
                                           <td class="table__cell">{{ doc.date_end|date:"d-m-Y"}}</td>
                                           <td class="table__cell">
-                                              <button class="table__btn-delete-app" style="background: red">Удалить</button>
+                                              <button class="table__btn-delete-app" id="doc-{{ doc.pk }}" style="background: red">Удалить</button>
                                           </td>
                                         </tr>
                                 {% endfor %}
@@ -251,7 +251,18 @@
       </div>
     </form>
 
-{% endblock forms %}
+    <form method="post" action="#">
+     {% csrf_token %}
+      <div class="confirm-delete">
+        <h1>Удалить?</h1>
+        <input id="action-delete" type="hidden" name="action" value="">
+
+        <button id="btn-confirm-delete" type="submit">Да</button>
+        <button id="btn-refuse-delete" type="reset">Нет</button>
+      </div>
+    </form>
+    {% endblock forms %}
+
 
 {% block js_script %}
 <script src="{% static 'js/car.js' %}"></script>
