@@ -22,21 +22,21 @@
                     </div>
 
                     <div class="main__items">
-                                {{ form }}
-                        {##}
-{#                        {{ form.login }}#}
-{#                        {{ form.email }}#}
-{#                        {{ form.password }}#}
-{#                        {{ form.password_repeat }}#}
-{#                        {{ form.first_name }}#}
-{#                        {{ form.last_name }}#}
-{#                        {{ form.patronymic }}#}
-{#                        {{ form.birthdate }}#}
-{#                        <input type="email" name="auth" name="registration" id="login" placeholder="введите email">#}
-{#                        <input type="password" name="auth" name="registration" id="password" placeholder="введите пароль">#}
-{#                        <input type="password" name="auth" name="registration" id="password_repeat" placeholder="введите пароль">#}
+{#                                {{ form }}#}
+            {% for field in form %}
+                {{field.label_tag}}
+                <div>{{field}}</div>
+                {% if field.errors%}
+                    {% for error in field.errors %}
+                        <div style="color: red; opacity: 1;">
+                            {{error}}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
                     </div>
                      <input class="main__button" type="submit" value="Отправить">
+                    <a style="margin-bottom: -15px;" href="{% url 'login' %}">Войти</a>
                 </form>
 
             </div>

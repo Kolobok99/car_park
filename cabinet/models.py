@@ -121,7 +121,11 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         ('m', 'manager'),
         ('d', 'driver'),
     )
-    email = models.EmailField(verbose_name='Почта', unique=True, null=True, blank=True)
+    email = models.EmailField(verbose_name='Почта', unique=True, null=True, blank=True,
+                              error_messages={
+                                  'unique': 'Пользователь с таким email уже существует.',
+                                  'invalid': 'Неправильно совсем!'
+                              })
     password = models.CharField("Пароль", max_length=128, )
 
     first_name = models.CharField(verbose_name='Имя', max_length=20, null=True, blank=True)

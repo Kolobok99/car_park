@@ -101,6 +101,7 @@ body {
       -ms-flex-direction: column;
           flex-direction: column;
   row-gap: 30px;
+  max-width: 300px;
   padding: 60px 30px;
   border-radius: 10px;
   background: #fffffff3;

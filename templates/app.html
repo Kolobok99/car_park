@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block static_href %}
+    {% static 'css/app.css' %}
+{% endblock static_href %}
+
+{% block title %} {{ app.pk }} {% endblock title%}
+
+
+{% block main %}
+      <div class="main">
+        <div class="main__container">
+          <div class="main__app-info info-app">
+                <div class="info-app__main-info">
+                    <div class="info-app__item">
+                        <p class="info-app__title">Заявка</p>
+                        <p>№ {{ app.pk }}</p>
+                    </div>
+
+                    <div class="info-app__item">
+                        <p class="info-app__title">Срочночть</p>
+                         {% if app.urgency == 'N' %}
+                             <p>Не срочно (10 дней на выполнение)</p>
+                         {% elif app.urgency == 'U' %}
+                             <p>Срочно (7 дней на выполнение)</p>
+                         {% else %}
+                             <p>Очень срочно (3 дня на выполнение)</p>
+                         {% endif %}
+                    </div>
+
+                    <div class="info-app__item">
+                        <p class="info-app__title">Статус выполнения</p>
+                        {% if app.status == 'O' %}
+                            <p>Ожидает рассмотрения</p>
+                        {% elif app.status == 'R' %}
+                            <p>Рассмотрена</p>
+                        {% elif app.status == 'V' %}
+                            <p>Выполнена</p>
+                        {% else %}
+                            <p>Просрочена</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="info-app__item">
+                        <p class="info-app__title">Дата создания</p>
+                        <p>{{ app.start_date|date:"d-m-Y" }}</p>
+                    </div>
+
+                    <div class="info-app__item">
+                        <p class="info-app__title">Дата рассмотрения (ожидаемая)</p>
+                        <p>21.05.2022</p>
+                    </div>
+
+                    <div class="info-app__item">
+                        <p class="info-app__title">Дата завершения (ожидаемая)</p>
+                        <p>{{ app.end_date|date:"d-m-Y" }}</p>
+                    </div>
+
+                    <div class="info-app__item">
+                        <p class="info-app__title">Создатель</p>
+                        <p> {{ app.owner.last_name}} {{ app.owner.first_name|slice:'0:1' }}. {{ app.owner.patronymic|slice:"0:1" }} </p>
+                    </div>
+
+                    <div class="info-app__item">
+                        <p class="info-app__title">Авто</p>
+                       <p>
+                          <a href="{% url 'choose-car' app.car.registration_number %}">
+                           {{ app.car.registration_number|slice:'0:1'}}-{{ app.car.registration_number|slice:'1:4'}}-{{ app.car.registration_number|slice:'4:6'}}
+                          </a>
+                       </p>
+                    </div>
+
+                </div>
+
+                <div class="info-app__detail">
+                    <div class="info-app__item">
+                        <p class="info-app__title">Описание</p>
+                        <p class="info-app__description">
+                            {{ app.description }}
+                        </p>
+                    </div>
+                    <button class="info-app__btn-submit" type="submit">Изменить заявку  </button>
+                    <button class="info-app__btn-delete" type="submit">Удалить заявку  </button>
+
+                </div>
+
+          </div>
+        </div>
+      </div>
+{% endblock main %}
+
+{% block forms %}
+<form method="post" action="{% url 'choose-car' app.pk %}">
+    {% csrf_token %}
+      <div class="form-app change">
+        <button type="reset">
+          <div class="bnt-form-app-reset-change">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <line x1="0" x2="100" y1="0" y2="100" />
+              <line x1="0" x2="100" y1="100" y2="0" />
+            </svg>
+          </div>
+        </button>
+        <h1 class="form-app__title">
+          Заявка на авто {{ app.car.registration_number }}
+        </h1>
+          <div class="form-app__timing">
+              {{ form.errors }}
+
+              <p>{{ form.type_of.label }}:</p>
+                {{ form.type_of }}
+              <p>Срочность:</p>
+                <br>
+                {% for radio in form.urgency %}
+                      {{ radio.tag }}
+                      <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                {% endfor %}
+
+               <label for="new_descr">Опишите суть заявки:</label>
+              {{ form.description }}
+
+              <input type="hidden" name="car" id="id_car" value="{{ car.pk }}">
+              <input type="hidden" name="owner" id="id_owner" value="{{ user.pk }}">
+              <input type="hidden" name="status" value="O" id="id_status">
+              <input type="hidden" name="action" value="app_create">
+
+            <button type="submit" value="TRueForm">Отправить</button>
+          </div>
+     </div>
+    </form>
+
+     <form method="post" action="{% url 'app' app.pk %}">
+     {% csrf_token %}
+      <div class="confirm-delete">
+        <h1>Удалить заявку №21</h1>
+        <input type="hidden" name="action" value="delete-yes">
+
+        <button type="submit">Да</button>
+        <button  type="reset" id="notsubmit">Нет</button>
+      </div>
+    </form>
+{% endblock forms %}
+
+{% block js_script %}
+<script src="{% static 'js/app.js' %}"></script>
+{% endblock js_script %}

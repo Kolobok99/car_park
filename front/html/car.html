@@ -99,6 +99,23 @@
                       <th class="table__title">Действия</th>
                     </tr>
                     <tr class="table__row">
+                        <td class="table__cell">1</td>
+                        <td class="table__cell">
+                            27.05.2022
+                            <br>-<br>
+                            05.06.2022 
+
+                        </td>
+                        <td class="table__cell">Срочно</td>
+                        <td class="table__cell">Рассмотрена</td>
+                        <td class="table__cell">Поломка</td>    
+                        <td class="table__cell">Пробило левую переднюю шину</td>
+                        <td class="table__cell">
+                          <button class="table__btn-change-app" id="app_id_1">изменить заявку</button>
+                        </td>
+                        
+                      </tr>
+                      <tr class="table__row">
                         <td class="table__cell">2</td>
                         <td class="table__cell">
                             27.05.2022
@@ -111,9 +128,24 @@
                         <td class="table__cell">Поломка</td>    
                         <td class="table__cell">Пробило левую переднюю шину</td>
                         <td class="table__cell">
-                          <button class="table__btn-change-app">изменить заявку</button>
+                          <button class="table__btn-change-app" id="app_id_2">изменить заявку</button>
                         </td>
+                        
                       </tr>
+                      <tr class="table__row">
+                        <td class="table__cell">3</td>
+                        <td class="table__cell">
+                            27.05.2022
+                            <br>-<br>
+                            05.06.2022 
+
+                        </td>
+                        <td class="table__cell">Срочно</td>
+                        <td class="table__cell">Рассмотрена</td>
+                        <td class="table__cell">Поломка</td>    
+                        <td class="table__cell">Пробило левую переднюю шину</td>
+                        
+                      </tr>  
                       
                 </table>
             </div>
@@ -200,7 +232,7 @@
           </div>
         </button>
         <h1 class="form-app__title">
-          Заявка №21
+          Заявка № <span id="data-title-app-id"></span>
         </h1>
         <p>Срочность:</p>
           <div class="form-app__timing">
@@ -217,6 +249,7 @@
   
             <label for="descr-change">Опишите суть заявки:</label>
             <textarea name="description" id="descr-change" cols="30" rows="10"></textarea>
+            <input id="app-change-hidden-2" type="hidden" name="action" value="">
             <button type="submit">Отправить</button>
           </div>
       </div>

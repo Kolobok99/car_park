@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
-from django.views.generic.edit import FormMixin
+from django.views.generic.edit import FormMixin, DeletionMixin, UpdateView
 
 from .forms import *
 from .models import *
@@ -90,6 +90,23 @@ class AplicationsView(Context, TemplateView):
             context['all_apps'] = filtration_apps(self.request.GET)
 
         return context
+
+class AppView(LoginRequiredMixin, DeletionMixin, UpdateView):
+    '''Просмотр, изменение и удаление заявки'''
+
+    model = Application
+    form_class = AppCreateForm
+    template_name = 'app.html'
+    success_url = "/applications"
+
+    def get_context_data(self, **kwargs):
+        context = super(AppView, self).get_context_data(**kwargs)
+        context['app'] = Application.objects.get(pk=self.kwargs['pk'])
+        return context
+
+    def post(self, request, *args, **kwargs):
+        if self.request.POST['action'] == 'delete-yes':
+            return self.delete(request, *args, **kwargs)
 
 
 class RegistrationView(CreateView):
@@ -182,6 +199,14 @@ class CarView(TemplateView):
             form = AppCreateForm(self.request.POST)
         elif action_type == 'doc_create':
             form = AutoDocForm(self.request.POST)
+        elif "app_delete_" in action_type:
+            app_pk_to_delete = "".join([i for i in action_type if i.isdigit()])
+            app_to_delete = Application.objects.get(pk=app_pk_to_delete)
+            app_to_delete.delete()
+        elif "doc_delete_" in action_type:
+            doc_pk_to_delete = "".join([i for i in action_type if i.isdigit()])
+            doc_to_delete = Application.objects.get(pk=doc_pk_to_delete)
+            doc_to_delete.delete()
         else:
             form = None
         if form.is_valid():

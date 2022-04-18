@@ -46,7 +46,7 @@
                         <ul class="filtr-items__sub-menu">
                           {% for driver in view.get_drivers %}
                             <label for="{{ driver }}" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="driver" value="{{ driver.id}}" id="{{ myuser }}">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="driver" value="{{ driver.id}}" id="{{ driver.myuser }}">
                                     <label for="{{ driver }}" class="filtr-items__check-label">
                                         {{ driver.last_name}} {{ driver.first_name|first}}.{{ driver.patronymic|first}}.
                                 </li>

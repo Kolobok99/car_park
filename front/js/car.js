@@ -17,14 +17,14 @@ document.addEventListener('click', function (event) {
 
     //Работа с формой редактирования
     
-    //кнопка открытия формы:
-    const btnChangeApp = this.getElementsByClassName('table__btn-change-app')[0];
-    console.log(btnChangeApp);
-    //формы изменения заявки:
-    const formChange = this.getElementsByClassName('form-app change')[0];
+    // //кнопка открытия формы:
+    // const btnChangeApp = this.getElementsByClassName('table__btn-change-app')[0];
+    // console.log(btnChangeApp);
+    // //формы изменения заявки:
+    // const formChange = this.getElementsByClassName('form-app change')[0];
 
-    //кнопка закрытия формы btnReset
-    const btnResetAppChange = document.getElementsByClassName('bnt-form-app-reset-change')[0];
+    // //кнопка закрытия формы btnReset
+    // const btnResetAppChange = document.getElementsByClassName('bnt-form-app-reset-change')[0];
 
 
     //Работа с формой добавления документов:
@@ -41,12 +41,23 @@ document.addEventListener('click', function (event) {
     if (evenClassName == btnAddApp.className || btnResetAppAdd.contains(event.target)) {
         formAdd.classList.toggle('data-show-or-hide-form');
         wrapper.classList.toggle('blackout');
-    } else if (evenClassName == btnChangeApp.className || btnResetAppChange.contains(event.target)) {
-        formChange.classList.toggle('data-show-or-hide-form');
-        wrapper.classList.toggle('blackout');
+    // } else if (evenClassName == btnChangeApp.className || btnResetAppChange.contains(event.target)) {
+    //     formChange.classList.toggle('data-show-or-hide-form');
+    //     wrapper.classList.toggle('blackout');
     } else if (evenClassName == btnAddDoc.className || btnResetDocAdd.contains(event.target)) {
         formAddDoc.classList.toggle('data-show-or-hide-form');
         wrapper.classList.toggle('blackout');
-    };    
+    };
+    
+    // if (evenClassName == btnChangeApp.className) {
+    //     const eventTargetId = event.target.id;
+    //     const eventTargetOnlyId = eventTargetId.replace(/[^\d]/g, '')
+    //     const titleAppId = this.getElementById('data-title-app-id');
+        
+    //     titleAppId.textContent = parseInt(eventTargetOnlyId);
+        
+    //     // const appChangeHidden = this.getElementById(`app-change-hidden-${eventTargetOnlyId}`);
+    //     // appChangeHidden.value = "";
+    // }
 
 });

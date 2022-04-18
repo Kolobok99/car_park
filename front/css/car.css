@@ -275,7 +275,7 @@ body {
   padding: 8px;
 }
 
-.table__btn-add-app, .table__btn-change-app, .table__btn-save-balance, .table__btn-add-doc {
+.table__btn-add-app, .table__btn-delete-app, .table__btn-save-balance, .table__btn-add-doc {
   font-size: 15px;
   color: white;
   background: #005BFF;
@@ -283,7 +283,7 @@ body {
   border-radius: 5px;
 }
 
-.table__btn-add-app:active, .table__btn-change-app:active, .table__btn-save-balance:active, .table__btn-add-doc:active {
+.table__btn-add-app:active, .table__btn-delete-app:active, .table__btn-save-balance:active, .table__btn-add-doc:active {
   background: #134cb6;
 }
 
@@ -466,7 +466,7 @@ body {
 }
 
 .footer {
-  background-color: #337afd;
+  background: #005BFF;
   padding: 5px;
   text-align: center;
   color: #fff;

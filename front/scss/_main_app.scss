@@ -271,8 +271,52 @@
             stroke: #503bba;
           }
     
-
 }
+
+.confirm-delete {
+
+    position: absolute;
+    left: 40%;
+    top:20%;
+
+    font-size: 20px;
+    text-align: center;
+
+    padding: 10px 20px 20px 20px;
+    border-radius: 10px;
+    padding: 10px 20px 20px 20px;
+    box-shadow: 11px 11px 35px 1px rgba(31, 128, 202, 0.3);
+
+    z-index: 5;
+    visibility: hidden;
+
+    background-color: #657ff2;
+
+
+
+
+    h1 {
+        
+    }
+    
+    button {
+        margin-top: 10px;
+        font-size: 20px;
+
+        padding: 10px;
+        border-radius: 5px;
+        color: whitesmoke;
+    }
+
+    button[type="submit"]{
+        background-color: rgb(221, 60, 28);
+    }
+
+    button[id="notsubmit"]{
+        background-color: rgb(54, 54, 178);
+    }
+}
+
 
 .data-show-or-hide-form{
 transition: opacity 400ms ease-in;

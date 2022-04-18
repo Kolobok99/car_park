@@ -12,6 +12,7 @@ urlpatterns = [
     path('documents/', DocumentsView.as_view(), name='documents'),
     path('cards/', CardCreateView.as_view(), name='cards'),
     path('applications', AplicationsView.as_view(), name='applications'),
+    path('applications/<int:pk>', AppView.as_view(), name='app'),
     path('registration/', RegistrationView.as_view(), name='registration'),
     path('login/', LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', LogoutView.as_view(template_name='login.html', next_page='login'), name='logout'),

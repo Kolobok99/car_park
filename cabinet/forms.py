@@ -1,3 +1,5 @@
+import re
+
 from django import forms
 from django.core import validators
 from django.forms import modelformset_factory
@@ -75,12 +77,30 @@ class DriverCreateForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
+        errors = {}
         pass1 = cleaned_data.get('password')
         pass2 = cleaned_data.get('password_repeat')
 
-        if pass1 != pass2:
-            raise ValidationError('Пароли не совпадают!')
+        first_name = cleaned_data.get('first_name')
+        last_name = cleaned_data.get('last_name')
+        patronymic = cleaned_data.get('patronymic')
 
+        def name_validate(name:str, verbose_name, key):
+            if not name[0].isupper():
+                errors[key] = ValidationError(f'{verbose_name} должно начинаться с большой буквы!')
+            if re.search(r'[a-zA-Z]|\d', name):
+                errors[key] = ValidationError(f'{verbose_name} может состоять только из Кириллицы!')
+
+        if pass1 != pass2:
+            errors['pass'] = ValidationError('Пароли не совпадают!')
+
+        name_validate(first_name, "'имя'", 'first_name')
+        name_validate(last_name, "'фамилия'", 'last_name')
+        name_validate(patronymic, "'отчество'", 'patronymic')
+
+        if errors:
+            raise ValidationError(errors)
+        return cleaned_data
 
     class Meta:
         model = MyUser
