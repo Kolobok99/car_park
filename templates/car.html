@@ -11,6 +11,7 @@
 {% block main %}
       <div class="main">
         <div class="main__container">
+        {% if user.is_manager or user.pk == car.owner.pk %}
           <div class="main__car car-area">
             <div class="car-area__avatar">
                 <img src="../img/cars/tesla.jpg" alt="" />
@@ -43,7 +44,6 @@
               </div>
             </div>
           </div>
-
           <div class="main__tables">
             <div class="main__table table">
                 <h1 class="table__table-title">Заявки</h1>
@@ -141,11 +141,20 @@
             {% endif %}
             </div>
           </div>
+{% else %}
+                <h1 style="
+                margin-left: 36%;
+                margin-top: 20%;
+                font-size: 30px;
+                opacity: 0.7;
+                            ">Страница недоступна</h1>
+{% endif %}
         </div>
       </div>
 {% endblock main %}
 
 {% block forms %}
+{% if user.is_manager or user.pk == car.owner.pk %}
     <form method="post" action="{% url 'choose-car' car.registration_number %}">
     {% csrf_token %}
       <div class="form-app add">
@@ -269,9 +278,12 @@
         <button id="btn-refuse-delete" type="reset">Нет</button>
       </div>
     </form>
+{% endif %}
     {% endblock forms %}
 
 
 {% block js_script %}
+    {% if user.is_manager or user.pk == car.owner.pk %}
 <script src="{% static 'js/car.js' %}"></script>
+    {% endif %}
 {% endblock js_script %}

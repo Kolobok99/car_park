@@ -24,8 +24,8 @@
                     type="text"
                     name="user-info"
                     id="first_name"
-                    value="Иван"
-                    placeholder="Иван"
+                    value="{{ user.first_name }}"
+                    placeholder="{{ user.first_name }}"
                   />
                 </div>
 
@@ -35,7 +35,7 @@
                     type="text"
                     name="user-info"
                     id="last_name"
-                    value="Золотавин"
+                    value="{{ user.last_name }}"
                     placeholder="Золотавин"
                   />
                 </div>
@@ -46,8 +46,8 @@
                     type="text"
                     name="user-info"
                     id="patronymic"
-                    value="Александрович"
-                    placeholder="Александрович"
+                    value="{{ user.patronymic }}"
+                    placeholder="{{ user.patronymic }}"
                   />
                 </div>
                <div class="account-area__item">
@@ -56,8 +56,8 @@
                       type="date"
                       name="user-info"
                       id="birthdate"
-                      value="28.09.1999"
-                      placeholder="28.09.1999"
+                      value="{{ user.birthdate }}"
+                      placeholder="{{ user.birthdate }}"
                     />
                </div>
 
@@ -67,8 +67,8 @@
                       type="tel"
                       name="user-info"
                       id="phone"
-                      value="79227776370"
-                      placeholder="+7-922-777-6370"
+                      value="{{ user.phone }}"
+                      placeholder="{{ user.phone }}"
                     />
                 </div>
 
@@ -78,8 +78,8 @@
                       type="email"
                       name="user-info"
                       id="email"
-                      value="izolotavin99@gmail.com"
-                      placeholder="izolotavin99@gmail.com"
+                      value="{{ user.email}}"
+                      placeholder="{{ user.email}}"
                     />
                   </div>
                 </div>

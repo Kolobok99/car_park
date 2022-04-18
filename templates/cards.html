@@ -83,12 +83,17 @@
                     </table>
                 </div>
             {% else %}
-            <h1>Страница недоступна<h1>
+             <h1 style="
+                text-align: center;
+                margin-top: 20%;
+                font-size: 30px;
+                opacity: 0.7;
+                            ">Страница недоступна</h1>
             {% endif %}
             </div>
         </div>
 {% endblock main %}
-
+{% if user.is_manager %}
 {% block forms %}
     {% if user.is_manager %}
      <form method="post" action="{% url 'cards' %}">
@@ -119,7 +124,9 @@
       </form>
     {% endif %}
 {% endblock forms %}
-
+{% endif %}
 {% block js_script %}
+{% if user.is_manager %}
 <script src="{% static 'js/cards.js' %}"></script>
+{% endif %}
 {% endblock js_script %}

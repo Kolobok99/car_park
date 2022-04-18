@@ -11,6 +11,8 @@
 {% block main %}
       <div class="main">
         <div class="main__container">
+{% if user.is_manager or user.pk == app.owner.pk %}
+
           <div class="main__app-info info-app">
                 <div class="info-app__main-info">
                     <div class="info-app__item">
@@ -86,11 +88,22 @@
                 </div>
 
           </div>
+{% else %}
+                <h1 style="
+                text-align: center;
+                margin-top: 20%;
+                font-size: 30px;
+                opacity: 0.7;
+                            ">Страница недоступна</h1>
+    {{ user.pk }}
+    {{ app.owner.pk }}
+{% endif %}
         </div>
       </div>
 {% endblock main %}
 
 {% block forms %}
+{% if user.is_manager or user.pk == app.owner.pk %}
 <form method="post">
     {% csrf_token %}
       <div class="form-app change">
@@ -140,8 +153,11 @@
         <button  type="reset" id="notsubmit">Нет</button>
       </div>
     </form>
+{% endif %}
     {% endblock forms %}
 
 {% block js_script %}
+{% if user.is_manager or user.pk == app.owner.pk %}
 <script src="{% static 'js/app.js' %}"></script>
+{% endif %}
 {% endblock js_script %}

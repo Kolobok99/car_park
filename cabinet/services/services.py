@@ -46,6 +46,8 @@ class Context():
     def get_all_status_types(self):
         return Application.STATUS_CHOISES
 
+
+
 def filtration_car(get_params):
     reg_number = get_params.get('registration_number')
     if reg_number == '': reg_number = '`'

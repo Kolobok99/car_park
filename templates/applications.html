@@ -12,7 +12,7 @@
 {% block main %}
  <div class="main">
             <div class="main__container">
-
+            {% if user.is_manager %}
                 <div class="main__title">
                     <h1>Заявок</h1>
                     <p>{{ all_apps.count }}</p>
@@ -132,8 +132,17 @@
                         {% endfor %}
                     </table>
                 </div>
+            {% else %}
+               <h1 style="
+                text-align: center;
+                margin-top: 20%;
+                font-size: 30px;
+                opacity: 0.7;
+                            ">Страница недоступна</h1>
+            {% endif %}
             </div>
         </div>
+
 {% endblock main %}
 
 {% block forms %}
@@ -143,5 +152,7 @@
 {% endblock forms %}
 
 {% block js_script %}
+    {% if user.is_manager %}
 {#<script src="{% static 'js/applications.js' %}"></script>#}
+    {% endif %}
 {% endblock js_script %}
