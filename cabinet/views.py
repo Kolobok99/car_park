@@ -195,22 +195,17 @@ class CarView(TemplateView):
 
     def post(self, request, *args, **kwargs):
         action_type = self.request.POST.get('action')
+        print(action_type)
+        form = None
         if action_type == 'app_create':
             form = AppCreateForm(self.request.POST)
         elif action_type == 'doc_create':
             form = AutoDocForm(self.request.POST)
-        elif "app_delete_" in action_type:
-            app_pk_to_delete = "".join([i for i in action_type if i.isdigit()])
-            app_to_delete = Application.objects.get(pk=app_pk_to_delete)
-            app_to_delete.delete()
-        elif "doc_delete_" in action_type:
+        elif "doc-" in action_type:
+            print("YES!")
             doc_pk_to_delete = "".join([i for i in action_type if i.isdigit()])
-            doc_to_delete = Application.objects.get(pk=doc_pk_to_delete)
+            doc_to_delete = AutoDoc.objects.get(pk=doc_pk_to_delete)
             doc_to_delete.delete()
-        else:
-            form = None
-        if form.is_valid():
+        if form != None and form.is_valid():
             form.save()
-            messages.success(request, 'Запись добавлена!')
-
         return HttpResponseRedirect("")

@@ -57,12 +57,15 @@ document.addEventListener('click', function (event) {
         // console.log(actionInputDelete.value);
         formToConfirmDelete.classList.toggle('data-show-or-hide-form');
         wrapper.classList.toggle('blackout');
+        console.log('123');
 
-    } else if (evenClassName == buttonRefuseDelete.className) {
+    } else if (event.target.id == 'btn-refuse-delete') {
+        console.log('456');
         formToConfirmDelete.classList.toggle('data-show-or-hide-form');
         wrapper.classList.toggle('blackout');
     }
     
+    console.log(evenClassName);
     // if (evenClassName == btnChangeApp.className) {
     //     const eventTargetId = event.target.id;
     //     const eventTargetOnlyId = eventTargetId.replace(/[^\d]/g, '')
