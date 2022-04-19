@@ -200,7 +200,7 @@ class AccountView(LoginRequiredMixin, UpdateView):
 
     template_name = 'account.html'
     form_class = UserUpdateForm
-    success_url = "/"
+    success_url = reverse_lazy('account')
 
     def get_object(self, queryset=None):
         return MyUser.objects.get(pk=self.request.user.pk)

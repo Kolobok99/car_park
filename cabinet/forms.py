@@ -130,6 +130,7 @@ class UserUpdateForm(forms.ModelForm):
         exclude = ('role','is_active', 'is_staff', 'is_superuser', 'image', 'password')
 
 
+
 class AppCreateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
