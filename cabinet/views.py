@@ -9,9 +9,9 @@ from .models import *
 
 from django.views.generic import ListView, TemplateView, CreateView, DetailView
 
-from cabinet.services.services import filtration_car, filtration_driver, filtration_document, Context, filtration_cards, \
+from cabinet.services.filtration import filtration_car, filtration_driver, filtration_document, filtration_cards, \
     filtration_apps
-from .services.multiforms import MultiFormsView
+from cabinet.services.services import Context
 
 
 class CarsView(Context, ListView):
