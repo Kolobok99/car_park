@@ -16,39 +16,45 @@
               <img src="{% static '/img/account/full-avatar.jpeg' %}" alt="" />
               <input type="file" name="avatar" id="image" />
             </div>
-            <form method="post" action="#">
+            <form method="post">{% csrf_token %}
               <div class="account-area__info">
+                <input type="hidden" name="action" value="user_update">
                 <div class="account-area__item">
+                   {{ form.errors }}
                   <label for="first_name">Имя:</label>
-                  <input
-                    type="text"
-                    name="user-info"
-                    id="first_name"
-                    value="{{ user.first_name }}"
-                    placeholder="{{ user.first_name }}"
-                  />
+{#                  <input#}
+{#                    type="text"#}
+{#                    name="user-info"#}
+{#                    id="first_name"#}
+{#                    value="{{ user.first_name }}"#}
+{#                    placeholder="{{ user.first_name }}"#}
+{#                  />#}
+                    {{ form.first_name }}
                 </div>
 
                 <div class="account-area__item">
                   <label for="last_name">Фамилия:</label>
-                  <input
-                    type="text"
-                    name="user-info"
-                    id="last_name"
-                    value="{{ user.last_name }}"
-                    placeholder="Золотавин"
-                  />
+{#                  <input#}
+{#                    type="text"#}
+{#                    name="user-info"#}
+{#                    id="last_name"#}
+{#                    value="{{ user.last_name }}"#}
+{#                    placeholder="Золотавин"#}
+{#                  />#}
+                    {{ form.last_name }}
                 </div>
+
 
                 <div class="account-area__item">
                   <label for="patronymic">Отчество:</label>
-                  <input
-                    type="text"
-                    name="user-info"
-                    id="patronymic"
-                    value="{{ user.patronymic }}"
-                    placeholder="{{ user.patronymic }}"
-                  />
+{#                  <input#}
+{#                    type="text"#}
+{#                    name="user-info"#}
+{#                    id="patronymic"#}
+{#                    value="{{ user.patronymic }}"#}
+{#                    placeholder="{{ user.patronymic }}"#}
+{#                  />#}
+                    {{ form.patronymic }}
                 </div>
                <div class="account-area__item">
                     <label for="birthdate">Дата рождения:</label>
@@ -63,25 +69,27 @@
 
                 <div class="account-area__item">
                     <label for="phone">Телефон:</label>
-                    <input
-                      type="tel"
-                      name="user-info"
-                      id="phone"
-                      value="{{ user.phone }}"
-                      placeholder="{{ user.phone }}"
-                    />
+{#                    <input#}
+{#                      type="tel"#}
+{#                      name="user-info"#}
+{#                      id="phone"#}
+{#                      value="{{ user.phone }}"#}
+{#                      placeholder="{{ user.phone }}"#}
+{#                    />#}
+                    {{ form.phone }}
                 </div>
 
                 <div class="account-area__item">
                     <label for="email">Email::</label>
-                    <input
-                      type="email"
-                      name="user-info"
-                      id="email"
-                      value="{{ user.email}}"
-                      placeholder="{{ user.email}}"
-                    />
-                  </div>
+{#                    <input#}
+{#                      type="email"#}
+{#                      name="user-info"#}
+{#                      id="email"#}
+{#                      value="{{ user.email}}"#}
+{#                      placeholder="{{ user.email}}"#}
+{#                    />#}
+                {{ form.email }}
+                </div>
                 </div>
                 <button class="account-area__btn-submit" type="submit">Изменить данные</button>
             </div>

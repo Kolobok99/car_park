@@ -142,7 +142,7 @@ class RegistrationView(CreateView):
     '''Регистрация пользователя'''
 
     template_name = 'registration.html'
-    form_class = DriverCreateForm
+    form_class = UserCreateForm
     success_url = '/cars'
 
 
@@ -195,16 +195,31 @@ class RegistrationView(CreateView):
 #         print(0)
 #         return self.form_invalid(form)
 
-class AccountView(LoginRequiredMixin, TemplateView):
+class AccountView(LoginRequiredMixin, UpdateView):
     '''Обработка страницы ЛК'''
 
     template_name = 'account.html'
+    form_class = UserUpdateForm
+    success_url = "/"
 
-    def get_context_data(self, **kwargs):
-        context = super(AccountView, self).get_context_data(**kwargs)
-        context['user'] = MyUser.objects.get(pk=self.request.user.pk)
+    def get_object(self, queryset=None):
+        return MyUser.objects.get(pk=self.request.user.pk)
 
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super(AccountView, self).get_context_data(**kwargs)
+    #     context['user'] = MyUser.objects.get(pk=self.request.user.pk)
+    #     # context['user_update_form'] = UserUpdateForm
+    #
+    #     return context
+
+    def form_valid(self, form):
+        print("form_valid")
+        print(self.request.POST['action'])
+        if self.request.POST['action'] == 'user_update':
+            form.instance.pk = self.request.user.pk
+            form.instance.password = self.request.user.password
+            if form.is_valid():
+                return super().form_valid(form)
 
 
 class CarView(LoginRequiredMixin, TemplateView):

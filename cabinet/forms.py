@@ -69,7 +69,7 @@ class FuelCardSaltForm(forms.ModelForm):
         model = FuelCard
         fields = ('has_owner', )
 
-class DriverCreateForm(forms.ModelForm):
+class UserCreateForm(forms.ModelForm):
     '''Форма регистрации пользователя'''
     password_repeat = forms.CharField(label='Повторите пароль',
                                       widget=forms.widgets.PasswordInput()
@@ -122,6 +122,13 @@ class DriverCreateForm(forms.ModelForm):
             'last_name': forms.widgets.TextInput(),
             'patronymic': forms.widgets.TextInput(),
         }
+
+class UserUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = MyUser
+        exclude = ('role','is_active', 'is_staff', 'is_superuser', 'image', 'password')
+
 
 class AppCreateForm(forms.ModelForm):
 

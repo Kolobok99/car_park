@@ -20,6 +20,7 @@
                    {% if user.is_authenticated %}
                         <div class="main__items">
                             <h1>Вы уже выполнили вход!</h1>
+                            <a style="text-align: center" href="{% url 'account' %}">личный кабинет</a>
                         </div>
                    {% else %}
                        <div class="main__items">

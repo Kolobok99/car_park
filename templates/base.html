@@ -36,6 +36,8 @@
                     <a href="{% url 'account' %}" class="auth__settings">
                         <img class="auth__avatar" src="{% static '/img/header/avatar.png' %}" alt="avatar">
                     </a>
+                    {{ user.role }}
+                    {{ user.pk }}
                     <a href="{% url 'logout' %}" class="auth__exit">
                         <img style="width: 30px; height: 30px; opacity: 0.8" src="{% static '/img/header/exit-white.svg' %}" alt="">
                     </a>
