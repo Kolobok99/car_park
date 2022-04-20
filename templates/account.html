@@ -70,7 +70,7 @@
                 </div>
 
                 <div class="account-area__item">
-                    <label for="email">Email::</label>
+                    <label for="email">Email:</label>
 {#                    <input#}
 {#                      type="email"#}
 {#                      name="user-info"#}
@@ -88,14 +88,13 @@
           <div class="main__tables">
             <div class="main__table table">
                 <h1 class="table__table-title">Автомобили</h1>
-                <table>
+                    <table>
                     <tr class="table__titles">
                       <th class="table__title">Номер</th>
                       <th class="table__title">Марка</th>
                       <th class="table__title">регион</th>
                       <th class="table__title">Последний <br>осмотр</th>
                       <th class="table__title">Активные <br>заявки</th>
-                      <th class="table__title">Действия</th>
                     </tr>
                 {% for car in user.my_cars.all %}
                     <tr class="table__row">
@@ -112,9 +111,7 @@
                           {{ app.type_of }}<br>
                           {% endfor %}
                       </td>
-                      <td class="table__cell">
-                        <button class="table__btn-add-app">Добавить заявку</button>
-                    </td>
+
                     </tr>
                 {% endfor %}
 
@@ -125,7 +122,7 @@
             <div class="main__table table">
                 <h1 class="table__table-title">Заявки</h1>
                 <table>
-                    <!--  -->
+                                <!--  -->
     <!-- ID -->                            <col style="width:1%">
     <!-- Дата создания -->                 <col style="width:10%">
     <!-- Дата окнчания -->                 <col style="width:10%">
@@ -133,7 +130,6 @@
     <!-- Статус -->                        <col style="width:10%">
     <!-- Тип -->                           <col style="width:20%">
     <!-- Создатель -->                     <col style="width:10%">
-    <!-- Авто -->                           <col style="width: 10%">
 
 
 
@@ -145,31 +141,52 @@
                       <th class="table__title">Тип</th>
                       <th class="table__title">Авто</th>
                       <th class="table__title">Краткое<br> описание</th>
-                      <th class="table__title">Действия</th>
                     </tr>
+                    {% for app in user.my_apps.all %}
                     <tr class="table__row">
-                        <td class="table__cell">2</td>
+                        <td class="table__cell"><a href="{% url 'app'  app.pk %}">{{ app.id }}</a></td>
                         <td class="table__cell">
-                            27.05.2022
+                            {{ app.start_date}}
                             <br>-<br>
-                            05.06.2022
-
+                            {{ app.end_date}}
                         </td>
-                        <td class="table__cell">Срочно</td>
-                        <td class="table__cell">Рассмотрена</td>
-                        <td class="table__cell">Поломка</td>
-                        <td class="table__cell">A<br>-111-<br>EE</td>
-                        <td class="table__cell">Пробило левую переднюю шину</td>
                         <td class="table__cell">
-                          <button class="table__btn-change-app">изменить заявку</button>
-                      </td>
+                            {% if app.urgency == 'N' %}
+                                  Не срочно
+                            {% elif app.urgency == 'U' %}
+                                  Срочно
+                            {% else %}
+                                  Очень срочно
+                            {% endif %}
+                        </td>
+                        <td class="table__cell">
+                             {% if app.status == 'O' %}
+                                  Ожидает рассмотрения
+                             {% elif app.status == 'R' %}
+                                  Рассмотрена
+                             {% elif app.status == 'V' %}
+                                  Выполнена
+                             {% else %}
+                                  Просрочена
+                             {% endif %}
+                        </td>
+                        <td class="table__cell">{{ app.type_of }}</td>
+                    <td class="table__cell">{{ app.car }}</td>
+                        <td class="table__cell">{{ app.description|truncatechars:10 }}</td>
                       </tr>
-
+                    {% endfor %}
                 </table>
+
             </div>
 
             <div class="main__table table">
-                <h1 class="table__table-title">Топливные карты</h1>
+                <h1 class="table__table-title _doc-title">Топливные карты</h1>
+{#                {% if user.is_manager %}#}
+{#                <button class="table__btn-add-doc">Добавить</button>#}
+{#                {% else %}#}
+{#                <button class="table__btn-add-doc">Запросить</button>#}
+{#                {% endif %}#}
+
                 <table>
 
                     <!-- ID -->                            <col style="width:5%">
@@ -187,22 +204,26 @@
                                           <th class="table__title">Действия</th>
                                         </tr>
                                         <!-- <label for="1"> -->
-                                        <form method="post">
+                                        {% for card in user.my_cards.all %}
+                                        <form method="post"> {% csrf_token %}
                                           <tr class="table__row">
-                                            <td class="table__cell">1</td>
-                                            <td class="table__cell">4264-3231</td>
-                                            <td class="table__cell">800 л.</td>
+                                            <td class="table__cell">{{ card.id }}</td>
+                                            <td class="table__cell">{{ card.number|slice:"0:4" }}-{{ card.number|slice:"4:8" }}-{{ card.number|slice:"8:12" }}-{{ card.number|slice:"12:16" }}</td>
+                                            <td class="table__cell">{{ card.limit }} л.</td>
                                             <td class="table__cell">
-                                            <input class="table__card-balance" type="text" name="balance" id="1" value="200" placeholder="200">л
+                                             <input type="hidden" name="action" value="change_balance_{{ card.pk }}">
+                                            <input class="table__card-balance" type="text" name="balance" value="{{ card.balance }}" placeholder="{{ card.balance }}">л
                                             </td>
                                             <td class="table__cell">
                                               <button class="table__btn-save-balance">изменить баланс</button>
                                           </td>
-                                        </form>
                                         <!-- </label> -->
                                         </tr>
+                                        </form>
+                                        {% endfor %}
                                         <!-- </label> -->
                 </table>
+
             </div>
 
             <div class="main__table table">
@@ -213,27 +234,27 @@
                     <!-- ID -->                            <col style="width:5%">
                     <!-- Дата создания -->                 <col style="width:15%">
                     <!-- Дата окнчания -->                 <col style="width:15%">
-
+                    <!-- Дата окнчания -->                 <col style="width:15%">
 
                                         <tr class="table__titles">
                                           <th class="table__title">Тип документа</th>
                                           <th class="table__title">Дата получения</th>
                                           <th class="table__title">Дата окончания</th>
-
+                                          <th class="table__title">Удалить?</th>
                                         </tr>
-                                        <label for="1">
-                                        <tr class="table__row">
-                                          <td class="table__cell">паспорт</td>
-                                          <td class="table__cell">22.02.2019</td>
-                                          <td class="table__cell">22.02.2024</td>
+                                {% for doc in user.my_docs.all %}
+                                    <tr class="table__row">
+                                          <td class="table__cell">{{ doc.type }}</td>
+                                          <td class="table__cell">{{ doc.date_start|date:"d-m-Y"}}</td>
+                                          <td class="table__cell">{{ doc.date_end|date:"d-m-Y"}}</td>
+                                          <td class="table__cell">
+                                              <button class="table__btn-delete-app" id="doc-{{ doc.pk }}" style="background: red">Удалить</button>
+                                          </td>
                                         </tr>
+                                {% endfor %}
 
-                                        <tr class="table__row">
-                                            <td class="table__cell">страховое</td>
-                                            <td class="table__cell">22.02.2021</td>
-                                            <td class="table__cell">22.02.2022</td>
-                                          </tr>
                 </table>
+
                 <br>
                 <br>
 
@@ -306,79 +327,86 @@
           </form>
 
 
-          <form method="post">
-            <div class="form-app change">
-              <button type="reset">
-                <div class="bnt-form-app-reset-change">
-                  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <line x1="0" x2="100" y1="0" y2="100" />
-                    <line x1="0" x2="100" y1="100" y2="0" />
-                  </svg>
-                </div>
-              </button>
-              <h1 class="form-app__title">
-                Заявка №21
-              </h1>
-              <p>Срочность:</p>
-                <div class="form-app__timing">
+{#          <form method="post">#}
+{#            <div class="form-app change">#}
+{#              <button type="reset">#}
+{#                <div class="bnt-form-app-reset-change">#}
+{#                  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">#}
+{#                    <line x1="0" x2="100" y1="0" y2="100" />#}
+{#                    <line x1="0" x2="100" y1="100" y2="0" />#}
+{#                  </svg>#}
+{#                </div>#}
+{#              </button>#}
+{#              <h1 class="form-app__title">#}
+{#                Заявка №21#}
+{#              </h1>#}
+{#              <p>Срочность:</p>#}
+{#                <div class="form-app__timing">#}
+{##}
+{#                  <input type="radio" checked name="timing-change" id="rdo-noturgent-c">#}
+{#                  <label for="rdo-noturgent-c">Не срочно</label>#}
+{##}
+{##}
+{#                  <input type="radio" name="timing-change" id="rdo-urgent-c">#}
+{#                  <label for="rdo-urgent-c">Срочно</label>#}
+{##}
+{#                  <input type="radio" name="timing-change" id="rdo-veryurgent-c">#}
+{#                  <label for="rdo-veryurgent-c">Очень срочно</label>#}
+{##}
+{#                  <label for="descr-change">Опишите суть заявки:</label>#}
+{#                  <textarea name="description" id="descr-change" cols="30" rows="10"></textarea>#}
+{#                  <button type="submit">Отправить</button>#}
+{#                </div>#}
+{#            </div>#}
+{#          </form>#}
+     <form method="post"> {% csrf_token %}
+      <div class="form-doc add">
+        <button type="reset">
+          <div class="bnt-form-doc-reset-add">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <line x1="0" x2="100" y1="0" y2="100" />
+              <line x1="0" x2="100" y1="100" y2="0" />
+            </svg>
+          </div>
+        </button>
+        <h1 class="form-app__title">
+          Добавление документов:
+        </h1>
+        <p>Тип:</p>
+          <div class="form-app__timing">
+            {{ doc_create_form.errors }}
+           {% for radio in doc_create_form.type %}
+               {% if 'a' in radio.choice_label %}
+                  {{ radio.tag }}
+                  <label for="{{ radio.id_for_label }}">{{ radio.choice_label|cut:"(a)"}}</label>
+               {% endif %}
+{#                   {{ radio.tag }}#}
+{#                  <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>#}
+           {% endfor %}
+          {{ doc_create_form.date_start.label }}:
+          {{ doc_create_form.date_start }}
 
-                  <input type="radio" checked name="timing-change" id="rdo-noturgent-c">
-                  <label for="rdo-noturgent-c">Не срочно</label>
+          {{ doc_create_form.date_end.label }}:
+          {{ doc_create_form.date_end }}
 
+{#            <input type="hidden" name="owner" id="id_owner" value="{{ car.pk }}">#}
+            <input type="hidden" name="action" value="doc_create">
+{#            <label for="doc-copy">Прикрепите документа</label>#}
+{#            <input type="file">#}
+            <button type="submit">Отправить</button>
+          </div>
+      </div>
+    </form>
+<form method="post">
+     {% csrf_token %}
+      <div class="confirm-delete">
+        <h1>Удалить?</h1>
+        <input id="action-delete" type="hidden" name="action" value="">
 
-                  <input type="radio" name="timing-change" id="rdo-urgent-c">
-                  <label for="rdo-urgent-c">Срочно</label>
-
-                  <input type="radio" name="timing-change" id="rdo-veryurgent-c">
-                  <label for="rdo-veryurgent-c">Очень срочно</label>
-
-                  <label for="descr-change">Опишите суть заявки:</label>
-                  <textarea name="description" id="descr-change" cols="30" rows="10"></textarea>
-                  <button type="submit">Отправить</button>
-                </div>
-            </div>
-          </form>
-
-          <form method="post">
-            <div class="form-doc add">
-              <button type="reset">
-                <div class="bnt-form-doc-reset-add">
-                  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <line x1="0" x2="100" y1="0" y2="100" />
-                    <line x1="0" x2="100" y1="100" y2="0" />
-                  </svg>
-                </div>
-              </button>
-              <h1 class="form-app__title">
-                Добавление документов:
-              </h1>
-              <p>Тип:</p>
-                <div class="form-app__timing">
-
-                  <input type="radio" checked name="type_doc" id="rdo-passport">
-                  <label for="rdo-passport">Паспорт</label>
-
-
-                  <input type="radio" name="type_doc" id="rdo-snils">
-                  <label for="rdo-snils">Снился</label>
-
-                  <input type="radio" name="type_doc" id="rdo-insurance">
-                  <label for="rdo-insurance">Строховой полис</label>
-
-                  <label for="date-start">Дата получения:</label>
-                  <input type="date" id="date-start">
-
-                  <label for="date-end">Дата получения:</label>
-                  <input type="date" id="date-end">
-
-                  <label for="doc-copy">Прикрепите документа</label>
-                  <input type="file">
-
-                  <button type="submit">Отправить</button>
-                </div>
-            </div>
-          </form>
-
+        <button id="btn-confirm-delete" type="submit">Да</button>
+        <button id="btn-refuse-delete" type="reset">Нет</button>
+      </div>
+    </form>
 {% endblock forms %}
 
 {% block js_script %}

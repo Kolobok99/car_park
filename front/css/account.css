@@ -294,7 +294,7 @@ body {
   max-width: 30px;
 }
 
-.table__btn-add-app, .table__btn-change-app, .table__btn-save-balance, .table__btn-add-doc {
+.table__btn-add-app, .table__btn-delete-app, .table__btn-change-app, .table__btn-save-balance, .table__btn-add-doc {
   font-size: 15px;
   color: white;
   background: #005BFF;
@@ -302,7 +302,7 @@ body {
   border-radius: 5px;
 }
 
-.table__btn-add-app:active, .table__btn-change-app:active, .table__btn-save-balance:active, .table__btn-add-doc:active {
+.table__btn-add-app:active, .table__btn-delete-app:active, .table__btn-change-app:active, .table__btn-save-balance:active, .table__btn-add-doc:active {
   background: #134cb6;
 }
 
@@ -399,7 +399,7 @@ body {
   margin-top: 5px;
 }
 
-.form-app__timing label[for*="rdo"], .form-doc__timing label[for*="rdo"] {
+.form-app__timing label[for*="rdo"], .form-app__timing label[for*="id_type_"], .form-app__timing label[for*="id_urgency"], .form-doc__timing label[for*="rdo"], .form-doc__timing label[for*="id_type_"], .form-doc__timing label[for*="id_urgency"] {
   padding-left: 8px;
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
@@ -413,7 +413,7 @@ body {
           user-select: none;
 }
 
-.form-app__timing label[for*="rdo"]::before, .form-doc__timing label[for*="rdo"]::before {
+.form-app__timing label[for*="rdo"]::before, .form-app__timing label[for*="id_type_"]::before, .form-app__timing label[for*="id_urgency"]::before, .form-doc__timing label[for*="rdo"]::before, .form-doc__timing label[for*="id_type_"]::before, .form-doc__timing label[for*="id_urgency"]::before {
   content: '';
   display: inline-block;
   width: 15px;
@@ -462,6 +462,38 @@ body {
 
 .form-app svg:hover line, .form-doc svg:hover line {
   stroke: #503bba;
+}
+
+.confirm-delete {
+  position: absolute;
+  left: 72%;
+  top: 60%;
+  font-size: 20px;
+  text-align: center;
+  padding: 10px 20px 20px 20px;
+  border-radius: 10px;
+  padding: 10px 20px 20px 20px;
+  -webkit-box-shadow: 11px 11px 35px 1px rgba(31, 128, 202, 0.3);
+          box-shadow: 11px 11px 35px 1px rgba(31, 128, 202, 0.3);
+  z-index: 5;
+  visibility: hidden;
+  background-color: #657ff2;
+}
+
+.confirm-delete button {
+  margin-top: 10px;
+  font-size: 20px;
+  padding: 10px;
+  border-radius: 5px;
+  color: whitesmoke;
+}
+
+.confirm-delete button[type="submit"] {
+  background-color: #dd3c1c;
+}
+
+.confirm-delete button[id="btn-refuse-delete"] {
+  background-color: #3636b2;
 }
 
 .data-show-or-hide-form {

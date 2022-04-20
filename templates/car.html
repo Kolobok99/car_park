@@ -13,7 +13,41 @@
         <div class="main__container">
         {% if user.is_manager or user.pk == car.owner.pk %}
           <div class="main__car car-area">
+          {% if user.is_manager %}
+            <form method="post">{% csrf_token %}
             <div class="car-area__avatar">
+                <img src="../img/cars/tesla.jpg" alt="" />
+                <input type="file" name="avatar" id="image" />
+            </div>
+            <div class="car-area__info">
+              <div class="car-area__item">
+                <p>Марка:</p>
+                <span>{{ form.brand}}</span>
+              </div>
+
+              <div class="car-area__item">
+                <p>Номер:</p>
+                <span>{{ form.registration_number }}</span>
+              </div>
+
+              <div class="car-area__item">
+                <p>Код:</p>
+                <span>{{ form.region_code }}</span>
+              </div>
+
+              <div class="car-area__item">
+                <p>Последний осмотр:</p>
+                <span>{{ form.last_inspection }}</span>
+              </div>
+
+              <div class="car-area__item">
+                <p>Водитель:</p>
+                <span>{{ form.owner}}.</span>
+              </div>
+              <button class="account-area__btn-submit" type="submit">Изменить данные</button>
+              </form>
+            {% else %}
+              <div class="car-area__avatar">
                 <img src="../img/cars/tesla.jpg" alt="" />
                 <input type="file" name="avatar" id="image" />
             </div>
@@ -42,8 +76,10 @@
                 <p>Водитель:</p>
                 <span>{{ car.owner.last_name}} {{ car.owner.first_name|first}}.{{ car.owner.patronymic|first}}.</span>
               </div>
+            {% endif %}
             </div>
           </div>
+
           <div class="main__tables">
             <div class="main__table table">
                 <h1 class="table__table-title">Заявки</h1>

@@ -44,14 +44,20 @@
                     <li class="filtr-items__item">
                         <p class="filtr-items__title">Водитель</p>
                         <ul class="filtr-items__sub-menu">
-                          {% for driver in view.get_drivers %}
-                            <label for="{{ driver }}" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="driver" value="{{ driver.id}}" id="{{ driver}}">
-                                    <label for="{{ driver}}" class="filtr-items__check-label">
-                                        {{ driver.last_name}} {{ driver.first_name|first}}.{{ driver.patronymic|first}}.
+{#                          {% for driver in view.get_drivers %}#}
+                            <label for="driver_yes" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="radio" name="driver_has" value="driver_yes" id="driver_yes">
+                                    <label for="driver_yes" class="filtr-items__check-label">
+                                        Есть водитель
                                 </li>
                             </label>
-                          {% endfor %}
+                             <label for="driver_no" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="radio" name="driver_has" value="driver_no" id="driver_no">
+                                    <label for="driver_no" class="filtr-items__check-label">
+                                        Нет водителя
+                                </li>
+                            </label>
+{#                          {% endfor %}#}
                         </ul>
                     </li>
                     <li class="filtr-items__item">
@@ -88,6 +94,7 @@
             </form>
 
                 <div class="main__information">
+                {% if cars.count %}
                     <table class="main__table table">
                         <tr class="table__titles">
                           <th class="table__title">Номер</th>
@@ -112,7 +119,9 @@
                               {% for application in car.applications.all %}
                                 <table>
                                     <tr>
-                                        <td>{{ application.type_of }}</td>
+                                        <td>
+                                            <a href="{% url 'app' application.pk %}">{{ application.type_of }}</a>
+                                        </td>
                                         <td>{{ application.start_date }}</td>
                                     </tr>
                                 </table>
@@ -122,6 +131,9 @@
 
                          {% endfor %}
                     </table>
+                {% else %}
+                    <p style="text-align: center; font-size: 30px; opacity: 0.8">Не найдено </p>
+                {% endif %}
                 </div>
 {% else %}
                 <h1 style="

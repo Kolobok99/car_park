@@ -1,31 +1,74 @@
 from itertools import chain
 
+import django_filters
 from django.db.models import Q
 from cabinet.models import Car, MyUser, AutoDoc, UserDoc, FuelCard, TypeOfAppl, Application
 
+class CarFilter(django_filters.Filter):
+
+    registration_number = django_filters.CharFilter(field_name='registration_number', lookup_expr='icontains')
+
+    class Meta:
+        model = Car
+
+
 
 def filtration_car(get_params):
+
     reg_number = get_params.get('registration_number')
+    driver = get_params.get('driver_has')
     if reg_number == '': reg_number = '`'
+    if driver == 'driver_no':
+        query_set = Car.objects.filter(
+            Q(registration_number__icontains=reg_number) |
+            Q(brand__in=get_params.getlist('brand')) |
+            Q(owner__isnull=True) |
+            Q(region_code__in=get_params.getlist('region')) |
+            (Q(applications__type_of_id__in=get_params.getlist('type_of_app')) & Q(
+                applications__is_active=True))
 
-    query_set = Car.objects.filter(
-        Q(registration_number__icontains=reg_number) |
-        Q(brand__in=get_params.getlist('brand')) |
-        Q(owner__in=get_params.getlist('driver')) |
-        Q(region_code__in=get_params.getlist('region')) |
-        (Q(applications__type_of_id__in=get_params.getlist('type_of_app')) & Q(
-            applications__is_active=True))
+        )
+    else:
+        driver = MyUser.objects.filter(role='d')
+        query_set = Car.objects.filter(
+            Q(registration_number__icontains=reg_number) |
+            Q(brand__in=get_params.getlist('brand')) |
+            Q(owner__in=driver) |
+            Q(region_code__in=get_params.getlist('region')) |
+            (Q(applications__type_of_id__in=get_params.getlist('type_of_app')) & Q(
+                applications__is_active=True))
 
-    )
+        )
     return query_set.distinct()
 
 def filtration_driver(get_params):
     """Возвращает отфильтрованный queryset"""
     last_name = get_params.get('last_name')
     phone = get_params.get('phone')
-
+    card_balance = get_params.get('card_balance')
     if last_name == '': last_name = '`'
     if phone == '': phone = '`'
+    print(card_balance)
+
+    if card_balance == "200":
+        query_set_balance = MyUser.objects.filter(
+            Q(my_cards__balance__lte=200) &
+            Q(role='d')
+        )
+    elif card_balance == "500":
+        query_set_balance = MyUser.objects.filter(
+            Q(my_cards__balance__qte=500) &
+            Q(role='d')
+        )
+    elif card_balance == "0":
+        query_set_balance = MyUser.objects.filter(
+            Q(my_cards__isnull=True) &
+            Q(role='d')
+        )
+        print("YES!")
+        print(query_set_balance)
+    else:
+        query_set_balance = None
 
     query_set = MyUser.objects.filter(
         Q(role='d') &
@@ -34,9 +77,10 @@ def filtration_driver(get_params):
         | (Q(my_apps__type_of_id__in=get_params.getlist('type_of_app')) & Q(
            my_apps__is_active=True)))
     )
-
-    return query_set.distinct()
-
+    if query_set_balance == None:
+        return query_set.distinct()
+    else:
+        return query_set_balance
 def filtration_document(get_params):
     """Возвращает отфильтрованный queryset модели document"""
     start_date = get_params.get('start_date')

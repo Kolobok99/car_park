@@ -9,9 +9,15 @@ from datetime import timedelta
 
 from django.db.models import Q
 
+from car_park import settings
+
 
 class Car(models.Model):
     '''машины водилетей'''
+
+    def upload_image(self):
+        path = f"{settings.MEDIA_ROOT}/cars/{self.registration_number}/avatars"
+        return path
 
     brand = models.ForeignKey('CarBrand', on_delete=models.SET_NULL,
                               related_name='cars', verbose_name='Марка', null=True, blank=True)
@@ -25,10 +31,13 @@ class Car(models.Model):
                                                    validators=[
                                                        validators.MaxValueValidator(200, message='Укажите меньше 200!')]
                                                    )
-    owner = models.ForeignKey('MyUser', on_delete=models.SET_NULL,
+    owner = models.ForeignKey('MyUser', on_delete=models.SET(None),
                               related_name='my_cars', null=True, blank=True)
 
     last_inspection = models.DateField("последний осмотр", null=True, blank=True)
+
+    image = models.FileField('фотография', null=True, blank=True, upload_to=upload_image)
+
 
     def save(self, *args, **kwargs):
         # self.slug = self.registration_number

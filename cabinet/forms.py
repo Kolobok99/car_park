@@ -40,22 +40,23 @@ class CarAddForm(forms.ModelForm):
 
     # region_code = forms.CharField(label='Код региона:')
 
-    # last_inspection = forms.DateField(label='Последний осмотр:')
+    last_inspection = forms.DateField(label='Последний осмотр:', widget=forms.DateInput(attrs={'class':'datepicker form-control', 'placeholder':'Select a date'}), required=False)
 
     # owner = forms.ModelChoiceField(label='Закрепить за:', queryset=Driver.objects.all())
 
 
     class Meta:
         model = Car
-        fields = ('registration_number', 'brand', 'region_code', 'last_inspection', 'owner',)
+        fields = ('registration_number', 'brand', 'region_code', 'last_inspection', 'owner', 'image')
         labels = {
             'registration_number': 'Номер',
             'brand': 'Марка',
             'region_code': 'Код региона',
             'last_inspection': 'Последний осмотр',
             'owner': 'Закрепить за',
-
         }
+
+
 
 class FuelCardAddForm(forms.ModelForm):
 
@@ -180,6 +181,32 @@ class AutoDocForm(forms.ModelForm):
     action = forms.CharField(widget=forms.widgets.HiddenInput())
     class Meta:
         model = AutoDoc
+        # fields = '__all__'
+        exclude = ('owner',)
+        widgets = {
+            # 'owner': forms.widgets.HiddenInput(),
+            'date_start': forms.widgets.DateInput(attrs={
+                "type": 'date',
+
+            }),
+            'date_end': forms.widgets.DateInput(attrs={
+                "type": 'date',
+
+            }),
+            'type': forms.widgets.RadioSelect(
+
+            )
+        }
+
+class DriverDocForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['type'].empty_label = "Не выбран"
+
+    action = forms.CharField(widget=forms.widgets.HiddenInput())
+    class Meta:
+        model = UserDoc
         # fields = '__all__'
         exclude = ('owner',)
         widgets = {

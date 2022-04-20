@@ -11,7 +11,7 @@ from .models import *
 from django.views.generic import ListView, TemplateView, CreateView, DetailView
 
 from cabinet.services.filtration import filtration_car, filtration_driver, filtration_document, filtration_cards, \
-    filtration_apps
+    filtration_apps, CarFilter
 from cabinet.services.services import Context
 
 
@@ -36,6 +36,8 @@ class CarCreateView(Context, LoginRequiredMixin, CreateView):
             context['cars'] = Car.objects.all()
         else:
             context['cars'] = filtration_car(self.request.GET)
+            # context['cars'] = CarFilter(self.request.GET, query_set=Car.objects.all())
+            print(context['cars'])
         return context
 
 
@@ -213,38 +215,64 @@ class AccountView(LoginRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         return MyUser.objects.get(pk=self.request.user.pk)
 
-    # def get_context_data(self, **kwargs):
-    #     context = super(AccountView, self).get_context_data(**kwargs)
-    #     context['user'] = MyUser.objects.get(pk=self.request.user.pk)
-    #     # context['user_update_form'] = UserUpdateForm
-    #
-    #     return context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['doc_create_form'] = DriverDocForm
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        action_type = self.request.POST['action']
+        if 'change_balance' in action_type:
+            card_id = "".join([i for i in action_type if i.isdigit()])
+            print(card_id)
+            card = FuelCard.objects.get(pk=card_id)
+            card.balance = self.request.POST['balance']
+            card.save()
+            return HttpResponseRedirect("")
+        elif action_type == 'doc_create':
+            form = DriverDocForm(self.request.POST)
+            form.instance.owner = MyUser.objects.get(pk=self.request.user.pk)
+            if form.is_valid():
+                form.save()
+                return HttpResponseRedirect("")
+        elif "doc-" in action_type:
+            doc_pk_to_delete = "".join([i for i in action_type if i.isdigit()])
+            doc_to_delete = UserDoc.objects.get(pk=doc_pk_to_delete)
+            doc_to_delete.delete()
+            return HttpResponseRedirect("")
+        else:
+            return super(AccountView, self).post(request, *args, **kwargs)
 
     def form_valid(self, form):
         print(form.fields)
-        if self.request.POST['action'] == 'user_update':
+        action_type = self.request.POST['action']
+        if action_type == 'user_update':
             form.instance.pk = self.request.user.pk
             form.instance.password = self.request.user.password
             list_of_fields = ['first_name', 'last_name', 'patronymic',
                               'phone', 'email']
-            def old_field_value(list_of_fields:list):
-                for field in list_of_fields:
-                    if form.cleaned_data[field] is None:
-                        setattr(form.instance, field, getattr(self.request.user, field))
-            old_field_value(list_of_fields)
+            for field in list_of_fields:
+                if form.cleaned_data[field] is None:
+                    setattr(form.instance, field, getattr(self.request.user, field))
             if form.is_valid():
                 return super().form_valid(form)
 
 
-class CarView(LoginRequiredMixin, TemplateView):
+class CarView(LoginRequiredMixin, UpdateView):
     template_name = 'car.html'
+    form_class = CarAddForm
+    success_url = reverse_lazy('cars')
+
+    def get_object(self, queryset=None):
+        return Car.objects.get(registration_number=self.kwargs['slug'])
 
     def get_context_data(self, **kwargs):
-        car = Car.objects.get(registration_number=self.kwargs['slug'])
+        # car = Car.objects.get(registration_number=self.kwargs['slug'])
         app_create_form = AppCreateForm()
         doc_create_form = AutoDocForm()
         context = super().get_context_data(**kwargs)
-        context['car'] = car
+        # context['car'] = car
         context['app_create_form'] = app_create_form
         context['doc_create_form'] = doc_create_form
 
