@@ -143,7 +143,7 @@ class RegistrationView(CreateView):
 
     template_name = 'registration.html'
     form_class = UserCreateForm
-    success_url = '/cars'
+    success_url = reverse_lazy('account')
 
 
 # class CarView(MultiFormsView, DetailView):
@@ -213,11 +213,17 @@ class AccountView(LoginRequiredMixin, UpdateView):
     #     return context
 
     def form_valid(self, form):
-        print("form_valid")
-        print(self.request.POST['action'])
+        print(form.fields)
         if self.request.POST['action'] == 'user_update':
             form.instance.pk = self.request.user.pk
             form.instance.password = self.request.user.password
+            list_of_fields = ['first_name', 'last_name', 'patronymic',
+                              'phone', 'email']
+            def old_field_value(list_of_fields:list):
+                for field in list_of_fields:
+                    if form.cleaned_data[field] is None:
+                        setattr(form.instance, field, getattr(self.request.user, field))
+            old_field_value(list_of_fields)
             if form.is_valid():
                 return super().form_valid(form)
 

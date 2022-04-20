@@ -124,11 +124,25 @@ class UserCreateForm(forms.ModelForm):
         }
 
 class UserUpdateForm(forms.ModelForm):
+    #
+    # def __init__(self, *args, **kwargs):
+    #     super(UserUpdateForm, self).__init__(*args, **kwargs)
+    #     self.fields['first_name'].widget = forms.widgets.TextInput(
+    #         attrs={
+    #             "placeholder": self.fields['first_name'].value
+    #         }
+    #     )
 
     class Meta:
         model = MyUser
         exclude = ('role','is_active', 'is_staff', 'is_superuser', 'image', 'password')
-
+        # widgets = {
+        #     'first_name': forms.widgets.TextInput(
+        #         attrs={
+        #             'placeholder':
+        #         }
+        #     )
+        # }
 
 
 class AppCreateForm(forms.ModelForm):
