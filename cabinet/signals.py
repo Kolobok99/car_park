@@ -12,5 +12,12 @@ def post_save_myuser(created, **kwargs):
     instance = kwargs['instance']
     if created:
         print(f"{instance.email} создан!")
-        # os.mkdir(settings.BASE_DIR / f'media/avatars/{instance.email}')
-        os.mkdir(f'{settings.MEDIA_ROOT}/avatars/{instance.email}')
+
+        #создание папки для пользователя
+        os.mkdir(f'{settings.MEDIA_ROOT}/drivers/{instance.email}')
+
+        #создание папки для хранения аватарок
+        os.mkdir(f'{settings.MEDIA_ROOT}/drivers/{instance.email}/avatars')
+
+        #создание папки для хранения документов
+        os.mkdir(f'{settings.MEDIA_ROOT}/drivers/{instance.email}/docs')

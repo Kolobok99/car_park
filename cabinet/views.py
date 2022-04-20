@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.http import HttpResponseRedirect, HttpResponse
@@ -143,7 +144,14 @@ class RegistrationView(CreateView):
 
     template_name = 'registration.html'
     form_class = UserCreateForm
-    success_url = reverse_lazy('account')
+    success_url = reverse_lazy('login')
+
+    # def form_valid(self, form):
+    #     super(RegistrationView, self).form_valid(form)
+    #     email = form.cleaned_data['email']
+    #     password = form.cleaned_data['password']
+    #     user = authenticate(email, password)
+    #     return login(self.request, user)
 
 
 # class CarView(MultiFormsView, DetailView):
