@@ -5,6 +5,49 @@ from django.db.models import Q, F
 from cabinet.models import Car, MyUser, AutoDoc, UserDoc, FuelCard, TypeOfAppl, Application
 
 
+def refact3_filtration_car(get_params):
+    # 1.1)Получить все get-параметры:
+    registration_number = get_params.get('registration_number')
+
+    # 1.2) Получить все getlist параметры:
+    brand = get_params.getlist('brand')
+    region_code = get_params.getlist('region_code')
+    applications = get_params.getlist('applications')
+
+    # 1.3) Получить остальные параметры:
+    driver_has = get_params.getlist('driver_has')
+    # if driver_has == "driver_no":driver_has = False
+    list_of_Q = []
+
+    if registration_number != "":
+        reg_number_parameter = 'registration_number__icontains'
+        Q_reg_number = Q(**{reg_number_parameter: registration_number})
+        list_of_Q.append(Q_reg_number)
+
+    if brand:
+       brand_parameter = 'brand__in'
+       Q_brand = Q(**{brand_parameter: brand})
+       list_of_Q.append(Q_brand)
+
+    if len(driver_has) != 2:
+        driver_has_parameter = "owner__isnull"
+        Q_driver_has = Q(**{driver_has_parameter: bool(driver_has[0])})
+        list_of_Q.append(Q_driver_has)
+    if region_code:
+        region_code_parameter = "region_code__in"
+        Q_region_code = Q(**{region_code_parameter: region_code})
+        list_of_Q.append(Q_region_code)
+    if applications:
+        applications_parametr = "applications__type_of_id__in"
+        Q_applications = Q(**{applications_parametr: applications})
+        Q_active_apps = Q(**{"applications__is_active": True})
+        list_of_Q.append(Q_applications)
+        list_of_Q.append(Q_active_apps)
+
+    return Car.objects.filter(
+        *list_of_Q
+    )
+
 def refact2_filtration_car(get_params):
     # 1.1)Получить все get-параметры:
     registration_number = get_params.get('registration_number')
@@ -34,18 +77,23 @@ def refact2_filtration_car(get_params):
             flag = True
     if len(driver_has) != 2:
         print("NO!")
-        if driver_has[0] == 'driver_no':
-            if flag:
-                query_set = query_set.filter(owner__isnull=True)
-            else:
-                query_set = Car.objects.filter(owner__isnull=True)
-                flag = True
-        elif driver_has[0] == 'driver_yes':
-            if flag:
-                query_set = query_set.filter(owner__isnull=False)
-            else:
-                query_set = Car.objects.filter(owner__isnull=False)
-                flag = True
+        if flag:
+            query_set = query_set.filter(owner__isnull=bool(driver_has[0]))
+        else:
+            query_set = Car.objects.filter(owner__isnull=bool(driver_has[0]))
+            flag = True
+        # if driver_has[0] == 'driver_no':
+        #     if flag:
+        #         query_set = query_set.filter(owner__isnull=True)
+        #     else:
+        #         query_set = Car.objects.filter(owner__isnull=True)
+        #         flag = True
+        # elif driver_has[0] == 'driver_yes':
+        #     if flag:
+        #         query_set = query_set.filter(owner__isnull=False)
+        #     else:
+        #         query_set = Car.objects.filter(owner__isnull=False)
+        #         flag = True
 
     if region_code:
         if flag:

@@ -46,15 +46,15 @@
                         <ul class="filtr-items__sub-menu">
 {#                          {% for driver in view.get_drivers %}#}
                             <label for="driver_yes" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" checked type="checkbox" name="driver_has" value="driver_yes" id="driver_yes">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" checked type="checkbox" name="driver_has" value="1" id="driver_yes">
                                     <label for="driver_yes" class="filtr-items__check-label">
-                                        Есть водитель
+                                        Нет водителя
                                 </li>
                             </label>
                              <label for="driver_no" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" checked type="checkbox" name="driver_has" value="driver_no" id="driver_no">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" checked type="checkbox" name="driver_has" value="" id="driver_no">
                                     <label for="driver_no" class="filtr-items__check-label">
-                                        Нет водителя
+                                        Есть водитель
                                 </li>
                             </label>
 {#                          {% endfor %}#}
