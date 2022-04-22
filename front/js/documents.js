@@ -24,33 +24,51 @@ document.addEventListener('click', function (event) {
     // Если нажат label или check:
         // filtr-items__check-label
         // filtr-items__check
-    
+
+    const filterButton =  this.getElementsByClassName('filtr-items__button')[0];
+    console.log(filterButton)
+
+
     if (input_check_auto.checked) {
         // console.log('YES!');
         block_to_hide_man.classList.add('class-to-hide-block');
         man_title.classList.add('class-to-hide-title');
+        filterButton.disabled=false;
+        filterButton.style.opacity=1;
 
     } else {
         block_to_hide_man.classList.remove('class-to-hide-block');
         man_title.classList.remove('class-to-hide-title');
-    };
+    }
 
     if (input_check_man.checked) {
         // console.log('YES!');
         block_to_hide_car.classList.add('class-to-hide-block');
         car_title.classList.add('class-to-hide-title');
+        filterButton.disabled=false;
+        filterButton.style.opacity=1;
 
     } else {
         block_to_hide_car.classList.remove('class-to-hide-block');
         car_title.classList.remove('class-to-hide-title');
 
-    };
+
+    }
 
     if (input_check_auto.checked && input_check_man.checked) {
         block_to_hide_man.classList.remove('class-to-hide-block');
         man_title.classList.remove('class-to-hide-title');
         block_to_hide_car.classList.remove('class-to-hide-block');
         car_title.classList.remove('class-to-hide-title');
+        filterButton.disabled=false;
+        filterButton.style.opacity=1;
     }
-    
+    if (!input_check_auto.checked && !input_check_man.checked) {
+        block_to_hide_man.classList.add('class-to-hide-block');
+        man_title.classList.add('class-to-hide-title');
+        block_to_hide_car.classList.add('class-to-hide-block');
+        car_title.classList.add('class-to-hide-title');
+        filterButton.disabled=true;
+        filterButton.style.opacity=0.5;
+    }
 });

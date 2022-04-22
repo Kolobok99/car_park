@@ -65,7 +65,7 @@
                         <ul class="filtr-items__sub-menu">
                           {% for car in view.get_regions %}
                             <label for="{{ car.region_code }}" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="region" value="{{ car.region_code }}" id="{{ car.region_code }}">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="region_code" value="{{ car.region_code }}" id="{{ car.region_code }}">
                                     <label for="{{ car.region_code }}" class="filtr-items__check-label">{{ car.region_code }}
                                 </li>
                             </label>
@@ -78,7 +78,7 @@
                         <ul class="filtr-items__sub-menu">
                             {% for app in view.get_types_of_app %}
                             <label for="{{ app.title }}" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="type_of_app" value="{{ app.id }}" id="{{ app.title }}">
+                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="applications" value="{{ app.id }}" id="{{ app.title }}">
                                     <label for="{{ app.title }}" class="filtr-items__check-label">{{ app.title }}
                                 </li>
                             </label>

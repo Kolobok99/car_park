@@ -32,7 +32,7 @@
                         <ul class="filtr-items__sub-menu">
                             {% for type_of_app in view.get_types_of_app %}
                              <label for="{{ type_of_app.id }}"  class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="type_of_app" id="{{ type_of_app.id }}" value="{{ type_of_app.id }}">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="applications" id="{{ type_of_app.id }}" value="{{ type_of_app.id }}">
                                     <label for="{{ type_of_app.id }}" class="filtr-items__check-label">{{ type_of_app.title }}</label>
                                 </li>
                             </label>
@@ -48,7 +48,7 @@
                                 </li>
                             </label>
                             <label for="no_cards" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="radio" name="card_balance" id="no_cards" value="0">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="radio" name="card_balance" id="no_cards" value="1">
                                     <label for="no_cards" class="filtr-items__check-label">Нет карт
                                 </li>
                             </label>

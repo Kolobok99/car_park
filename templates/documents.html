@@ -29,12 +29,12 @@
                         <p class="filtr-items__title">Авто/Водитель</p>
                         <ul class="filtr-items__sub-menu">
                             <label for="auto" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check data-auto-check" type="checkbox" name="aorm" id="auto" value="car">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check data-auto-check" checked type="checkbox" name="aorm" id="auto" value="car">
                                     <label for="auto" class="filtr-items__check-label">Авто</label>
                                 </li>
                             </label>
                             <label for="man" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check data-driver-check" type="checkbox" name="aorm" id="man" value="man">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check data-driver-check" checked type="checkbox" name="aorm" id="man" value="man">
                                     <label for="man" class="filtr-items__check-label">Водитель
                                 </li>
                             </label>
@@ -77,6 +77,9 @@
                     </button>
                 </ul>
                 <a class="btn-reset" href="{% url 'documents' %}">Сбросить</a>
+                {% for parametr in get_parametrs %}
+                    {{ parametr }}
+                {% endfor %}
 
             </form>
 

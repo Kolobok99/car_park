@@ -1,48 +1,188 @@
 from itertools import chain
 
 import django_filters
-from django.db.models import Q
+from django.db.models import Q, F
 from cabinet.models import Car, MyUser, AutoDoc, UserDoc, FuelCard, TypeOfAppl, Application
 
-class CarFilter(django_filters.Filter):
 
-    registration_number = django_filters.CharFilter(field_name='registration_number', lookup_expr='icontains')
+def refact2_filtration_car(get_params):
+    # 1.1)Получить все get-параметры:
+    registration_number = get_params.get('registration_number')
 
-    class Meta:
-        model = Car
+    # 1.2) Получить все getlist параметры:
+    brand = get_params.getlist('brand')
+    region_code = get_params.getlist('region_code')
+    applications = get_params.getlist('applications')
+
+    # 1.3) Получить остальные параметры:
+    driver_has = get_params.get('driver_has')
+    # if driver_has == "driver_no":driver_has = False
+
+    query_set = None
+
+    list_of_query = []
+    flag = False
+
+    if registration_number != '':
+        # query_registration_number = Car.objects.filter(registration_number__icontains=registration_number)
+        # list_of_query.append(query_registration_number)
+        query_set = Car.objects.filter(registration_number__icontains=registration_number)
+        flag = True
+    if brand:
+        if flag:
+            query_set = query_set.filter(brand__in=brand)
+        else:
+            query_set = Car.objects.filter(brand__in=brand)
+        # query_brand = Car.objects.filter(brand__in=brand)
+        # list_of_query.append(query_brand)
+    if region_code:
+        query_region_code = Car.objects.filter(region_code__in=region_code)
+        list_of_query.append(query_region_code)
+    if applications:
+        query_applications = Car.objects.filter(
+            (Q(applications__type_of_id__in=applications) & Q(
+                applications__is_active=True)
+             ))
+        list_of_query.append(query_applications)
+    if driver_has == 'driver_no':
+        query_driver_has = Car.objects.filter(
+            owner__isnull=True
+        )
+        list_of_query.append(query_driver_has)
+    else:
+        query_driver_has = Car.objects.filter(
+            owner__isnull=False
+        )
+        list_of_query.append(query_driver_has)
+
+    if list_of_query:
+        queryset = list_of_query[0]
+        for query in list_of_query[1:]:
+            queryset = queryset & query
+    else:
+        queryset = Car.objects.all()
+    return queryset
+
+
+def refact_filtration_car(get_params):
+
+    # 1.1)Получить все get-параметры:
+    registration_number = get_params.get('registration_number')
+
+    # 1.2) Получить все getlist параметры:
+    brand = get_params.getlist('brand')
+    region_code = get_params.getlist('region_code')
+    applications = get_params.getlist('applications')
+
+    # 1.3) Получить остальные параметры:
+    driver_has = get_params.get('driver_has')
+    # if driver_has == "driver_no":driver_has = False
+
+    list_of_query = []
+
+    if registration_number != '':
+        query_registration_number = Car.objects.filter(registration_number__icontains=registration_number)
+        list_of_query.append(query_registration_number)
+    if brand:
+        query_brand = Car.objects.filter(brand__in=brand)
+        list_of_query.append(query_brand)
+    if region_code:
+        query_region_code = Car.objects.filter(region_code__in=region_code)
+        list_of_query.append(query_region_code)
+    if applications:
+        query_applications = Car.objects.filter(
+            (Q(applications__type_of_id__in=applications) & Q(
+                applications__is_active=True)
+        ))
+        list_of_query.append(query_applications)
+    if driver_has == 'driver_no':
+        query_driver_has = Car.objects.filter(
+            owner__isnull=True
+        )
+        list_of_query.append(query_driver_has)
+    else:
+        query_driver_has = Car.objects.filter(
+            owner__isnull=False
+        )
+        list_of_query.append(query_driver_has)
+
+    if list_of_query:
+        queryset = list_of_query[0]
+        for query in list_of_query[1:]:
+                queryset = queryset & query
+    else:
+        queryset = Car.objects.all()
+    return queryset
 
 
 
 def filtration_car(get_params):
 
     reg_number = get_params.get('registration_number')
-    driver = get_params.get('driver_has')
     if reg_number == '': reg_number = '`'
-    if driver == 'driver_no':
-        query_set = Car.objects.filter(
-            Q(registration_number__icontains=reg_number) |
-            Q(brand__in=get_params.getlist('brand')) |
-            Q(owner__isnull=True) |
-            Q(region_code__in=get_params.getlist('region')) |
-            (Q(applications__type_of_id__in=get_params.getlist('type_of_app')) & Q(
-                applications__is_active=True))
 
+    query_set = Car.objects.filter(
+        Q(registration_number__icontains=reg_number) &
+        Q(brand__in=get_params.getlist('brand')) &
+        Q(region_code__in=get_params.getlist('region_code')) &
+        (Q(applications__type_of_id__in=get_params.getlist('applications')) & Q(
+            applications__is_active=True))
+
+    )
+    return query_set
+
+def refact_filtration_driver(get_params):
+
+    # 1.1) Получить get параметры:
+    last_name = get_params.get('last_name')
+    phone = get_params.get('phone')
+    card_balance = get_params.get('card_balance')
+    try: card_balance = int(card_balance)
+    except: ...
+
+    # 1.2) Получить get-list параметры:
+    applications = get_params.getlist('applications')
+
+    list_of_query = []
+    drivers = MyUser.objects.filter(role='d')
+
+
+    if last_name != '':
+        query_last_name = drivers.filter(last_name__icontains=last_name)
+        list_of_query.append(query_last_name)
+
+    if phone != '':
+        query_phone = drivers.filter(phone__icontains=phone)
+        list_of_query.append(query_phone)
+
+    if card_balance == 200:
+        query_card_balance = drivers.filter(my_cards__balance__lte=card_balance)
+        list_of_query.append(query_card_balance)
+    elif card_balance == 500:
+        query_card_balance = drivers.filter(my_cards__balance__gte=card_balance)
+        list_of_query.append(query_card_balance)
+    elif card_balance == 1:
+        query_card_balance = drivers.filter(my_cards__isnull=True)
+        list_of_query.append(query_card_balance)
+
+    if applications:
+        query_applications = drivers.filter(
+            (Q(my_apps__type_of_id__in=applications) & Q(
+                my_apps__is_active=True))
         )
+        list_of_query.append(query_applications)
+    if list_of_query:
+        queryset = list_of_query[0]
+        for query in list_of_query[1:]:
+                queryset = queryset & query
     else:
-        driver = MyUser.objects.filter(role='d')
-        query_set = Car.objects.filter(
-            Q(registration_number__icontains=reg_number) |
-            Q(brand__in=get_params.getlist('brand')) |
-            Q(owner__in=driver) |
-            Q(region_code__in=get_params.getlist('region')) |
-            (Q(applications__type_of_id__in=get_params.getlist('type_of_app')) & Q(
-                applications__is_active=True))
-
-        )
-    return query_set.distinct()
+        queryset = drivers
+    return queryset
 
 def filtration_driver(get_params):
     """Возвращает отфильтрованный queryset"""
+
+
     last_name = get_params.get('last_name')
     phone = get_params.get('phone')
     card_balance = get_params.get('card_balance')
@@ -81,10 +221,62 @@ def filtration_driver(get_params):
         return query_set.distinct()
     else:
         return query_set_balance
-def filtration_document(get_params):
-    """Возвращает отфильтрованный queryset модели document"""
+
+def refact_filtration_documents(get_params):
+    def get_docs_between_date(model, start_date='', end_date=''):
+        '''Возвращает queryset model'и с фильтрацией по дате'''
+        print(f'{end_date=}')
+        if start_date == '':
+            query_set = model.objects.filter(
+                date_end__lte=end_date
+            )
+        elif end_date == '':
+            query_set = model.objects.filter(
+                date_start__gte=start_date
+            )
+        else:
+            query_set = model.objects.filter(
+                Q(date_start__gte=start_date)
+                & Q(date_end__lte=end_date)
+            )
+        return query_set
+
+    # 1.1) Получаем get-параметры
+
     start_date = get_params.get('start_date')
     end_date = get_params.get('end_date')
+
+    man_or_car = get_params.getlist('aorm')
+
+    doc_type_car = get_params.getlist('doc_type-car')
+    doc_type_man = get_params.getlist('doc_type-man')
+
+    list_of_query = []
+
+    # 2.1
+    # if start_date != '' or end_date != '':
+    #     query_car_docs_between_date = get_docs_between_date(model=Car, start_date=start_date, end_date=end_date)
+    #     query_driver_docs_between_date = get_docs_between_date(model=MyUser, start_date=start_date, end_date=end_date)
+
+    if len(man_or_car) == 2:
+        ...
+        #документы по дате
+
+
+    elif man_or_car[0] == 'man':
+        pass
+    elif man_or_car[0] == 'car':
+        pass
+
+
+def filtration_document(get_params):
+    """Возвращает отфильтрованный queryset модели document"""
+
+    # 1.1) Получаем get-параметры
+
+    start_date = get_params.get('start_date')
+    end_date = get_params.get('end_date')
+
 
     man_or_car = get_params.getlist('aorm')
 
@@ -262,6 +454,48 @@ def filtration_document(get_params):
     #        else:
     #            man_docs_date = get_docs_between_date(model=DriverDoc, start_date=start_date, end_date=end_date)
 
+
+
+
+def refact_filtration_cards(get_params):
+
+    number = get_params.get('number')
+
+    limit_min = get_params.get('limit_min')
+    limit_max = get_params.get('limit_max')
+
+    balance_min = get_params.get('balance_min')
+    balance_max = get_params.get('balance_max')
+
+    list_of_query = []
+    if number != '':
+        query_number = FuelCard.objects.filter(number__icontains=number)
+        list_of_query.append(query_number)
+
+    if limit_min != '':
+        query_limit_min = FuelCard.objects.filter(limit__gte=limit_min)
+        list_of_query.append(query_limit_min)
+    if limit_max != '':
+        query_limit_max = FuelCard.objects.filter(limit__lte=limit_max)
+        list_of_query.append(query_limit_max)
+
+    if balance_min != '':
+        query_balance_min = FuelCard.objects.filter(balance__gte=balance_min)
+        list_of_query.append(query_balance_min)
+    if balance_max != '':
+        query_balance_max = FuelCard.objects.filter(balance__lte=balance_max)
+        list_of_query.append(query_balance_max)
+
+    if list_of_query:
+        queryset = list_of_query[0]
+        for query in list_of_query[1:]:
+                queryset = queryset & query
+    else:
+        queryset = FuelCard.objects.all()
+    return queryset
+
+
+
 def filtration_cards(get_params):
     """Возвращает QuerySet отфильтрованных данных карт"""
 
@@ -293,6 +527,39 @@ def filtration_cards(get_params):
         & (Q(balance__gte=balance_min) & Q(balance__lte=balance_max))
     )
     return querySet
+
+
+
+def refact_filtration_apps(get_params):
+    ...
+    #1) GET-параметры
+    start_date = get_params.get('start_date')
+    end_date = get_params.get('end_date')
+
+    urgency = get_params.getlist('urgency_types')
+    status= get_params.getlist('status_types')
+    type_of = get_params.getlist('types_of_apps')
+
+    list_of_query = []
+
+    if start_date != '' or end_date != '':
+        query_date = get_query_between_date(model=Application, start_date=start_date, end_date=end_date)
+        list_of_query.append(query_date)
+    if urgency:
+        query_urgency = Application.objects.filter(urgency__in=urgency)
+        list_of_query.append(query_urgency)
+    if status:
+        query_status = Application.objects.filter(status__in=status)
+        list_of_query.append(query_status)
+    if type_of:
+        query_type_of = Application.objects.filter(type_of__in=type_of)
+    if list_of_query:
+        queryset = list_of_query[0]
+        for query in list_of_query[1:]:
+            queryset = queryset & query
+    else:
+        queryset = Application.objects.all()
+    return queryset
 
 def filtration_apps(get_params):
     '''Возвращает отфильтрованный набор заявок'''
@@ -337,14 +604,14 @@ def filtration_apps(get_params):
 
     return return_set
 
-def get_docs_between_date(model, start_date=None, end_date=None):
+def get_query_between_date(model, start_date="", end_date=""):
     '''Возвращает queryset model с фильтрацией по дате'''
     print(f'{end_date=}')
-    if start_date is None:
+    if start_date == "":
         query_set = model.objects.filter(
             date_end__lte=end_date
         )
-    elif end_date is None:
+    elif end_date == "":
         query_set = model.objects.filter(
             date_start__gte=start_date
         )
