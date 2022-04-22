@@ -15,7 +15,7 @@ def refact2_filtration_car(get_params):
     applications = get_params.getlist('applications')
 
     # 1.3) Получить остальные параметры:
-    driver_has = get_params.get('driver_has')
+    driver_has = get_params.getlist('driver_has')
     # if driver_has == "driver_no":driver_has = False
 
     query_set = None
@@ -24,8 +24,6 @@ def refact2_filtration_car(get_params):
     flag = False
 
     if registration_number != '':
-        # query_registration_number = Car.objects.filter(registration_number__icontains=registration_number)
-        # list_of_query.append(query_registration_number)
         query_set = Car.objects.filter(registration_number__icontains=registration_number)
         flag = True
     if brand:
@@ -33,35 +31,40 @@ def refact2_filtration_car(get_params):
             query_set = query_set.filter(brand__in=brand)
         else:
             query_set = Car.objects.filter(brand__in=brand)
-        # query_brand = Car.objects.filter(brand__in=brand)
-        # list_of_query.append(query_brand)
-    if region_code:
-        query_region_code = Car.objects.filter(region_code__in=region_code)
-        list_of_query.append(query_region_code)
-    if applications:
-        query_applications = Car.objects.filter(
-            (Q(applications__type_of_id__in=applications) & Q(
-                applications__is_active=True)
-             ))
-        list_of_query.append(query_applications)
-    if driver_has == 'driver_no':
-        query_driver_has = Car.objects.filter(
-            owner__isnull=True
-        )
-        list_of_query.append(query_driver_has)
-    else:
-        query_driver_has = Car.objects.filter(
-            owner__isnull=False
-        )
-        list_of_query.append(query_driver_has)
+            flag = True
+    if len(driver_has) != 2:
+        print("NO!")
+        if driver_has[0] == 'driver_no':
+            if flag:
+                query_set = query_set.filter(owner__isnull=True)
+            else:
+                query_set = Car.objects.filter(owner__isnull=True)
+                flag = True
+        elif driver_has[0] == 'driver_yes':
+            if flag:
+                query_set = query_set.filter(owner__isnull=False)
+            else:
+                query_set = Car.objects.filter(owner__isnull=False)
+                flag = True
 
-    if list_of_query:
-        queryset = list_of_query[0]
-        for query in list_of_query[1:]:
-            queryset = queryset & query
-    else:
-        queryset = Car.objects.all()
-    return queryset
+    if region_code:
+        if flag:
+            query_set = query_set.filter(region_code__in=region_code)
+        else:
+            query_set = Car.objects.filter(region_code__in=region_code)
+            flag = True
+    if applications:
+        if flag:
+            query_set = query_set.filter(applications__is_active=True)
+            query_set = query_set.filter(applications__type_of_id__in=applications)
+        else:
+            query_set = Car.objects.filter(
+                (Q(applications__type_of_id__in=applications) & Q(
+                    applications__is_active=True)
+                 ))
+            flag = True
+    if query_set:
+        return query_set
 
 
 def refact_filtration_car(get_params):

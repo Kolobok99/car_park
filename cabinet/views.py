@@ -12,7 +12,7 @@ from django.views.generic import ListView, TemplateView, CreateView, DetailView
 
 from cabinet.services.filtration import filtration_car, filtration_driver, filtration_document, filtration_cards, \
     filtration_apps, refact_filtration_car, refact_filtration_driver, refact_filtration_documents, \
-    refact_filtration_cards, refact_filtration_apps
+    refact_filtration_cards, refact_filtration_apps, refact2_filtration_car
 from cabinet.services.services import Context
 
 
@@ -37,7 +37,7 @@ class CarCreateView(Context, LoginRequiredMixin, CreateView):
         if len(self.request.GET) == 0:
             context['cars'] = Car.objects.all()
         else:
-            context['cars'] = refact_filtration_car(self.request.GET)
+            context['cars'] = refact2_filtration_car(self.request.GET)
         return context
 
 
