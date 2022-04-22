@@ -48,7 +48,7 @@
                             <ul class="filtr-items__sub-menu">
                                 {% for car_type_of_docs in view.get_car_types_of_docs %}
                                     <label for="{{ car_type_of_docs.id }}" class="filtr-items__check-label">
-                                        <li class="filtr-items__sub-item"><input class="filtr-items__check" value="{{ car_type_of_docs.id }}" type="checkbox" name="doc_type-car" id="{{ car_type_of_docs.id }}">
+                                        <li class="filtr-items__sub-item"><input class="filtr-items__check" value="{{ car_type_of_docs.id }}" type="checkbox" name="doc_type" id="{{ car_type_of_docs.id }}">
                                             <label for="{{ car_type_of_docs.id }}" class="filtr-items__check-label">{{ car_type_of_docs.name }}</label>
                                         </li>
                                     </label>
@@ -64,7 +64,7 @@
                             <ul class="filtr-items__sub-menu">
                                 {% for man_type_of_docs in view.get_man_types_of_docs %}
                                     <label for="{{ man_type_of_docs.id }}" class="filtr-items__check-label">
-                                        <li class="filtr-items__sub-item"><input class="filtr-items__check"  value="{{ man_type_of_docs.id }}" type="checkbox" name="doc_type-man" id="{{ man_type_of_docs.id }}">
+                                        <li class="filtr-items__sub-item"><input class="filtr-items__check"  value="{{ man_type_of_docs.id }}" type="checkbox" name="doc_type" id="{{ man_type_of_docs.id }}">
                                             <label for="{{ man_type_of_docs.id }}" class="filtr-items__check-label">{{ man_type_of_docs.name }}</label>
                                         </li>
                                     </label>

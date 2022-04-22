@@ -10,9 +10,8 @@ from .models import *
 
 from django.views.generic import ListView, TemplateView, CreateView, DetailView
 
-from cabinet.services.filtration import filtration_car, filtration_driver, filtration_document, filtration_cards, \
-    filtration_apps, refact_filtration_car, refact_filtration_driver, refact_filtration_documents, \
-    refact_filtration_cards, refact_filtration_apps, refact2_filtration_car, refact3_filtration_car
+from cabinet.services.filtration import *
+
 from cabinet.services.services import Context
 
 
@@ -49,7 +48,7 @@ class DriversView(Context, LoginRequiredMixin, TemplateView):
         if len(self.request.GET) == 0:
             context['drivers'] = MyUser.objects.filter(role='d')
         else:
-            context['drivers'] = refact_filtration_driver(self.request.GET)
+            context['drivers'] = refact3_filtration_driver(self.request.GET)
         return context
 
 
@@ -61,9 +60,17 @@ class DocumentsView(Context, LoginRequiredMixin, TemplateView):
         if len(self.request.GET) == 0:
             context['all_docs'] = super(DocumentsView, self).get_all_docs()
         else:
-            context['all_docs'] = filtration_document(self.request.GET)
-            context['get_parametrs'] = self.request.GET.items()
+            if len(self.request.GET.getlist('aorm')) == 2:
+                context['all_docs'] = chain(
+                    refact3_filtration_documents(model=AutoDoc, get_params=self.request.GET),
+                    refact3_filtration_documents(model=UserDoc, get_params=self.request.GET)
+                )
+            elif self.request.GET.get('aorm') == 'car':
+                context['all_docs'] = refact3_filtration_documents(model=AutoDoc, get_params=self.request.GET)
+            elif self.request.GET.get('aorm') == 'man':
+                context['all_docs'] = refact3_filtration_documents(model=UserDoc, get_params=self.request.GET)
 
+            context['get_parametrs'] = self.request.GET.items()
         return context
 
 
@@ -79,7 +86,7 @@ class CardCreateView(Context, LoginRequiredMixin, CreateView):
         if len(self.request.GET) == 0:
             context['all_cards'] = FuelCard.objects.exclude(owner=None)
         else:
-            context['all_cards'] = refact_filtration_cards(self.request.GET)
+            context['all_cards'] = refact3_filtration_cards(self.request.GET)
         return context
 
 
@@ -92,7 +99,7 @@ class AplicationsView(Context, LoginRequiredMixin, TemplateView):
         if len(self.request.GET) == 0:
             context['all_apps'] = Application.objects.all()
         else:
-            context['all_apps'] = refact_filtration_apps(self.request.GET)
+            context['all_apps'] = refact3_filtration_apps(self.request.GET)
 
         return context
 
