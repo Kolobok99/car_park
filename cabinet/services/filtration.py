@@ -2,6 +2,8 @@ from itertools import chain
 
 import django_filters
 from django.db.models import Q, F
+from django.http import QueryDict
+
 from cabinet.models import Car, MyUser, AutoDoc, UserDoc, FuelCard, TypeOfAppl, Application
 
 
@@ -38,8 +40,8 @@ def refact3_filtration_car(get_params):
         Q_region_code = Q(**{region_code_parameter: region_code})
         list_of_Q.append(Q_region_code)
     if applications:
-        applications_parametr = "applications__type_of_id__in"
-        Q_applications = Q(**{applications_parametr: applications})
+        applications_parameter = "applications__type_of_id__in"
+        Q_applications = Q(**{applications_parameter: applications})
         Q_active_apps = Q(**{"applications__is_active": True})
         list_of_Q.append(Q_applications)
         list_of_Q.append(Q_active_apps)
@@ -113,8 +115,6 @@ def refact2_filtration_car(get_params):
             flag = True
     if query_set:
         return query_set
-
-
 def refact_filtration_car(get_params):
 
     # 1.1)Получить все get-параметры:
@@ -164,9 +164,6 @@ def refact_filtration_car(get_params):
     else:
         queryset = Car.objects.all()
     return queryset
-
-
-
 def filtration_car(get_params):
 
     reg_number = get_params.get('registration_number')
