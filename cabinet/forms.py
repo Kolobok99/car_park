@@ -64,11 +64,11 @@ class FuelCardAddForm(forms.ModelForm):
         model = FuelCard
         exclude = ('balance', )
 
-class FuelCardSaltForm(forms.ModelForm):
-
-    class Meta:
-        model = FuelCard
-        fields = ('has_owner', )
+# class FuelCardSaltForm(forms.ModelForm):
+#
+#     class Meta:
+#         model = FuelCard
+#         fields = ('has_owner', )
 
 class UserCreateForm(forms.ModelForm):
     '''Форма регистрации пользователя'''

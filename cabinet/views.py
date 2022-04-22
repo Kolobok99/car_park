@@ -1,3 +1,5 @@
+from itertools import chain
+
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
@@ -15,76 +17,81 @@ from cabinet.services.filtration import *
 from cabinet.services.services import Context
 
 
-class CarsView(Context, ListView):
-    """Вывод всех автомобилей"""
-
+class CarsCreateAndFilterView(Context, LoginRequiredMixin, CreateView):
+    """
+    Выводит список автомобилей
+    Фильтрует автомобили
+    Добавляет новый автомобиль
+    """
     template_name = "cars.html"
-    context_object_name = "cars"
-    success_url = '/cars'
-
-
-class CarCreateView(Context, LoginRequiredMixin, CreateView):
-    '''добавление нового автомобиля'''
-    template_name = "cars.html"
-    # context_object_name = "cars"
     success_url = '/cars'
     form_class = CarAddForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # context['cars'] = CarFilter(self.request.GET, query_set=Car.objects.all())
-        if len(self.request.GET) == 0:
+        reguest_GET = self.request.GET
+        if len(reguest_GET) == 0:
             context['cars'] = Car.objects.all()
         else:
-            context['cars'] = refact3_filtration_car(self.request.GET)
+            context['cars'] = refact3_filtration_car(reguest_GET)
         return context
 
-
-class DriversView(Context, LoginRequiredMixin, TemplateView):
+class DriversFilterView(Context, LoginRequiredMixin, TemplateView):
+    """
+    Выводит список водителей
+    Фильтрует список водителей
+    """
     template_name = 'drivers.html'
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(DriversView, self).get_context_data(**kwargs)
-        if len(self.request.GET) == 0:
+    def get_context_data(self, **kwargs):
+        context = super(DriversFilterView, self).get_context_data(**kwargs)
+        request_GET = self.request.GET
+        if len(request_GET) == 0:
             context['drivers'] = MyUser.objects.filter(role='d')
         else:
-            context['drivers'] = refact3_filtration_driver(self.request.GET)
+            context['drivers'] = refact3_filtration_driver(request_GET)
         return context
-
 
 class DocumentsView(Context, LoginRequiredMixin, TemplateView):
+    """
+        Выводит список документов (водители+авто)
+        Фильтрует список документов (водители+авто)
+    """
     template_name = 'documents.html'
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(DocumentsView, self).get_context_data(**kwargs)
-        if len(self.request.GET) == 0:
-            context['all_docs'] = super(DocumentsView, self).get_all_docs()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        request_GET = self.request.GET
+        if len(request_GET) == 0:
+            context['all_docs'] = super().get_all_docs()
         else:
-            if len(self.request.GET.getlist('aorm')) == 2:
+            if len(request_GET.getlist('aorm')) == 2:
                 context['all_docs'] = chain(
-                    refact3_filtration_documents(model=AutoDoc, get_params=self.request.GET),
-                    refact3_filtration_documents(model=UserDoc, get_params=self.request.GET)
+                    refact3_filtration_documents(model=AutoDoc, get_params=request_GET),
+                    refact3_filtration_documents(model=UserDoc, get_params=request_GET)
                 )
-            elif self.request.GET.get('aorm') == 'car':
-                context['all_docs'] = refact3_filtration_documents(model=AutoDoc, get_params=self.request.GET)
-            elif self.request.GET.get('aorm') == 'man':
-                context['all_docs'] = refact3_filtration_documents(model=UserDoc, get_params=self.request.GET)
+            elif request_GET.get('aorm') == 'car':
+                context['all_docs'] = refact3_filtration_documents(model=AutoDoc, get_params=request_GET)
+            elif request_GET.get('aorm') == 'man':
+                context['all_docs'] = refact3_filtration_documents(model=UserDoc, get_params=request_GET)
 
-            context['get_parametrs'] = self.request.GET.items()
+            context['get_parametrs'] = request_GET.items()
         return context
 
-
-class CardCreateView(Context, LoginRequiredMixin, CreateView):
-    """Создание и вывод топилвных карт"""
-
+class CardFilterAndCreateView(Context, LoginRequiredMixin, CreateView):
+    """
+        Выводит список топливных карт
+        Фильтрует топливные карты
+        Добавляет новые топливные карты
+    """
     template_name = 'cards.html'
     success_url = '/cards'
     form_class = FuelCardAddForm
 
     def get_context_data(self, **kwargs):
-        context = super(CardCreateView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         if len(self.request.GET) == 0:
-            context['all_cards'] = FuelCard.objects.exclude(owner=None)
+            context['all_cards'] = FuelCard.objects.all()
         else:
             context['all_cards'] = refact3_filtration_cards(self.request.GET)
         return context

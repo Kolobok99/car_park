@@ -24,7 +24,19 @@
                         <input type="text" name="number"  placeholder="номер">
                     </li>
                     <li class="filtr-items__item">
-                        ИЛИ
+                        <p class="filtr-items__title">Владелец</p>
+                        <ul class="filtr-items__sub-menu">
+                            <label for="auto" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check data-auto-check" checked type="checkbox" name="owner" id="auto" value="1">
+                                    <label for="auto" class="filtr-items__check-label">Есть</label>
+                                </li>
+                            </label>
+                            <label for="man" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check data-driver-check" checked type="checkbox" name="owner" id="man" value="">
+                                    <label for="man" class="filtr-items__check-label">Нет
+                                </li>
+                            </label>
+                        </ul>
                     </li>
                     <li class="filtr-items__item">
                         <p>лимит:</p>
@@ -32,6 +44,7 @@
 
                         <input type="text" name="limit_max" placeholder="макс.">
                     </li>
+
 
                     <li class="filtr-items__item">
                         <p>остаток:</p>

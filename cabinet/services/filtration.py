@@ -1,10 +1,6 @@
-from itertools import chain
+from django.db.models import Q
 
-import django_filters
-from django.db.models import Q, F
-from django.http import QueryDict
-
-from cabinet.models import Car, MyUser, AutoDoc, UserDoc, FuelCard, TypeOfAppl, Application
+from cabinet.models import *
 
 
 def refact3_filtration_car(get_params):
@@ -33,7 +29,7 @@ def refact3_filtration_car(get_params):
 
     if len(driver_has) != 2:
         driver_has_parameter = "owner__isnull"
-        Q_driver_has = Q(**{driver_has_parameter: bool(driver_has[0])})
+        Q_driver_has = Q(**{driver_has_parameter: not bool(driver_has[0])})
         list_of_Q.append(Q_driver_has)
     if region_code:
         region_code_parameter = "region_code__in"
@@ -49,6 +45,7 @@ def refact3_filtration_car(get_params):
     return Car.objects.filter(
         *list_of_Q
     )
+
 def refact3_filtration_driver(get_params):
     last_name = get_params.get('last_name')
     phone = get_params.get('phone')
@@ -82,8 +79,11 @@ def refact3_filtration_driver(get_params):
     return drivers.filter(
         *list_of_Q
     )
+
 def refact3_filtration_cards(get_params):
+    print("YES")
     number = get_params.get('number')
+    owner = get_params.getlist('owner')
 
     limit_min = get_params.get('limit_min')
     limit_max = get_params.get('limit_max')
@@ -96,9 +96,15 @@ def refact3_filtration_cards(get_params):
     if number != '':
         list_of_Q.append(Q(**{"number__icontains": number}))
 
+    if len(owner) != 2:
+        owner_parameter = "owner__isnull"
+        Q_owner = Q(**{owner_parameter: not bool(owner[0])})
+        list_of_Q.append(Q_owner)
+    print(type(limit_min))
     if limit_min != '':
         list_of_Q.append(Q(**{"limit__gte": limit_min}))
-    if limit_min != '':
+
+    if limit_max != '':
         list_of_Q.append(Q(**{"limit__lte": limit_max}))
 
     if balance_min != '':
@@ -109,6 +115,7 @@ def refact3_filtration_cards(get_params):
     return FuelCard.objects.filter(
         *list_of_Q
     )
+
 def refact3_filtration_apps(get_params):
     start_date = get_params.get('start_date')
     end_date = get_params.get('end_date')
@@ -138,26 +145,6 @@ def refact3_filtration_apps(get_params):
     return active_applications.filter(
         *list_of_Q
     )
-
-def get_query_between_date(model, start_date="", end_date=""):
-    '''Возвращает queryset model с фильтрацией по дате'''
-    print(f'{end_date=}')
-    if start_date == "":
-        query_set = model.objects.filter(
-            date_end__lte=end_date
-        )
-    elif end_date == "":
-        query_set = model.objects.filter(
-            date_start__gte=start_date
-        )
-    else:
-        query_set = model.objects.filter(
-            Q(date_start__gte=start_date)
-            & Q(date_end__lte=end_date)
-        )
-    return query_set
-
-
 
 def refact3_filtration_documents(model, get_params):
 
