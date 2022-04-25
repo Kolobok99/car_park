@@ -161,13 +161,12 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     objects = MyUserManager()
 
     def save(self):
-        # avatars = os.listdir(f'{settings.MEDIA_ROOT}/drivers/{self.email}/avatars')
-        # print(avatars)
-        # for avatar in avatars:
-        #     os.remove(f'{settings.MEDIA_ROOT}/drivers/{self.email}/avatars/{avatar}')
-
         super().save()
-        # shutil.rmtree(f'{settings.MEDIA_ROOT}/drivers/{self.email}/avatars')
+        avatars = os.listdir(f'{settings.MEDIA_ROOT}/drivers/{self.email}/avatars')
+        for avatar in avatars:
+            path_to_delete = f'{settings.MEDIA_ROOT}/drivers/{self.email}/avatars/{avatar}'
+            if self.image.path != path_to_delete:
+                os.remove(path_to_delete)
 
         img = Image.open(self.image.path)
 
