@@ -61,6 +61,7 @@
             </form>
 
                 <div class="main__information">
+                {% if all_cards.count %}
                     <table class="main__table table">
 
     <!-- ID -->                            <col style="width:5%">
@@ -94,6 +95,9 @@
                         </tr>
                     {% endfor %}
                     </table>
+                     {% else %}
+                    <p style="text-align: center; font-size: 30px; opacity: 0.8">Не найдено </p>
+                {% endif %}
                 </div>
             {% else %}
              <h1 style="

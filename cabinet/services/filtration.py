@@ -73,7 +73,7 @@ def refact3_filtration_driver(get_params):
         list_of_Q.append(Q(**{"my_cards__balance__isnull": card_balance}))
 
     if applications:
-        list_of_Q.append(Q(**{"my_apps__type_of_id__in": applications}))
+        list_of_Q.append(Q(**{"my_apps__type_id__in": applications}))
         list_of_Q.append(Q(**{"my_apps__is_active": True}))
 
     return drivers.filter(

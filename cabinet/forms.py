@@ -65,11 +65,11 @@ class FuelCardAddForm(forms.ModelForm):
         model = FuelCard
         exclude = ('balance', )
 
-# class FuelCardSaltForm(forms.ModelForm):
-#
-#     class Meta:
-#         model = FuelCard
-#         fields = ('has_owner', )
+class FuelCardChangeBalance(forms.ModelForm):
+
+    class Meta:
+        model = FuelCard
+        fields = ('balance', )
 
 class UserCreateForm(forms.ModelForm):
     '''Форма регистрации пользователя'''
@@ -135,16 +135,18 @@ class UserUpdateForm(forms.ModelForm):
     #         }
     #     )
 
+    # def clean(self):
+    #     cleaned_data = super().clean()
+    #     list_of_fields = ['first_name', 'last_name', 'patronymic',
+    #                       'phone', 'email']
+    #     for field in list_of_fields:
+    #         if cleaned_data[field] is None:
+    #             setattr(self.instance, field, getattr(self.instance.pk, field))
+
     class Meta:
         model = MyUser
         exclude = ('role','is_active', 'is_staff', 'is_superuser', 'image', 'password')
-        # widgets = {
-        #     'first_name': forms.widgets.TextInput(
-        #         attrs={
-        #             'placeholder':
-        #         }
-        #     )
-        # }
+
 
 
 
@@ -178,7 +180,6 @@ class AppCreateForm(AppForm):
 class AppUpdateForm(AppForm):
     action = forms.CharField(widget=forms.HiddenInput(), initial="app_update")
 
-
 class AutoDocForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
@@ -204,7 +205,6 @@ class AutoDocForm(forms.ModelForm):
 
             )
         }
-
 
 class DriverDocForm(forms.ModelForm):
 
