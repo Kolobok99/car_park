@@ -120,7 +120,7 @@
                                   Просрочена
                                   {% endif %}
                               </td>
-                              <td class="table__cell">{{ app.type_of }}</td>
+                              <td class="table__cell">{{ app.type }}</td>
                               <td class="table__cell">{{ app.owner.last_name}} {{ app.owner.first_name|slice:'0:1' }}. {{ app.owner.patronymic|slice:"0:1" }}.</td>
                               <td class="table__cell">
                                   <a href="{% url 'choose-car' app.car.registration_number %}">

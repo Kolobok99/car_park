@@ -208,8 +208,8 @@
           <div class="form-app__timing">
               {{ app_create_form.errors }}
 
-              <p>{{ app_create_form.type_of.label }}:</p>
-                {{ app_create_form.type_of }}
+              <p>{{ app_create_form.type.label }}:</p>
+                {{ app_create_form.type }}
               <p>Срочность:</p>
                 <br>
                 {% for radio in app_create_form.urgency %}
@@ -220,9 +220,9 @@
                <label for="new_descr">Опишите суть заявки:</label>
               {{ app_create_form.description }}
 
-{#              <input type="hidden" name="car" id="id_car" value="{{ car.pk }}">#}
-{#              <input type="hidden" name="owner" id="id_owner" value="{{ user.pk }}">#}
-{#              <input type="hidden" name="status" value="O" id="id_status">#}
+{#              <input type="hidden" title="car" id="id_car" value="{{ car.pk }}">#}
+{#              <input type="hidden" title="owner" id="id_owner" value="{{ user.pk }}">#}
+{#              <input type="hidden" title="status" value="O" id="id_status">#}
               <input type="hidden" name="action" value="app_create">
 
             <button type="submit" value="TRueForm">Отправить</button>
@@ -289,13 +289,13 @@
 {#                   {{ radio.tag }}#}
 {#                  <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>#}
            {% endfor %}
-          {{ doc_create_form.date_start.label }}:
-          {{ doc_create_form.date_start }}
+          {{ doc_create_form.start_date.label }}:
+          {{ doc_create_form.start_date }}
 
-          {{ doc_create_form.date_end.label }}:
-          {{ doc_create_form.date_end }}
+          {{ doc_create_form.end_date.label }}:
+          {{ doc_create_form.end_date }}
 
-{#            <input type="hidden" name="owner" id="id_owner" value="{{ car.pk }}">#}
+{#            <input type="hidden" title="owner" id="id_owner" value="{{ car.pk }}">#}
             <input type="hidden" name="action" value="doc_create">
 {#            <label for="doc-copy">Прикрепите документа</label>#}
 {#            <input type="file">#}

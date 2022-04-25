@@ -24,7 +24,7 @@
                   <label for="first_name">Имя:</label>
 {#                  <input#}
 {#                    type="text"#}
-{#                    name="user-info"#}
+{#                    title="user-info"#}
 {#                    id="first_name"#}
 {#                    value="{{ user.first_name }}"#}
 {#                    placeholder="{{ user.first_name }}"#}
@@ -36,7 +36,7 @@
                   <label for="last_name">Фамилия:</label>
 {#                  <input#}
 {#                    type="text"#}
-{#                    name="user-info"#}
+{#                    title="user-info"#}
 {#                    id="last_name"#}
 {#                    value="{{ user.last_name }}"#}
 {#                    placeholder="Золотавин"#}
@@ -49,7 +49,7 @@
                   <label for="patronymic">Отчество:</label>
 {#                  <input#}
 {#                    type="text"#}
-{#                    name="user-info"#}
+{#                    title="user-info"#}
 {#                    id="patronymic"#}
 {#                    value="{{ user.patronymic }}"#}
 {#                    placeholder="{{ user.patronymic }}"#}
@@ -61,7 +61,7 @@
                     <label for="phone">Телефон:</label>
 {#                    <input#}
 {#                      type="tel"#}
-{#                      name="user-info"#}
+{#                      title="user-info"#}
 {#                      id="phone"#}
 {#                      value="{{ user.phone }}"#}
 {#                      placeholder="{{ user.phone }}"#}
@@ -73,7 +73,7 @@
                     <label for="email">Email:</label>
 {#                    <input#}
 {#                      type="email"#}
-{#                      name="user-info"#}
+{#                      title="user-info"#}
 {#                      id="email"#}
 {#                      value="{{ user.email}}"#}
 {#                      placeholder="{{ user.email}}"#}
@@ -170,7 +170,7 @@
                                   Просрочена
                              {% endif %}
                         </td>
-                        <td class="table__cell">{{ app.type_of }}</td>
+                        <td class="table__cell">{{ app.type }}</td>
                     <td class="table__cell">{{ app.car }}</td>
                         <td class="table__cell">{{ app.description|truncatechars:10 }}</td>
                       </tr>
@@ -268,18 +268,18 @@
                   <p>Срочность:</p>
                     <div class="form-add__timing">
 
-                      <input type="radio" name="timing" id="noturgent">
+                      <input type="radio" title="timing" id="noturgent">
                       <label for="noturgent">Не срочно</label>
 
 
-                      <input type="radio" name="timing" id="urgent">
+                      <input type="radio" title="timing" id="urgent">
                       <label for="urgent">Срочно</label>
 
-                      <input type="radio" name="timing" id="veryurgent">
+                      <input type="radio" title="timing" id="veryurgent">
                       <label for="veryurgent">Очень срочно</label>
 
                       <label for="new_descr">Опишите суть заявки:</label>
-                      <textarea name="description" id="new_descr" cols="30" rows="10"></textarea>
+                      <textarea title="description" id="new_descr" cols="30" rows="10"></textarea>
                       <button type="submit">Отправить</button>
                     </div>
                   </form>
@@ -343,18 +343,18 @@
 {#              <p>Срочность:</p>#}
 {#                <div class="form-app__timing">#}
 {##}
-{#                  <input type="radio" checked name="timing-change" id="rdo-noturgent-c">#}
+{#                  <input type="radio" checked title="timing-change" id="rdo-noturgent-c">#}
 {#                  <label for="rdo-noturgent-c">Не срочно</label>#}
 {##}
 {##}
-{#                  <input type="radio" name="timing-change" id="rdo-urgent-c">#}
+{#                  <input type="radio" title="timing-change" id="rdo-urgent-c">#}
 {#                  <label for="rdo-urgent-c">Срочно</label>#}
 {##}
-{#                  <input type="radio" name="timing-change" id="rdo-veryurgent-c">#}
+{#                  <input type="radio" title="timing-change" id="rdo-veryurgent-c">#}
 {#                  <label for="rdo-veryurgent-c">Очень срочно</label>#}
 {##}
 {#                  <label for="descr-change">Опишите суть заявки:</label>#}
-{#                  <textarea name="description" id="descr-change" cols="30" rows="10"></textarea>#}
+{#                  <textarea title="description" id="descr-change" cols="30" rows="10"></textarea>#}
 {#                  <button type="submit">Отправить</button>#}
 {#                </div>#}
 {#            </div>#}
@@ -383,13 +383,13 @@
 {#                   {{ radio.tag }}#}
 {#                  <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>#}
            {% endfor %}
-          {{ doc_create_form.date_start.label }}:
-          {{ doc_create_form.date_start }}
+          {{ doc_create_form.start_date.label }}:
+          {{ doc_create_form.start_date }}
 
-          {{ doc_create_form.date_end.label }}:
-          {{ doc_create_form.date_end }}
+          {{ doc_create_form.end_date.label }}:
+          {{ doc_create_form.end_date }}
 
-{#            <input type="hidden" name="owner" id="id_owner" value="{{ car.pk }}">#}
+{#            <input type="hidden" title="owner" id="id_owner" value="{{ car.pk }}">#}
             <input type="hidden" name="action" value="doc_create">
 {#            <label for="doc-copy">Прикрепите документа</label>#}
 {#            <input type="file">#}

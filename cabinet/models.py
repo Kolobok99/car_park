@@ -1,14 +1,9 @@
-import datetime
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
-from django.core.exceptions import ValidationError
 from django.db import models
-from django.contrib.auth.models import AbstractUser, PermissionsMixin, UserManager
+from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.core import validators
 
 from datetime import timedelta
-
-from django.db.models import Q
-
 from car_park import settings
 
 
@@ -58,10 +53,10 @@ class Car(models.Model):
 class CarBrand(models.Model):
     '''марки автомобилей'''
 
-    name = models.CharField(verbose_name='Название бредна', max_length=20)
+    title = models.CharField(verbose_name='Название бредна', max_length=20)
 
     def __str__(self):
-        return self.name
+        return self.title
 
     class Meta:
         verbose_name = 'Марка'
@@ -158,8 +153,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     def is_manager(self):
         if self.role == 'm':
             return True
-        else:
-            return False
+        return False
 
     def __str__(self):
         return self.email
@@ -172,10 +166,10 @@ class Document(models.Model):
     '''абстрактная модель документа'''
 
     type = None
-    created_at = models.DateField(verbose_name='Дата создания',
+    created_at = models.DateField(verbose_name='Дата добавления',
                                   auto_now_add=True)
-    date_start = models.DateField(verbose_name='Дата выдачи')
-    date_end = models.DateField(verbose_name='Дата окончания')
+    start_date = models.DateField(verbose_name='Дата выдачи')
+    end_date = models.DateField(verbose_name='Дата окончания')
 
     class Meta:
         abstract = True
@@ -221,11 +215,11 @@ class DocType(models.Model):
         ('a', 'Машина'),
     )
 
-    name = models.CharField(verbose_name='Наименования документа', max_length=255)
+    title = models.CharField(verbose_name='Наименования документа', max_length=255)
     type = models.CharField(max_length=1, choices=KINDS, default='a')
 
     def __str__(self):
-        return f'{self.name} ({self.type})'
+        return f'{self.title} ({self.type})'
 
     class Meta:
         verbose_name = 'Тип документа'
@@ -248,7 +242,7 @@ class Application(models.Model):
         ('S', 'Очень срочно'),
     )
 
-    type_of = models.ForeignKey("TypeOfAppl", on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Тип заявки')
+    type = models.ForeignKey("TypeOfAppl", on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Тип заявки')
     owner = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name='my_apps')
     car = models.ForeignKey(Car, on_delete=models.CASCADE, related_name='applications', null=True, blank=True)
     start_date = models.DateField(verbose_name='время создания', auto_now_add=True)
@@ -257,14 +251,14 @@ class Application(models.Model):
     end_date = models.DateField(verbose_name='дата окончания', null=True, blank=True)
 
     is_active = models.BooleanField(verbose_name="Активность заявки", default=True)
-    status = models.CharField(verbose_name='Статус', max_length=1, choices=STATUS_CHOISES, default='o')
+    status = models.CharField(verbose_name='Статус', max_length=1, choices=STATUS_CHOISES, default='O')
     urgency = models.CharField(verbose_name='Cрочность', max_length=1, choices=URGENCY_CHOISES, default='N')
 
     description = models.TextField(verbose_name="Описание")
 
     def __str__(self):
         return f"{self.owner.last_name} + " \
-               f"{self.start_date} + {self.type_of} + {self.car.registration_number}"
+               f"{self.start_date} + {self.type} + {self.car.registration_number}"
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

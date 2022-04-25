@@ -2,6 +2,7 @@ import re
 
 from django import forms
 from django.core import validators
+from django.core.exceptions import ValidationError
 from django.forms import modelformset_factory
 
 from .models import *
@@ -93,7 +94,7 @@ class UserCreateForm(forms.ModelForm):
                 errors[key] = ValidationError(f'{verbose_name} может состоять только из Кириллицы!')
 
         if pass1 != pass2:
-            errors['pass'] = ValidationError('Пароли не совпадают!')
+            errors['password'] = ValidationError('Пароли не совпадают!')
 
         name_validate(first_name, "'имя'", 'first_name')
         name_validate(last_name, "'фамилия'", 'last_name')
@@ -150,13 +151,13 @@ class AppCreateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['type_of'].empty_label = "Не выбран"
+        self.fields['type'].empty_label = "Не выбран"
 
     action = forms.CharField(widget=forms.widgets.HiddenInput())
 
     class Meta:
         model = Application
-        fields = ('type_of',
+        fields = ('type',
                   'urgency',
                   'description',
                   # 'car',
@@ -185,11 +186,11 @@ class AutoDocForm(forms.ModelForm):
         exclude = ('owner',)
         widgets = {
             # 'owner': forms.widgets.HiddenInput(),
-            'date_start': forms.widgets.DateInput(attrs={
+            'start_date': forms.widgets.DateInput(attrs={
                 "type": 'date',
 
             }),
-            'date_end': forms.widgets.DateInput(attrs={
+            'end_date': forms.widgets.DateInput(attrs={
                 "type": 'date',
 
             }),
@@ -211,11 +212,11 @@ class DriverDocForm(forms.ModelForm):
         exclude = ('owner',)
         widgets = {
             # 'owner': forms.widgets.HiddenInput(),
-            'date_start': forms.widgets.DateInput(attrs={
+            'start_date': forms.widgets.DateInput(attrs={
                 "type": 'date',
 
             }),
-            'date_end': forms.widgets.DateInput(attrs={
+            'end_date': forms.widgets.DateInput(attrs={
                 "type": 'date',
 
             }),

@@ -90,33 +90,41 @@ class CardFilterAndCreateView(Context, LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if len(self.request.GET) == 0:
+        request_GET = self.request.GET
+        if len(request_GET) == 0:
             context['all_cards'] = FuelCard.objects.all()
         else:
-            context['all_cards'] = refact3_filtration_cards(self.request.GET)
+            context['all_cards'] = refact3_filtration_cards(request_GET)
         return context
 
 
 class AplicationsView(Context, LoginRequiredMixin, TemplateView):
-    """Вывод заявок"""
+    """
+        Выводит список активных заявок
+        Фильтрует активные заявок
+    """
     template_name = 'applications.html'
 
     def get_context_data(self, **kwargs):
         context = super(AplicationsView, self).get_context_data(**kwargs)
-        if len(self.request.GET) == 0:
+        request_GET = self.request.GET
+        if len(request_GET) == 0:
             context['all_apps'] = Application.objects.all()
         else:
-            context['all_apps'] = refact3_filtration_apps(self.request.GET)
+            context['all_apps'] = refact3_filtration_apps(request_GET)
 
         return context
 
 class AppView(LoginRequiredMixin,UpdateView, DeletionMixin):
-    '''Просмотр, изменение и удаление заявки'''
+    '''
+    Просмотр выбраной заявки
+    изменение выбраной заявки
+    удаление выбраной заявки
+    '''
 
     model = Application
     form_class = AppCreateForm
     template_name = 'app.html'
-    # success_url = "/applications"
 
     def get_success_url(self):
         if self.request.POST['action'] == 'delete-yes':
@@ -135,8 +143,6 @@ class AppView(LoginRequiredMixin,UpdateView, DeletionMixin):
             return super(AppView, self).post(request, *args, **kwargs)
 
     def form_valid(self, form):
-        print("form_valid")
-        print(self.request.POST['action'])
         if self.request.POST['action'] == 'app_update':
             if form.is_valid():
                 return super(AppView, self).form_valid(form)

@@ -39,7 +39,7 @@ class Migration(migrations.Migration):
             name='CarBrand',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=20, verbose_name='Название бредна')),
+                ('title', models.CharField(max_length=20, verbose_name='Название бредна')),
             ],
             options={
                 'verbose_name': 'Марка',
@@ -50,7 +50,7 @@ class Migration(migrations.Migration):
             name='DocType',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255, verbose_name='Наименования документа')),
+                ('title', models.CharField(max_length=255, verbose_name='Наименования документа')),
                 ('type', models.CharField(choices=[('m', 'Человек'), ('a', 'Машина')], default='a', max_length=1)),
             ],
             options={
@@ -75,8 +75,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_at', models.DateField(auto_now_add=True, verbose_name='Дата создания')),
-                ('date_start', models.DateField(verbose_name='Дата выдачи')),
-                ('date_end', models.DateField(verbose_name='Дата окончания')),
+                ('start_date', models.DateField(verbose_name='Дата выдачи')),
+                ('end_date', models.DateField(verbose_name='Дата окончания')),
                 ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='doc_owner', to=settings.AUTH_USER_MODEL)),
                 ('type', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='people_docs', to='cabinet.doctype')),
             ],
@@ -120,8 +120,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_at', models.DateField(auto_now_add=True, verbose_name='Дата создания')),
-                ('date_start', models.DateField(verbose_name='Дата выдачи')),
-                ('date_end', models.DateField(verbose_name='Дата окончания')),
+                ('start_date', models.DateField(verbose_name='Дата выдачи')),
+                ('end_date', models.DateField(verbose_name='Дата окончания')),
                 ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='doc_owner', to='cabinet.car')),
                 ('type', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='auto_docs', to='cabinet.doctype')),
             ],
@@ -140,7 +140,7 @@ class Migration(migrations.Migration):
                 ('is_active', models.BooleanField(default=True, verbose_name='Активность заявки')),
                 ('car', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='applications', to='cabinet.car')),
                 ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='my_apps', to=settings.AUTH_USER_MODEL)),
-                ('type_of', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='cabinet.typeofappl')),
+                ('type', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='cabinet.typeofappl')),
             ],
             options={
                 'verbose_name': 'Заявка',

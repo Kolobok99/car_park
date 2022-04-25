@@ -53,11 +53,11 @@ def sort_by_date_start(list_to_sort):
         m_nums = []  # [больше q]
         e_nums = []  # [q]
         for elem in list_to_sort:
-            # print(elem.date_start)
-            if elem.date_start < q.date_start:
+            # print(elem.start_date)
+            if elem.start_date < q.start_date:
                 # print("Меньше!")
                 s_nums.append(elem)
-            elif elem.date_start > q.date_start:
+            elif elem.start_date > q.start_date:
                 m_nums.append(elem)
                 # print("БОЛЬШЕ!")
             else:

@@ -121,8 +121,8 @@
           <div class="form-app__timing">
               {{ form.errors }}
 
-              <p>{{ form.type_of.label }}:</p>
-                {{ form.type_of }}
+              <p>{{ form.type.label }}:</p>
+                {{ form.type }}
               <p>Срочность:</p>
                 <br>
                 {% for radio in form.urgency %}
@@ -133,9 +133,9 @@
                <label for="new_descr">Опишите суть заявки:</label>
               {{ form.description }}
 
-              <input type="hidden" name="car" id="id_car" value="{{ app.car.pk }}">
-              <input type="hidden" name="owner" id="id_owner" value="{{ app.owner.pk }}">
-              <input type="hidden" name="status" value="O" id="id_status">
+{#              <input type="hidden" name="car" id="id_car" value="{{ app.car.pk }}">#}
+{#              <input type="hidden" name="owner" id="id_owner" value="{{ app.owner.pk }}">#}
+{#              <input type="hidden" name="status" value="O" id="id_status">#}
               <input type="hidden" name="action" value="app_update">
 
             <button type="submit" value="TRueForm">Отправить</button>
