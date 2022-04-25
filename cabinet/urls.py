@@ -7,12 +7,17 @@ from cabinet.views import *
 urlpatterns = [
     path('cars/', CarsCreateAndFilterView.as_view(), name='cars'),
     path('cars/<str:slug>', CarView.as_view(), name='choose-car'),
-    # path('cars/<str:slug>/create-app', AppCreateView.as_view(), title='car-create-app'),
+
     path('drivers/', DriversFilterView.as_view(), name='drivers'),
+    path('drivers/<int:pk>', DriverView.as_view(), name='choose-driver'),
+
     path('documents/', DocumentsView.as_view(), name='documents'),
+
     path('cards/', CardFilterAndCreateView.as_view(), name='cards'),
+
     path('applications', AplicationsView.as_view(), name='applications'),
     path('applications/<int:pk>', AppView.as_view(), name='app'),
+
     path('registration/', RegistrationView.as_view(), name='registration'),
     path('', LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', LogoutView.as_view(template_name='login.html', next_page='login'), name='logout'),

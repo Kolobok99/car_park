@@ -1,0 +1,380 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block static_href %}
+    {% static 'css/account.css' %}
+{% endblock static_href %}
+
+{% block title %}{{ driver.last_name}} {{ driver.first_name|first}}.{{ driver.patronymic|first}}. ({{ driver.pk}}) {% endblock title%}
+
+<style>
+
+</style>
+
+{% block main %}
+      <div class="main">
+        <div class="main__container">
+          <div class="main__account account-area">
+            <div class="account-area__avatar">
+              <img src="{% static '/img/account/full-avatar.jpeg' %}" alt="" />
+            </div>
+              <div class="account-area__info">
+                <input type="hidden" name="action" value="user_update">
+                <div class="account-area__item">
+                   <p>Имя:</p>
+                   <span>{{ driver.first_name }}</span>
+
+                </div>
+
+                <div class="account-area__item">
+                    <p>Фамилия:</p>
+                   <span>{{ driver.last_name}}</span>
+                </div>
+
+
+                <div class="account-area__item">
+                    <p>Отчество:</p>
+                   <span>{{ driver.patronymic }}</span>
+                </div>
+
+                <div class="account-area__item">
+                    <p>Номер телефона:</p>
+                   <span>{{ driver.phone|first }}-{{ driver.phone|slice:"1:4" }}-{{ driver.phone|slice:"4:7" }}-{{ driver.phone|slice:"7:11" }}</span>
+                </div>
+
+                <div class="account-area__item">
+                    <p>Email:</p>
+                   <span>{{ driver.email }}</span>
+                </div>
+                </div>
+            </div>
+
+          <div class="main__tables">
+            <div class="main__table table">
+                <h1 class="table__table-title">Автомобили</h1>
+                    <table>
+                    <tr class="table__titles">
+                      <th class="table__title">Номер</th>
+                      <th class="table__title">Марка</th>
+                      <th class="table__title">регион</th>
+                      <th class="table__title">Последний <br>осмотр</th>
+                      <th class="table__title">Активные <br>заявки</th>
+                    </tr>
+                {% for car in driver.my_cars.all %}
+                    <tr class="table__row">
+                      <td class="table__cell">
+                          <a href="{% url 'choose-car' car.registration_number %}">
+                                  {{ car.registration_number|slice:'0:1'}}-{{ car.registration_number|slice:'1:4'}}-{{ car.registration_number|slice:'4:6'}}
+                          </a>
+                      </td>
+                      <td class="table__cell">{{ car.brand }}</td>
+                      <td class="table__cell">{{ car.region_code }}</td>
+                      <td class="table__cell">{{ car.last_inspection }}</td>
+                      <td class="table__cell">
+                          {% for app in car.applications.all %}
+                          {{ app.type_of }}<br>
+                          {% endfor %}
+                      </td>
+
+                    </tr>
+                {% endfor %}
+
+
+                </table>
+            </div>
+
+            <div class="main__table table">
+                <h1 class="table__table-title">Заявки</h1>
+                <table>
+
+    <!-- ID -->                            <col style="width:1%">
+    <!-- Дата создания -->                 <col style="width:10%">
+    <!-- Дата окнчания -->                 <col style="width:10%">
+    <!-- Срочность -->                     <col style="width:10%">
+    <!-- Статус -->                        <col style="width:10%">
+    <!-- Тип -->                           <col style="width:20%">
+    <!-- Создатель -->                     <col style="width:10%">
+
+
+
+                    <tr class="table__titles">
+                      <th class="table__title">ID</th>
+                      <th class="table__title">Дата</th>
+                      <th class="table__title">Срочность</th>
+                      <th class="table__title">Статус</th>
+                      <th class="table__title">Тип</th>
+                      <th class="table__title">Авто</th>
+                      <th class="table__title">Краткое<br> описание</th>
+                    </tr>
+                    {% for app in driver.my_apps.all %}
+                    <tr class="table__row">
+                        <td class="table__cell"><a href="{% url 'app'  app.pk %}">{{ app.id }}</a></td>
+                        <td class="table__cell">
+                            {{ app.start_date}}
+                            <br>-<br>
+                            {{ app.end_date}}
+                        </td>
+                        <td class="table__cell">
+                            {% if app.urgency == 'N' %}
+                                  Не срочно
+                            {% elif app.urgency == 'U' %}
+                                  Срочно
+                            {% else %}
+                                  Очень срочно
+                            {% endif %}
+                        </td>
+                        <td class="table__cell">
+                             {% if app.status == 'O' %}
+                                  Ожидает рассмотрения
+                             {% elif app.status == 'R' %}
+                                  Рассмотрена
+                             {% elif app.status == 'V' %}
+                                  Выполнена
+                             {% else %}
+                                  Просрочена
+                             {% endif %}
+                        </td>
+                        <td class="table__cell">{{ app.type }}</td>
+                    <td class="table__cell">{{ app.car }}</td>
+                        <td class="table__cell">{{ app.description|truncatechars:10 }}</td>
+                      </tr>
+                    {% endfor %}
+                </table>
+
+            </div>
+
+            <div class="main__table table">
+                <h1 class="table__table-title _doc-title">Топливные карты</h1>
+                            <button class="table__btn-add-doc">Добавить</button>
+
+{#                {% if user.is_manager %}#}
+{#                <button class="table__btn-add-doc">Добавить</button>#}
+{#                {% else %}#}
+{#                <button class="table__btn-add-doc">Запросить</button>#}
+{#                {% endif %}#}
+
+                <table>
+
+                    <!-- ID -->                            <col style="width:5%">
+                    <!-- Дата создания -->                 <col style="width:15%">
+                    <!-- Дата окнчания -->                 <col style="width:15%">
+                    <!-- Срочность -->                     <col style="width:15%">
+                    <!-- действия -->                     <col style="width:15%">
+
+
+                                        <tr class="table__titles">
+                                          <th class="table__title">ID</th>
+                                          <th class="table__title">Номер</th>
+                                          <th class="table__title">Лимит</th>
+                                          <th class="table__title">Остаток</th>
+                                          <th class="table__title">Действия</th>
+                                        </tr>
+                                        <!-- <label for="1"> -->
+                                        {% for card in driver.my_cards.all %}
+                                        <form method="post"> {% csrf_token %}
+                                          <tr class="table__row">
+                                            <td class="table__cell">{{ card.id }}</td>
+                                            <td class="table__cell">{{ card.number|slice:"0:4" }}-{{ card.number|slice:"4:8" }}-{{ card.number|slice:"8:12" }}-{{ card.number|slice:"12:16" }}</td>
+                                            <td class="table__cell">{{ card.limit }} л.</td>
+                                            <td class="table__cell">
+                                             <input type="hidden" name="action" value="change_balance_{{ card.pk }}">
+                                            <input class="table__card-balance" type="text" name="balance" value="{{ card.balance }}" placeholder="{{ card.balance }}">л
+                                            </td>
+                                            <td class="table__cell">
+                                              <button class="table__btn-save-balance">изменить баланс</button>
+                                          </td>
+                                        <!-- </label> -->
+                                        </tr>
+                                        </form>
+                                        {% endfor %}
+                                        <!-- </label> -->
+                </table>
+
+            </div>
+
+            <div class="main__table table">
+                <h1 class="table__table-title _doc-title">Документы</h1>
+{#                <button class="table__btn-add-doc">Добавить</button>#}
+                <table>
+
+                    <!-- ID -->                            <col style="width:5%">
+                    <!-- Дата создания -->                 <col style="width:15%">
+                    <!-- Дата окнчания -->                 <col style="width:15%">
+                    <!-- Дата окнчания -->                 <col style="width:15%">
+
+                                        <tr class="table__titles">
+                                          <th class="table__title">Тип документа</th>
+                                          <th class="table__title">Дата получения</th>
+                                          <th class="table__title">Дата окончания</th>
+                                          <th class="table__title">Удалить?</th>
+                                        </tr>
+                                {% for doc in driver.my_docs.all %}
+                                    <tr class="table__row">
+                                          <td class="table__cell">{{ doc.type }}</td>
+                                          <td class="table__cell">{{ doc.date_start|date:"d-m-Y"}}</td>
+                                          <td class="table__cell">{{ doc.date_end|date:"d-m-Y"}}</td>
+                                          <td class="table__cell">
+                                              <button class="table__btn-delete-app" id="doc-{{ doc.pk }}" style="background: red">Удалить</button>
+                                          </td>
+                                        </tr>
+                                {% endfor %}
+
+                </table>
+
+                <br>
+                <br>
+
+                <br>
+                <br>
+                <!-- <form method="post">
+                <div class="main__form-add-app form-add">
+                  <h1 class="form-add__title">
+                    Заявка на авто #A-111-EE
+                  </h1>
+                  <p>Срочность:</p>
+                    <div class="form-add__timing">
+
+                      <input type="radio" title="timing" id="noturgent">
+                      <label for="noturgent">Не срочно</label>
+
+
+                      <input type="radio" title="timing" id="urgent">
+                      <label for="urgent">Срочно</label>
+
+                      <input type="radio" title="timing" id="veryurgent">
+                      <label for="veryurgent">Очень срочно</label>
+
+                      <label for="new_descr">Опишите суть заявки:</label>
+                      <textarea title="description" id="new_descr" cols="30" rows="10"></textarea>
+                      <button type="submit">Отправить</button>
+                    </div>
+                  </form>
+              </div> -->
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+{% endblock main %}
+
+{% block forms %}
+           <form method="post">
+            <div class="form-app add">
+              <button type="reset">
+                <div class="bnt-form-app-reset-add">
+                  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="0" x2="100" y1="0" y2="100" />
+                    <line x1="0" x2="100" y1="100" y2="0" />
+                  </svg>
+                </div>
+              </button>
+              <h1 class="form-app__title">
+                Заявка на авто #A-111-EE
+              </h1>
+              <p>Срочность:</p>
+                <div class="form-app__timing">
+
+                  <input type="radio" name="timing" id="rdo-noturgent">
+                  <label for="rdo-noturgent">Не срочно</label>
+
+
+                  <input type="radio" name="timing" id="rdo-urgent">
+                  <label for="rdo-urgent">Срочно</label>
+
+                  <input type="radio" name="timing" id="rdo-veryurgent">
+                  <label for="rdo-veryurgent">Очень срочно</label>
+
+                  <label for="new_descr">Опишите суть заявки:</label>
+                  <textarea name="description" id="new_descr" cols="30" rows="10"></textarea>
+                  <button type="submit">Отправить</button>
+                </div>
+           </div>
+          </form>
+
+
+{#          <form method="post">#}
+{#            <div class="form-app change">#}
+{#              <button type="reset">#}
+{#                <div class="bnt-form-app-reset-change">#}
+{#                  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">#}
+{#                    <line x1="0" x2="100" y1="0" y2="100" />#}
+{#                    <line x1="0" x2="100" y1="100" y2="0" />#}
+{#                  </svg>#}
+{#                </div>#}
+{#              </button>#}
+{#              <h1 class="form-app__title">#}
+{#                Заявка №21#}
+{#              </h1>#}
+{#              <p>Срочность:</p>#}
+{#                <div class="form-app__timing">#}
+{##}
+{#                  <input type="radio" checked title="timing-change" id="rdo-noturgent-c">#}
+{#                  <label for="rdo-noturgent-c">Не срочно</label>#}
+{##}
+{##}
+{#                  <input type="radio" title="timing-change" id="rdo-urgent-c">#}
+{#                  <label for="rdo-urgent-c">Срочно</label>#}
+{##}
+{#                  <input type="radio" title="timing-change" id="rdo-veryurgent-c">#}
+{#                  <label for="rdo-veryurgent-c">Очень срочно</label>#}
+{##}
+{#                  <label for="descr-change">Опишите суть заявки:</label>#}
+{#                  <textarea title="description" id="descr-change" cols="30" rows="10"></textarea>#}
+{#                  <button type="submit">Отправить</button>#}
+{#                </div>#}
+{#            </div>#}
+{#          </form>#}
+     <form method="post"> {% csrf_token %}
+      <div class="form-doc add">
+        <button type="reset">
+          <div class="bnt-form-doc-reset-add">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <line x1="0" x2="100" y1="0" y2="100" />
+              <line x1="0" x2="100" y1="100" y2="0" />
+            </svg>
+          </div>
+        </button>
+        <h1 class="form-app__title">
+          Добавление документов:
+        </h1>
+        <p>Тип:</p>
+          <div class="form-app__timing">
+            {{ doc_create_form.errors }}
+           {% for radio in doc_create_form.type %}
+               {% if 'a' in radio.choice_label %}
+                  {{ radio.tag }}
+                  <label for="{{ radio.id_for_label }}">{{ radio.choice_label|cut:"(a)"}}</label>
+               {% endif %}
+{#                   {{ radio.tag }}#}
+{#                  <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>#}
+           {% endfor %}
+          {{ doc_create_form.start_date.label }}:
+          {{ doc_create_form.start_date }}
+
+          {{ doc_create_form.end_date.label }}:
+          {{ doc_create_form.end_date }}
+
+{#            <input type="hidden" title="owner" id="id_owner" value="{{ car.pk }}">#}
+            <input type="hidden" name="action" value="doc_create">
+{#            <label for="doc-copy">Прикрепите документа</label>#}
+{#            <input type="file">#}
+            <button type="submit">Отправить</button>
+          </div>
+      </div>
+    </form>
+<form method="post">
+     {% csrf_token %}
+      <div class="confirm-delete">
+        <h1>Удалить?</h1>
+        <input id="action-delete" type="hidden" name="action" value="">
+
+        <button id="btn-confirm-delete" type="submit">Да</button>
+        <button id="btn-refuse-delete" type="reset">Нет</button>
+      </div>
+    </form>
+{% endblock forms %}
+
+{% block js_script %}
+<script src="{% static 'js/account.js' %}"></script>
+{% endblock js_script %}

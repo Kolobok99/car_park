@@ -83,7 +83,7 @@
                         {% for driver in drivers %}
 
                         <tr class="table__row">
-                          <td class="table__cell">{{ driver.pk }}</td>
+                          <td class="table__cell"><a href="{{ driver.get_absolute_url }}">{{ driver.pk }}</a></td>
 {#                          {{ driver.last_name}} {{ driver.first_name|first}}.{{ driver.patronymic|first}}.#}
                             <td class="table__cell">
                           {{ driver.last_name}} {{ driver.first_name|first}}.{{ driver.patronymic|first}}.

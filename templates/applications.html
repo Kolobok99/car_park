@@ -98,7 +98,7 @@
                         </tr>
                         {% for app in all_apps %}
                             <tr class="table__row">
-                              <td class="table__cell"><a href="{% url 'app'  app.pk %}">{{ app.pk }}</a></td>
+                              <td class="table__cell"><a href="{{ app.get_absolute_url }}">{{ app.pk }}</a></td>
                               <td class="table__cell">{{ app.start_date|date:"d-m-Y" }}</td>
                               <td class="table__cell">{{ app.end_date|date:"d-m-Y" }}</td>
                               <td class="table__cell">

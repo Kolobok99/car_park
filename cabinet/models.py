@@ -158,6 +158,9 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
+    def get_absolute_url(self):
+        return f"/drivers/{self.pk}"
+
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
@@ -260,6 +263,9 @@ class Application(models.Model):
         return f"{self.owner.last_name} + " \
                f"{self.start_date} + {self.type} + {self.car.registration_number}"
 
+    def get_absolute_url(self):
+        return f"applications/{self.pk}"
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         if self.time_to_execute == 0:
@@ -273,9 +279,11 @@ class Application(models.Model):
             self.end_date = self.start_date + timedelta(days=self.time_to_execute)
         super().save(*args, **kwargs)
 
+
     class Meta:
         verbose_name = 'Заявка'
         verbose_name_plural = 'Заявки'
+
 
 
 class TypeOfAppl(models.Model):

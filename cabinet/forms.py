@@ -26,7 +26,7 @@ class MyUserChangeForm(UserChangeForm):
         model = MyUser
         fields = ('email',)
 
-class CarAddForm(forms.ModelForm):
+class CarForm(forms.ModelForm):
 
     # registration_number = forms.CharField(
     #     label='Номер',
@@ -41,10 +41,9 @@ class CarAddForm(forms.ModelForm):
 
     # region_code = forms.CharField(label='Код региона:')
 
-    last_inspection = forms.DateField(label='Последний осмотр:', widget=forms.DateInput(attrs={'class':'datepicker form-control', 'placeholder':'Select a date'}), required=False)
+    last_inspection = forms.DateField(widget=forms.DateInput(format="%m/%d/%Y"))
 
     # owner = forms.ModelChoiceField(label='Закрепить за:', queryset=Driver.objects.all())
-
 
     class Meta:
         model = Car
@@ -57,7 +56,12 @@ class CarAddForm(forms.ModelForm):
             'owner': 'Закрепить за',
         }
 
+class CarAddForm(CarForm):
+    action = forms.CharField(widget=forms.HiddenInput(), initial="car_create")
 
+class CarUpdateForm(CarForm):
+    ...
+    # action = forms.CharField(widget=forms.HiddenInput(), initial="car_update")
 
 class FuelCardAddForm(forms.ModelForm):
 

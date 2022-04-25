@@ -252,6 +252,26 @@ body {
           flex: 1 1 auto;
 }
 
+.car-area__item input {
+  padding: 5px;
+  max-width: 30%;
+  justify-self: flex-end;
+}
+
+.car-area__item select {
+  padding: 7px;
+}
+
+.car-area__btn-submit {
+  margin-top: 20px;
+  padding: 10px;
+  color: #f5f5f5;
+  background-color: #005BFF;
+  font-size: 18px;
+  font-weight: 500;
+  border-radius: 7px;
+}
+
 .table table {
   border-collapse: collapse;
   width: 100%;

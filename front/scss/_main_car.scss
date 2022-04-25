@@ -59,8 +59,13 @@
 
         font-size: 18px;
 
-        p {
-
+        input{
+            padding: 5px;
+            max-width: 30%;
+            justify-self: flex-end;
+        }
+        select {
+            padding: 7px;
         }
 
         span {
@@ -68,6 +73,16 @@
             // font-size: 18px;
             
         }
+    }
+    &__btn-submit {
+        margin-top: 20px;
+        padding: 10px;
+        color: #f5f5f5;
+        background-color: #005BFF;
+        font-size: 18px;
+        font-weight: 500;
+        border-radius: 7px;
+        
     }
 }
 

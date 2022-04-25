@@ -28,7 +28,7 @@ class CarCreateView(Context, LoginRequiredMixin, CreateView):
     template_name = "cars.html"
     # context_object_name = "cars"
     success_url = '/cars'
-    form_class = CarAddForm
+    form_class = CarForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -270,7 +270,7 @@ class AccountView(LoginRequiredMixin, UpdateView):
 
 class CarView(LoginRequiredMixin, UpdateView):
     template_name = 'car.html'
-    form_class = CarAddForm
+    form_class = CarForm
     success_url = reverse_lazy('cars')
 
     def get_object(self, queryset=None):
@@ -337,7 +337,7 @@ class CarCreateView(Context, LoginRequiredMixin, CreateView):
     template_name = "cars.html"
     # context_object_name = "cars"
     success_url = '/cars'
-    form_class = CarAddForm
+    form_class = CarForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -579,7 +579,7 @@ class AccountView(LoginRequiredMixin, UpdateView):
 
 class CarView(LoginRequiredMixin, UpdateView):
     template_name = 'car.html'
-    form_class = CarAddForm
+    form_class = CarForm
     success_url = reverse_lazy('cars')
 
     def get_object(self, queryset=None):

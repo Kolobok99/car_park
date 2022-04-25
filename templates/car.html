@@ -22,28 +22,29 @@
             <div class="car-area__info">
               <div class="car-area__item">
                 <p>Марка:</p>
-                <span>{{ form.brand}}</span>
+                {{ form.brand}}
               </div>
 
               <div class="car-area__item">
                 <p>Номер:</p>
-                <span>{{ form.registration_number }}</span>
+                {{ form.registration_number }}
               </div>
 
               <div class="car-area__item">
                 <p>Код:</p>
-                <span>{{ form.region_code }}</span>
+                {{ form.region_code }}
               </div>
 
               <div class="car-area__item">
                 <p>Последний осмотр:</p>
-                <span>{{ form.last_inspection }}</span>
+                {{ form.last_inspection }}
               </div>
               <div class="car-area__item">
                 <p>Водитель:</p>
-                <span>{{ form.owner}}.</span>
+                {{ form.owner}}
               </div>
-              <button class="account-area__btn-submit" type="submit">Изменить данные</button>
+              {{ form.action }}
+              <button class="car-area__btn-submit" type="submit">Изменить данные</button>
               </form>
             {% else %}
               <div class="car-area__avatar">

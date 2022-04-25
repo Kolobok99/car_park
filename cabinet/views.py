@@ -25,7 +25,7 @@ class CarsCreateAndFilterView(Context, LoginRequiredMixin, CreateView):
     """
     template_name = "cars.html"
     success_url = '/cars'
-    form_class = CarAddForm
+    form_class = CarForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -204,7 +204,7 @@ class AccountView(LoginRequiredMixin, UpdateView):
 
 class CarView(LoginRequiredMixin, UpdateView):
     template_name = 'car.html'
-    form_class = CarAddForm
+    form_class = CarUpdateForm
     success_url = reverse_lazy('cars')
 
     def get_object(self, queryset=None):
@@ -218,7 +218,9 @@ class CarView(LoginRequiredMixin, UpdateView):
         return context
 
     def post(self, request, *args, **kwargs):
+        print("YES_IS_POST")
         action_type = self.request.POST.get('action')
+        print(action_type)
         form = None
         if action_type == 'app_create':
             form = AppCreateForm(self.request.POST)
@@ -227,10 +229,45 @@ class CarView(LoginRequiredMixin, UpdateView):
         elif action_type == 'doc_create':
             form = AutoDocForm(self.request.POST)
             form.instance.owner = Car.objects.get(registration_number=self.kwargs['slug'])
-        elif "doc-" in action_type:
+        elif action_type is not None and "doc-" in action_type:
             doc_pk_to_delete = "".join([i for i in action_type if i.isdigit()])
             doc_to_delete = AutoDoc.objects.get(pk=doc_pk_to_delete)
             doc_to_delete.delete()
-        if form != None and form.is_valid():
+        else:
+            return super(CarView, self).post(request, *args, **kwargs)
+        if form is not None and form.is_valid():
             form.save()
         return HttpResponseRedirect("")
+
+    # def form_valid(self, form):
+    #     action_type = self.request.POST['action']
+    #     print("YES_IS_VALID")
+    #     if action_type == 'car_update':
+    #         list_of_fields = ['registration_number', 'brand', 'region_code',
+    #                           'last_inspection', 'owner']
+    #         self.get_object()
+    #         for field in list_of_fields:
+    #             if form.cleaned_data[field] is None:
+    #                 setattr(form.instance, field, getattr(self.get_object(), field))
+
+        # elif action_type == 'doc_create':
+        #     form = DriverDocForm(self.request.POST)
+        #     form.instance.owner = MyUser.objects.get(pk=self.request.user.pk)
+        # if form.is_valid():
+        #     return super().form_valid(form)
+        # return HttpResponseRedirect("")
+
+class DriverView(LoginRequiredMixin, UpdateView):
+    """Страница выбранного водителя"""
+
+    template_name = 'driver.html'
+    slug_field = 'pk'
+    form_class = UserUpdateForm
+    success_url = reverse_lazy('choose-driver', slug_field)
+    context_object_name = 'driver'
+
+    def get_object(self, queryset=None):
+        return MyUser.objects.get(pk=self.kwargs['pk'])
+
+
+
