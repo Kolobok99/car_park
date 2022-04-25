@@ -123,7 +123,7 @@ class AppView(LoginRequiredMixin,UpdateView, DeletionMixin):
     '''
 
     model = Application
-    form_class = AppCreateForm
+    form_class = AppUpdateForm
     template_name = 'app.html'
 
     def get_success_url(self):
@@ -151,7 +151,7 @@ class AppView(LoginRequiredMixin,UpdateView, DeletionMixin):
         # print(self.request.POST['action'])
         # print(self.kwargs)
         # if self.request.POST['action'] == 'app_update':
-        #     form = AppCreateForm(self.request.POST, instance=self.kwargs['pk'])
+        #     form = AppForm(self.request.POST, instance=self.kwargs['pk'])
         #     return super(AppView, self).form_valid(form)
 
 
@@ -188,7 +188,7 @@ class RegistrationView(CreateView):
 #         return Car.objects.filter(registration_number=self.kwargs['slug'])
 #
 #     form_class = {
-#         'app_create': AppCreateForm,
+#         'app_create': AppForm,
 #         'doc_create': AutoDocForm,
 #     }
 #
@@ -207,7 +207,7 @@ class RegistrationView(CreateView):
 #
 #         return HttpResponseRedirect(self.get_success_url(form_name))
 
-# form_class = AppCreateForm
+# form_class = AppForm
 #
 # def get_success_url(self):
 #     return f"{self.kwargs['slug']}"
@@ -306,7 +306,6 @@ class CarView(LoginRequiredMixin, UpdateView):
         if action_type == 'app_create':
             form = AppCreateForm(self.request.POST)
             form.instance.car = Car.objects.get(registration_number=self.kwargs['slug'])
-            form.instance.status = 'O'
             form.instance.owner = self.request.user
             # print(form.instance.owner)
             print(form.errors)

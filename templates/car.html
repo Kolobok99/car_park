@@ -133,7 +133,7 @@
                                   Просрочена
                              {% endif %}
                         </td>
-                        <td class="table__cell">{{ app.type_of }}</td>
+                        <td class="table__cell">{{ app.type }}</td>
                         <td class="table__cell">{{ app.description|truncatechars:10 }}</td>
                       </tr>
                     {% endfor %}
@@ -163,8 +163,8 @@
                                 {% for doc in car.my_docs.all %}
                                     <tr class="table__row">
                                           <td class="table__cell">{{ doc.type }}</td>
-                                          <td class="table__cell">{{ doc.date_start|date:"d-m-Y"}}</td>
-                                          <td class="table__cell">{{ doc.date_end|date:"d-m-Y"}}</td>
+                                          <td class="table__cell">{{ doc.start_date|date:"d-m-Y"}}</td>
+                                          <td class="table__cell">{{ doc.end_date|date:"d-m-Y"}}</td>
                                           <td class="table__cell">
                                               <button class="table__btn-delete-app" id="doc-{{ doc.pk }}" style="background: red">Удалить</button>
                                           </td>
@@ -223,7 +223,8 @@
 {#              <input type="hidden" title="car" id="id_car" value="{{ car.pk }}">#}
 {#              <input type="hidden" title="owner" id="id_owner" value="{{ user.pk }}">#}
 {#              <input type="hidden" title="status" value="O" id="id_status">#}
-              <input type="hidden" name="action" value="app_create">
+{#              <input type="hidden" name="action" value="app_create">#}
+                {{ app_create_form.action }}
 
             <button type="submit" value="TRueForm">Отправить</button>
           </div>
@@ -296,7 +297,7 @@
           {{ doc_create_form.end_date }}
 
 {#            <input type="hidden" title="owner" id="id_owner" value="{{ car.pk }}">#}
-            <input type="hidden" name="action" value="doc_create">
+          {{ doc_create_form.action }}
 {#            <label for="doc-copy">Прикрепите документа</label>#}
 {#            <input type="file">#}
             <button type="submit">Отправить</button>

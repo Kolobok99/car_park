@@ -147,13 +147,14 @@ class UserUpdateForm(forms.ModelForm):
         # }
 
 
-class AppCreateForm(forms.ModelForm):
+
+class AppForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['type'].empty_label = "Не выбран"
 
-    action = forms.CharField(widget=forms.widgets.HiddenInput())
+    # action = forms.CharField(widget=forms.HiddenInput(), initial="app_create")
 
     class Meta:
         model = Application
@@ -171,6 +172,11 @@ class AppCreateForm(forms.ModelForm):
             'urgency': forms.widgets.RadioSelect(),
         }
 
+class AppCreateForm(AppForm):
+    action = forms.CharField(widget=forms.HiddenInput(), initial="app_create")
+
+class AppUpdateForm(AppForm):
+    action = forms.CharField(widget=forms.HiddenInput(), initial="app_update")
 
 
 class AutoDocForm(forms.ModelForm):
@@ -179,7 +185,7 @@ class AutoDocForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['type'].empty_label = "Не выбран"
 
-    action = forms.CharField(widget=forms.widgets.HiddenInput())
+    action = forms.CharField(widget=forms.widgets.HiddenInput(), initial="doc_create")
     class Meta:
         model = AutoDoc
         # fields = '__all__'
@@ -198,6 +204,7 @@ class AutoDocForm(forms.ModelForm):
 
             )
         }
+
 
 class DriverDocForm(forms.ModelForm):
 

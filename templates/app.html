@@ -136,7 +136,7 @@
 {#              <input type="hidden" name="car" id="id_car" value="{{ app.car.pk }}">#}
 {#              <input type="hidden" name="owner" id="id_owner" value="{{ app.owner.pk }}">#}
 {#              <input type="hidden" name="status" value="O" id="id_status">#}
-              <input type="hidden" name="action" value="app_update">
+              {{ form.action }}
 
             <button type="submit" value="TRueForm">Отправить</button>
           </div>
@@ -148,7 +148,6 @@
       <div class="confirm-delete">
         <h1>Удалить заявку №{{ application.pk }}</h1>
         <input type="hidden" name="action" value="delete-yes">
-
         <button type="submit">Да</button>
         <button  type="reset" id="notsubmit">Нет</button>
       </div>

@@ -107,7 +107,7 @@ class AppView(LoginRequiredMixin,UpdateView, DeletionMixin):
     '''Просмотр, изменение и удаление заявки'''
 
     model = Application
-    form_class = AppCreateForm
+    form_class = AppForm
     template_name = 'app.html'
     # success_url = "/applications"
 
@@ -138,7 +138,7 @@ class AppView(LoginRequiredMixin,UpdateView, DeletionMixin):
         # print(self.request.POST['action'])
         # print(self.kwargs)
         # if self.request.POST['action'] == 'app_update':
-        #     form = AppCreateForm(self.request.POST, instance=self.kwargs['pk'])
+        #     form = AppForm(self.request.POST, instance=self.kwargs['pk'])
         #     return super(AppView, self).form_valid(form)
 
 
@@ -175,7 +175,7 @@ class RegistrationView(CreateView):
 #         return Car.objects.filter(registration_number=self.kwargs['slug'])
 #
 #     form_class = {
-#         'app_create': AppCreateForm,
+#         'app_create': AppForm,
 #         'doc_create': AutoDocForm,
 #     }
 #
@@ -194,7 +194,7 @@ class RegistrationView(CreateView):
 #
 #         return HttpResponseRedirect(self.get_success_url(form_name))
 
-# form_class = AppCreateForm
+# form_class = AppForm
 #
 # def get_success_url(self):
 #     return f"{self.kwargs['slug']}"
@@ -278,7 +278,7 @@ class CarView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         # car = Car.objects.get(registration_number=self.kwargs['slug'])
-        app_create_form = AppCreateForm()
+        app_create_form = AppForm()
         doc_create_form = AutoDocForm()
         context = super().get_context_data(**kwargs)
         # context['car'] = car
@@ -291,7 +291,7 @@ class CarView(LoginRequiredMixin, UpdateView):
         action_type = self.request.POST.get('action')
         form = None
         if action_type == 'app_create':
-            form = AppCreateForm(self.request.POST)
+            form = AppForm(self.request.POST)
             form.instance.car = Car.objects.get(registration_number=self.kwargs['slug'])
             form.instance.status = 'O'
             form.instance.owner = self.request.user
@@ -416,7 +416,7 @@ class AppView(LoginRequiredMixin,UpdateView, DeletionMixin):
     '''Просмотр, изменение и удаление заявки'''
 
     model = Application
-    form_class = AppCreateForm
+    form_class = AppForm
     template_name = 'app.html'
     # success_url = "/applications"
 
@@ -447,7 +447,7 @@ class AppView(LoginRequiredMixin,UpdateView, DeletionMixin):
         # print(self.request.POST['action'])
         # print(self.kwargs)
         # if self.request.POST['action'] == 'app_update':
-        #     form = AppCreateForm(self.request.POST, instance=self.kwargs['pk'])
+        #     form = AppForm(self.request.POST, instance=self.kwargs['pk'])
         #     return super(AppView, self).form_valid(form)
 
 
@@ -484,7 +484,7 @@ class RegistrationView(CreateView):
 #         return Car.objects.filter(registration_number=self.kwargs['slug'])
 #
 #     form_class = {
-#         'app_create': AppCreateForm,
+#         'app_create': AppForm,
 #         'doc_create': AutoDocForm,
 #     }
 #
@@ -503,7 +503,7 @@ class RegistrationView(CreateView):
 #
 #         return HttpResponseRedirect(self.get_success_url(form_name))
 
-# form_class = AppCreateForm
+# form_class = AppForm
 #
 # def get_success_url(self):
 #     return f"{self.kwargs['slug']}"
@@ -587,7 +587,7 @@ class CarView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         # car = Car.objects.get(registration_number=self.kwargs['slug'])
-        app_create_form = AppCreateForm()
+        app_create_form = AppForm()
         doc_create_form = AutoDocForm()
         context = super().get_context_data(**kwargs)
         # context['car'] = car
@@ -600,7 +600,7 @@ class CarView(LoginRequiredMixin, UpdateView):
         action_type = self.request.POST.get('action')
         form = None
         if action_type == 'app_create':
-            form = AppCreateForm(self.request.POST)
+            form = AppForm(self.request.POST)
             form.instance.car = Car.objects.get(registration_number=self.kwargs['slug'])
             form.instance.status = 'O'
             form.instance.owner = self.request.user
