@@ -1,3 +1,8 @@
+import datetime
+import os
+import shutil
+
+from PIL import Image
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.db import models
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
@@ -123,6 +128,11 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         ('m', 'manager'),
         ('d', 'driver'),
     )
+
+    def upload_image(self, *args):
+        path = f"drivers/{self.email}/avatars/avatar{datetime.datetime.today()}.webp"
+        return path
+
     email = models.EmailField(verbose_name='Почта', unique=True, null=True, blank=True,
                               error_messages={
                                   'unique': 'Пользователь с таким email уже существует.',
@@ -136,7 +146,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     phone = models.CharField(verbose_name='номер телефона', null=True, blank=True, max_length=12)
 
     image = models.ImageField(verbose_name='Аватарка',
-                              null=True, blank=True, upload_to=f'avatars/')
+                              null=True, blank=True, upload_to=upload_image)
 
     role = models.CharField(verbose_name='Роль', max_length=1, choices=KINDES, default='d')
 
@@ -149,6 +159,23 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = []
 
     objects = MyUserManager()
+
+    def save(self):
+        # avatars = os.listdir(f'{settings.MEDIA_ROOT}/drivers/{self.email}/avatars')
+        # print(avatars)
+        # for avatar in avatars:
+        #     os.remove(f'{settings.MEDIA_ROOT}/drivers/{self.email}/avatars/{avatar}')
+
+        super().save()
+        # shutil.rmtree(f'{settings.MEDIA_ROOT}/drivers/{self.email}/avatars')
+
+        img = Image.open(self.image.path)
+
+        if img.height > 300 or img.width > 300:
+            output_size = (300, 300)
+            img.thumbnail(output_size)
+            img.save(self.image.path)
+
 
     def is_manager(self):
         if self.role == 'm':

@@ -12,11 +12,11 @@
       <div class="main">
         <div class="main__container">
           <div class="main__account account-area">
+            <form method="post" enctype="multipart/form-data">{% csrf_token %}
             <div class="account-area__avatar">
-              <img src="{% static '/img/account/full-avatar.jpeg' %}" alt="" />
-              <input type="file" name="avatar" id="image" />
+              <img src="{{ user.image.url }}" alt="" />
+                    <input type="file" name="image" accept="image/*" id="id_image">
             </div>
-            <form method="post">{% csrf_token %}
               <div class="account-area__info">
                 <input type="hidden" name="action" value="user_update">
                 <div class="account-area__item">
