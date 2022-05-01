@@ -1,7 +1,7 @@
 import os
 
 from django.dispatch import receiver
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.conf import settings
 
 from cabinet.models import MyUser, Car
@@ -22,6 +22,16 @@ def post_save_myuser(created, **kwargs):
         #создание папки для хранения документов
         os.mkdir(f'{settings.MEDIA_ROOT}/drivers/{instance.email}/docs')
 
+@receiver(pre_save, sender=MyUser)
+def pre_save_myuser(**kwargs):
+    instance = kwargs['instance']
+    old_email = MyUser.objects.get(pk=instance.pk).email
+    if instance.email != old_email:
+        os.renames(
+            f'{settings.MEDIA_ROOT}/drivers/{old_email}',
+            f'{settings.MEDIA_ROOT}/drivers/{instance.email}'
+        )
+
 @receiver(post_save, sender=Car)
 def post_save_cars(created, **kwargs):
     instance = kwargs['instance']
@@ -36,3 +46,15 @@ def post_save_cars(created, **kwargs):
 
         # создание папки для хранения документов
         os.mkdir(f'{settings.MEDIA_ROOT}/cars/{instance.registration_number}/docs')
+
+@receiver(pre_save, sender=Car)
+def pre_save_car(**kwargs):
+    instance = kwargs['instance']
+    old_registration_number = Car.objects.get(pk=instance.pk).registration_number
+    if instance.registration_number != old_registration_number:
+        os.renames(
+            f'{settings.MEDIA_ROOT}/cars/{old_registration_number}',
+            f'{settings.MEDIA_ROOT}/cars/{instance.registration_number}'
+        )
+    print(f"{instance.registration_number=}")
+    print(f"{old_registration_number=}")

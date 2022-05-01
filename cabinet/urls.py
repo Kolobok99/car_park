@@ -19,6 +19,8 @@ urlpatterns = [
     path('applications', AplicationsView.as_view(), name='applications'),
     path('applications/<int:pk>', AppView.as_view(), name='app'),
 
+    path('doc/<str:path>', show_pdf, name="open_pdf"),
+
     path('registration/', RegistrationView.as_view(), name='registration'),
     path('', LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', LogoutView.as_view(template_name='login.html', next_page='login'), name='logout'),
@@ -26,3 +28,6 @@ urlpatterns = [
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# urlpatterns += patterns('',
+#     (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
+# )

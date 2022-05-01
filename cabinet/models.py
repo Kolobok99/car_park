@@ -15,9 +15,13 @@ from car_park import settings
 class Car(models.Model):
     '''машины водилетей'''
 
-    def upload_image(self):
-        path = f"{settings.MEDIA_ROOT}/cars/{self.registration_number}/avatars"
+    def upload_image(self, *args):
+        path = f"cars/{self.registration_number}/avatars/car_avatar{datetime.datetime.today()}.webp"
         return path
+
+    # def upload_image(self, *args):
+    #     path = f"drivers/{self.registration_number}/avatars/user_avatar{datetime.datetime.today()}.webp"
+    #     return path
 
     brand = models.ForeignKey('CarBrand', on_delete=models.SET_NULL,
                               related_name='cars', verbose_name='Марка', null=True, blank=True)
@@ -26,21 +30,35 @@ class Car(models.Model):
             validators.RegexValidator(
                 regex='\w{1}\d{3}\w{2}',
                 message='Введите номер правильно!'
-            )], )
+            )],null=True, blank=True )
     region_code = models.PositiveSmallIntegerField(verbose_name='Код региона',
                                                    validators=[
                                                        validators.MaxValueValidator(200, message='Укажите меньше 200!')]
-                                                   )
+                                                   , null=True, blank=True)
     owner = models.ForeignKey('MyUser', on_delete=models.SET(None),
                               related_name='my_cars', null=True, blank=True)
 
     last_inspection = models.DateField("последний осмотр", null=True, blank=True)
 
-    image = models.FileField('фотография', null=True, blank=True, upload_to=upload_image)
-
+    image = models.ImageField('фотография', null=True, blank=True, upload_to=upload_image)
+    # image = models.ImageField(verbose_name='Аватарка',
+    #                           null=True, blank=True, upload_to=upload_image)
 
     def save(self, *args, **kwargs):
-        # self.slug = self.registration_number
+        super().save()
+        avatars = os.listdir(f'{settings.MEDIA_ROOT}/cars/{self.registration_number}/avatars/')
+        for avatar in avatars:
+            path_to_delete = f'{settings.MEDIA_ROOT}/cars/{self.registration_number}/avatars/{avatar}'
+            if self.image.path != path_to_delete:
+                os.remove(path_to_delete)
+
+        img = Image.open(self.image.path)
+
+        if img.height > 300 or img.width > 300:
+            output_size = (300, 300)
+            img.thumbnail(output_size)
+            img.save(self.image.path)
+
         self.registration_number = self.registration_number.upper()
         super(Car, self).save(*args, **kwargs)
 
@@ -128,9 +146,9 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         ('m', 'manager'),
         ('d', 'driver'),
     )
-
+    last_login = None
     def upload_image(self, *args):
-        path = f"drivers/{self.email}/avatars/avatar{datetime.datetime.today()}.webp"
+        path = f"drivers/{self.email}/avatars/user_avatar{datetime.datetime.today()}.webp"
         return path
 
     email = models.EmailField(verbose_name='Почта', unique=True, null=True, blank=True,
@@ -175,6 +193,8 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
             img.thumbnail(output_size)
             img.save(self.image.path)
 
+    def update_last_login(sender, user, **kwargs):
+        pass
 
     def is_manager(self):
         if self.role == 'm':
@@ -200,6 +220,7 @@ class Document(models.Model):
     start_date = models.DateField(verbose_name='Дата выдачи')
     end_date = models.DateField(verbose_name='Дата окончания')
 
+
     class Meta:
         abstract = True
 
@@ -208,10 +229,14 @@ class Document(models.Model):
 class UserDoc(Document):
     '''Документа водителя'''
 
+    def upload_file(self, *args):
+        path = f"drivers/{self.owner.email}/docs/user_doc_{self.type}_{self.end_date}"
+        return path
     type = models.ForeignKey('DocType', on_delete=models.SET_NULL,
                              related_name='people_docs', null=True, blank=True)
     owner = models.ForeignKey(MyUser, on_delete=models.CASCADE,
                               related_name='my_docs')
+    file = models.FileField(verbose_name='Копия документа', upload_to=upload_file, null=True, blank=True)
 
     def __str__(self):
         return f"{self.type} - {self.owner}"

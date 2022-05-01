@@ -82,8 +82,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'db_car_park',
-        'USER': 'django_car',
-        'PASSWORD': 'Sobaka2111!',
+        'USER': 'root',
+        'PASSWORD': 'rootroot',
         'HOST': 'localhost',
         'PORT': '3306',
     }

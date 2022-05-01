@@ -173,6 +173,7 @@ class AccountView(LoginRequiredMixin, UpdateView):
 
     def post(self, request, *args, **kwargs):
         action_type = self.request.POST['action']
+        print("IS_POST_USER!!!")
         if 'change_balance' in action_type:
             card_id = "".join([i for i in action_type if i.isdigit()])
             card = FuelCard.objects.get(pk=card_id)
@@ -185,9 +186,12 @@ class AccountView(LoginRequiredMixin, UpdateView):
         else:
             return super(AccountView, self).post(request, *args, **kwargs)
         return HttpResponseRedirect("")
+
     def form_valid(self, form):
         print(form.fields)
+        print("YES_VALID!!!")
         action_type = self.request.POST['action']
+        print(action_type)
         if action_type == 'user_update':
             form.instance.password = self.request.user.password
             list_of_fields = ['first_name', 'last_name', 'patronymic',
@@ -196,16 +200,18 @@ class AccountView(LoginRequiredMixin, UpdateView):
                 if form.cleaned_data[field] is None:
                     setattr(form.instance, field, getattr(self.request.user, field))
         elif action_type == 'doc_create':
-            form = DriverDocForm(self.request.POST)
+            form = DriverDocForm(self.request.POST, self.request.FILES)
             form.instance.owner = MyUser.objects.get(pk=self.request.user.pk)
         if form.is_valid():
             return super().form_valid(form)
         return HttpResponseRedirect("")
 
 class CarView(LoginRequiredMixin, UpdateView):
+    """Обработка страницы Машины"""
+
     template_name = 'car.html'
     form_class = CarUpdateForm
-    success_url = reverse_lazy('cars')
+    success_url = ''
 
     def get_object(self, queryset=None):
         return Car.objects.get(registration_number=self.kwargs['slug'])
@@ -221,7 +227,28 @@ class CarView(LoginRequiredMixin, UpdateView):
         print("YES_IS_POST")
         action_type = self.request.POST.get('action')
         print(action_type)
-        form = None
+        if "doc-" in action_type:
+            doc_pk_to_delete = "".join([i for i in action_type if i.isdigit()])
+            doc_to_delete = AutoDoc.objects.get(pk=doc_pk_to_delete)
+            doc_to_delete.delete()
+        else:
+            return super().post(request, *args, **kwargs)
+
+        return HttpResponseRedirect("")
+
+    def form_valid(self, form):
+        action_type = self.request.POST['action']
+        print("YES_IS_VALID")
+        if action_type == 'car_update':
+            list_of_fields = ['registration_number', 'brand', 'region_code',
+                              'last_inspection', 'owner']
+            self.get_object()
+            for field in list_of_fields:
+                if form.cleaned_data[field] is None:
+                    setattr(form.instance, field, getattr(self.get_object(), field))
+        elif action_type == 'doc_create':
+            form = DriverDocForm(self.request.POST)
+            form.instance.owner = MyUser.objects.get(pk=self.request.user.pk)
         if action_type == 'app_create':
             form = AppCreateForm(self.request.POST)
             form.instance.car = Car.objects.get(registration_number=self.kwargs['slug'])
@@ -229,33 +256,10 @@ class CarView(LoginRequiredMixin, UpdateView):
         elif action_type == 'doc_create':
             form = AutoDocForm(self.request.POST)
             form.instance.owner = Car.objects.get(registration_number=self.kwargs['slug'])
-        elif action_type is not None and "doc-" in action_type:
-            doc_pk_to_delete = "".join([i for i in action_type if i.isdigit()])
-            doc_to_delete = AutoDoc.objects.get(pk=doc_pk_to_delete)
-            doc_to_delete.delete()
-        else:
-            return super(CarView, self).post(request, *args, **kwargs)
-        if form is not None and form.is_valid():
-            form.save()
+        if form.is_valid():
+            return super().form_valid(form)
         return HttpResponseRedirect("")
 
-    # def form_valid(self, form):
-    #     action_type = self.request.POST['action']
-    #     print("YES_IS_VALID")
-    #     if action_type == 'car_update':
-    #         list_of_fields = ['registration_number', 'brand', 'region_code',
-    #                           'last_inspection', 'owner']
-    #         self.get_object()
-    #         for field in list_of_fields:
-    #             if form.cleaned_data[field] is None:
-    #                 setattr(form.instance, field, getattr(self.get_object(), field))
-
-        # elif action_type == 'doc_create':
-        #     form = DriverDocForm(self.request.POST)
-        #     form.instance.owner = MyUser.objects.get(pk=self.request.user.pk)
-        # if form.is_valid():
-        #     return super().form_valid(form)
-        # return HttpResponseRedirect("")
 
 class DriverView(LoginRequiredMixin, UpdateView):
     """Страница выбранного водителя"""
@@ -269,5 +273,22 @@ class DriverView(LoginRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         return MyUser.objects.get(pk=self.kwargs['pk'])
 
+class NewCarView(UpdateView):
+    template_name = "car.html"
+    success_url = '/'
+    model = Car
+    slug_field = 'registration_number'
+    # fields = "__all__"
+    # form_class = NewCarUpdateForm
+
+    def form_valid(self, form):
+        print("valit!")
+        return super(NewCarView, self).form_valid(form)
 
 
+from django.http import FileResponse
+import os
+
+def show_pdf(request):
+    filepath = os.path.join('static', 'sample.pdf')
+    return FileResponse(open(filepath, 'rb'), content_type='application/pdf')

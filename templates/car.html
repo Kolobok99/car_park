@@ -14,10 +14,13 @@
         {% if user.is_manager or user.pk == car.owner.pk %}
           <div class="main__car car-area">
           {% if user.is_manager %}
-            <form method="post">{% csrf_token %}
+            <form method="post" enctype="multipart/form-data">{% csrf_token %}
             <div class="car-area__avatar">
-                <img src="../img/cars/tesla.jpg" alt="" />
-                <input type="file" name="avatar" id="image" />
+                <img src="{{ car.image.url }}" alt="" />
+                    <input type="file" name="image" accept="image/*" id="id_image">
+{#                {{ form.image }}#}
+                {{ form.action }}
+                {{ form.errors }}
             </div>
             <div class="car-area__info">
               <div class="car-area__item">
@@ -44,12 +47,12 @@
                 {{ form.owner}}
               </div>
               {{ form.action }}
-              <button class="car-area__btn-submit" type="submit">Изменить данные</button>
+              <input class="car-area__btn-submit" type="submit">
               </form>
             {% else %}
               <div class="car-area__avatar">
                 <img src="../img/cars/tesla.jpg" alt="" />
-                <input type="file" name="avatar" id="image" />
+{#                <input type="file" name="avatar" id="image" />#}
             </div>
             <div class="car-area__info">
               <div class="car-area__item">
@@ -297,7 +300,7 @@
           {{ doc_create_form.end_date }}
 
 {#            <input type="hidden" title="owner" id="id_owner" value="{{ car.pk }}">#}
-          {{ doc_create_form.action }}
+          <input type="hidden" name="action" value="doc_create">
 {#            <label for="doc-copy">Прикрепите документа</label>#}
 {#            <input type="file">#}
             <button type="submit">Отправить</button>

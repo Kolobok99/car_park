@@ -52,6 +52,7 @@
           <div class="main__tables">
             <div class="main__table table">
                 <h1 class="table__table-title">Автомобили</h1>
+                {% if driver.my_cars.all %}
                     <table>
                     <tr class="table__titles">
                       <th class="table__title">Номер</th>
@@ -81,10 +82,14 @@
 
 
                 </table>
+                {% else %}
+                Автомобилей нет
+                {% endif %}
             </div>
 
             <div class="main__table table">
                 <h1 class="table__table-title">Заявки</h1>
+                {% if driver.my_apps.all %}
                 <table>
 
     <!-- ID -->                            <col style="width:1%">
@@ -140,6 +145,9 @@
                       </tr>
                     {% endfor %}
                 </table>
+                {% else %}
+                Заявок нет!
+                {% endif %}
 
             </div>
 
@@ -152,7 +160,7 @@
 {#                {% else %}#}
 {#                <button class="table__btn-add-doc">Запросить</button>#}
 {#                {% endif %}#}
-
+                {% if driver.my_cards.all %}
                 <table>
 
                     <!-- ID -->                            <col style="width:5%">
@@ -189,12 +197,15 @@
                                         {% endfor %}
                                         <!-- </label> -->
                 </table>
-
+                {% else %}
+                Карт нет
+                {% endif %}
             </div>
 
             <div class="main__table table">
                 <h1 class="table__table-title _doc-title">Документы</h1>
 {#                <button class="table__btn-add-doc">Добавить</button>#}
+            {% if driver.my_docs.all %}
                 <table>
 
                     <!-- ID -->                            <col style="width:5%">
@@ -220,7 +231,9 @@
                                 {% endfor %}
 
                 </table>
-
+            {% else %}
+            документов нет!
+            {% endif %}
                 <br>
                 <br>
 

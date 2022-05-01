@@ -28,22 +28,7 @@ class MyUserChangeForm(UserChangeForm):
 
 class CarForm(forms.ModelForm):
 
-    # registration_number = forms.CharField(
-    #     label='Номер',
-    #     validators=[
-    #         validators.RegexValidator(
-    #             regex='\w{1}\d{3}\w{2}',
-    #             message='Введите номер правильно!'
-    #         )
-    #     ]
-    # )
-    # brand = forms.ModelChoiceField(label='Марка:', queryset=CarBrand.objects.all()
-
-    # region_code = forms.CharField(label='Код региона:')
-
-    last_inspection = forms.DateField(widget=forms.DateInput(format="%m/%d/%Y"))
-
-    # owner = forms.ModelChoiceField(label='Закрепить за:', queryset=Driver.objects.all())
+    # last_inspection = forms.DateField(widget=forms.DateInput(format="%m/%d/%Y"))
 
     class Meta:
         model = Car
@@ -57,11 +42,10 @@ class CarForm(forms.ModelForm):
         }
 
 class CarAddForm(CarForm):
-    action = forms.CharField(widget=forms.HiddenInput(), initial="car_create")
+    ...
 
 class CarUpdateForm(CarForm):
-    ...
-    # action = forms.CharField(widget=forms.HiddenInput(), initial="car_update")
+    action = forms.CharField(widget=forms.HiddenInput(), initial="car_update")
 
 class FuelCardAddForm(forms.ModelForm):
 
