@@ -5,7 +5,7 @@ from .forms import *
 # Register your models here.
 list_of_moderls = [Car, CarBrand, FuelCard,
                    UserDoc, AutoDoc, DocType,
-                   Application, TypeOfAppl]
+                   Application, TypeOfAppl, WhiteListEmail]
 for m in list_of_moderls:
     admin.site.register(m)
 

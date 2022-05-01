@@ -349,3 +349,15 @@ class TypeOfAppl(models.Model):
     class Meta:
         verbose_name = 'Тип заявки'
         verbose_name_plural = 'Типы заявок'
+
+class WhiteListEmail(models.Model):
+    """Чек лист разрешенных для регистрации email'ов"""
+
+    email = models.EmailField(verbose_name='Email')
+
+    def __str__(self):
+        return self.email
+
+    class Meta:
+        verbose_name = 'White List of Emil'
+        verbose_name_plural = 'White List of Emil'

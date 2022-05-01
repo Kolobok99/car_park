@@ -68,6 +68,9 @@ class UserCreateForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         errors = {}
+        email = cleaned_data.get('email')
+        white_emails = [obj.email for obj in WhiteListEmail.objects.all()]
+
         pass1 = cleaned_data.get('password')
         pass2 = cleaned_data.get('password_repeat')
 
@@ -80,6 +83,10 @@ class UserCreateForm(forms.ModelForm):
                 errors[key] = ValidationError(f'{verbose_name} должно начинаться с большой буквы!')
             if re.search(r'[a-zA-Z]|\d', name):
                 errors[key] = ValidationError(f'{verbose_name} может состоять только из Кириллицы!')
+
+        if email not in white_emails:
+            errors['email'] = ValidationError('Ваша почта не указана в списке допустимых. '
+                                              'Обратитесь к администратору')
 
         if pass1 != pass2:
             errors['password'] = ValidationError('Пароли не совпадают!')
