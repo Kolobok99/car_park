@@ -79,6 +79,8 @@
                           <th class="table__title">Владелец</th>
                           <th class="table__title">Избъять</th>
                         </tr>
+                    <form method="post"> {% csrf_token %}
+                    <input type="hidden" name="action" value="owner-none">
                     {% for card in all_cards %}
                         <tr class="table__row">
                           <td class="table__cell">{{ card.pk }}</td>
@@ -88,13 +90,20 @@
                           <td class="table__cell">{{ card.owner.last_name}} {{ card.owner.first_name|first}}.{{ card.owner.patronymic|first}}.</td>
 {#                            {{ card.owner.user.first_name|first}}.{{ card.owner.user.patronymic|first}}.#}
                           <td class="table__cell">
+                            {% if card.owner %}
                             <label class="table__check-label">
-                              <input type="checkbox" class="table__check" name="table__check" id="1">
+                              <input type="checkbox" class="table__check" name="owner_id" value="{{ card.pk }}">
                             </label>
+                             {% else %}
+                              изъята
+                              {% endif %}
                           </td>
                         </tr>
                     {% endfor %}
                     </table>
+                    <br>
+                    <input type="submit" value="Отправить">
+                    </form>
                      {% else %}
                     <p style="text-align: center; font-size: 30px; opacity: 0.8">Не найдено </p>
                 {% endif %}

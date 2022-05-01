@@ -89,9 +89,9 @@ class CarBrand(models.Model):
 class FuelCard(models.Model):
     '''топливаня карта'''
 
-    limit = models.PositiveIntegerField(verbose_name='лимит')
+    limit = models.PositiveIntegerField(verbose_name='лимит', blank=True)
     number = models.CharField(verbose_name='номер', unique=True, max_length=16,
-                              validators=[validators.MinLengthValidator(16)])
+                              validators=[validators.MinLengthValidator(16)], blank=True)
 
     owner = models.ForeignKey('MyUser', on_delete=models.SET_NULL,
                               related_name='my_cards', blank=True, null=True)

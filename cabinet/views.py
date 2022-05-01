@@ -97,6 +97,20 @@ class CardFilterAndCreateView(Context, LoginRequiredMixin, CreateView):
             context['all_cards'] = refact3_filtration_cards(request_GET)
         return context
 
+    def post(self, request, *args, **kwargs):
+        print('post!')
+        # if 'action' in self.request.POST:
+        action = self.request.POST['action']
+        print(action)
+        if action == 'owner-none':
+            none_owner_pk = self.request.POST.getlist('owner_id')
+            print(none_owner_pk)
+            cards = FuelCard.objects.filter(pk__in=none_owner_pk)
+            print(cards)
+            for card in cards:
+                card.owner = None
+                card.save()
+        return HttpResponseRedirect("")
 
 class AplicationsView(Context, LoginRequiredMixin, TemplateView):
     """
@@ -127,10 +141,9 @@ class AppView(LoginRequiredMixin,UpdateView, DeletionMixin):
     template_name = 'app.html'
 
     def get_success_url(self):
-        if self.request.POST['action'] == 'delete-yes':
-            return "/applications"
-        elif self.request.POST['action'] == 'app_update':
-            return ""
+        if self.request.POST['action'] == 'delete-yes': return "/applications"
+        elif self.request.POST['action'] == 'app_update': return ""
+
     def get_context_data(self, **kwargs):
         context = super(AppView, self).get_context_data(**kwargs)
         context['app'] = Application.objects.get(pk=self.kwargs['pk'])
@@ -139,8 +152,7 @@ class AppView(LoginRequiredMixin,UpdateView, DeletionMixin):
     def post(self, request, *args, **kwargs):
         if self.request.POST['action'] == 'delete-yes':
             return self.delete(request, *args, **kwargs)
-        else:
-            return super(AppView, self).post(request, *args, **kwargs)
+        return super(AppView, self).post(request, *args, **kwargs)
 
     def form_valid(self, form):
         if self.request.POST['action'] == 'app_update':
@@ -241,7 +253,7 @@ class CarView(LoginRequiredMixin, UpdateView):
         print("YES_IS_VALID")
         if action_type == 'car_update':
             list_of_fields = ['registration_number', 'brand', 'region_code',
-                              'last_inspection', 'owner']
+                              'last_inspection']
             self.get_object()
             for field in list_of_fields:
                 if form.cleaned_data[field] is None:
