@@ -40,11 +40,11 @@ class Car(models.Model):
 
     def save(self, *args, **kwargs):
         super().save()
-        avatars = os.listdir(f'{settings.MEDIA_ROOT}/cars/{self.registration_number}/avatars/')
-        for avatar in avatars:
-            path_to_delete = f'{settings.MEDIA_ROOT}/cars/{self.registration_number}/avatars/{avatar}'
-            if self.image.path != path_to_delete:
-                os.remove(path_to_delete)
+        # avatars = os.listdir(f'{settings.MEDIA_ROOT}/cars/{self.registration_number}/avatars/')
+        # for avatar in avatars:
+        #     path_to_delete = f'{settings.MEDIA_ROOT}/cars/{self.registration_number}/avatars/{avatar}'
+        #     if self.image.path != path_to_delete:
+        #         os.remove(path_to_delete)
 
         img = Image.open(self.image.path)
 
@@ -174,12 +174,12 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
 
     def save(self):
         super().save()
-        avatars = os.listdir(f'{settings.MEDIA_ROOT}/drivers/{self.email}/avatars')
-        for avatar in avatars:
-            path_to_delete = f'{settings.MEDIA_ROOT}/drivers/{self.email}/avatars/{avatar}'
-            if self.image.path != path_to_delete:
-                os.remove(path_to_delete)
-
+        # avatars = os.listdir(f'{settings.MEDIA_ROOT}/drivers/{self.email}/avatars')
+        # for avatar in avatars:
+        #     path_to_delete = f'{settings.MEDIA_ROOT}/drivers/{self.email}/avatars/{avatar}'
+        #     if self.image.path != path_to_delete:
+        #         os.remove(path_to_delete)
+        #
         img = Image.open(self.image.path)
 
         if img.height > 300 or img.width > 300:
