@@ -22,7 +22,6 @@
               <div class="account-area__info">
                 <input type="hidden" name="action" value="user_update">
                 <div class="account-area__item">
-                   {{ form.errors }}
                   <label for="first_name">Имя:</label>
 {#                  <input#}
 {#                    type="text"#}
@@ -33,6 +32,7 @@
 {#                  />#}
                     {{ form.first_name }}
                 </div>
+                  <span style="color: red">{{ form.first_name.errors}}</span>
 
                 <div class="account-area__item">
                   <label for="last_name">Фамилия:</label>
@@ -45,7 +45,7 @@
 {#                  />#}
                     {{ form.last_name }}
                 </div>
-
+                <span style="color: red">{{ form.last_name.errors}}</span>
 
                 <div class="account-area__item">
                   <label for="patronymic">Отчество:</label>
@@ -58,6 +58,7 @@
 {#                  />#}
                     {{ form.patronymic }}
                 </div>
+                <span style="color: red">{{ form.patronymic.errors}}</span>
 
                 <div class="account-area__item">
                     <label for="phone">Телефон:</label>
@@ -70,6 +71,7 @@
 {#                    />#}
                     {{ form.phone }}
                 </div>
+                <span style="color: red">{{ form.phone.errors}}</span>
 
                 <div class="account-area__item">
                     <label for="email">Email:</label>
@@ -82,6 +84,8 @@
 {#                    />#}
                 {{ form.email }}
                 </div>
+                <span style="color: red">{{ form.email.errors}}</span>
+
                 </div>
                 <button class="account-area__btn-submit" type="submit">Изменить данные</button>
             </div>
@@ -162,15 +166,17 @@
                             {% endif %}
                         </td>
                         <td class="table__cell">
-                             {% if app.status == 'O' %}
-                                  Ожидает рассмотрения
-                             {% elif app.status == 'R' %}
-                                  Рассмотрена
-                             {% elif app.status == 'V' %}
-                                  Выполнена
-                             {% else %}
-                                  Просрочена
-                             {% endif %}
+                        {% if app.status == 'O' %}
+                            <p style="color: #ffac50">Ожидает рассмотрения</p>
+                        {% elif app.status == 'R' %}
+                            <p style="color: #389b4c">Рассмотрена</p>
+                        {% elif app.status == 'V' %}
+                            <p style="color: green">Выполнена</p>
+                        {% elif app.status == 'P' %}
+                            <p style="color: red">Просрочена</p>
+                        {% elif app.status == 'T' %}
+                            <p style="color: orange">Отклонена</p>
+                        {% endif %}
                         </td>
                         <td class="table__cell">{{ app.type }}</td>
                     <td class="table__cell">{{ app.car }}</td>

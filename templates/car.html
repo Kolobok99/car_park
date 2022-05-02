@@ -5,7 +5,7 @@
     {% static 'css/car.css' %}
 {% endblock static_href %}
 
-{% block title %} {{ car.registration_number }} {% endblock title%}
+{% block title %} {{ car.registration_number|slice:'0:1'}}-{{ car.registration_number|slice:'1:4'}}-{{ car.registration_number|slice:'4:6'}} {% endblock title%}
 
 
 {% block main %}
@@ -16,7 +16,9 @@
           {% if user.is_manager %}
             <form method="post" enctype="multipart/form-data">{% csrf_token %}
             <div class="car-area__avatar">
+                {% if car.image %}
                 <img src="{{ car.image.url }}" alt="" />
+                {% endif %}
                     <input type="file" name="image" accept="image/*" id="id_image">
 {#                {{ form.image }}#}
                 {{ form.action }}
@@ -126,15 +128,17 @@
                             {% endif %}
                         </td>
                         <td class="table__cell">
-                             {% if app.status == 'O' %}
-                                  Ожидает рассмотрения
-                             {% elif app.status == 'R' %}
-                                  Рассмотрена
-                             {% elif app.status == 'V' %}
-                                  Выполнена
-                             {% else %}
-                                  Просрочена
-                             {% endif %}
+                        {% if app.status == 'O' %}
+                            <p style="color: #ffac50">Ожидает рассмотрения</p>
+                        {% elif app.status == 'R' %}
+                            <p style="color: #389b4c">Рассмотрена</p>
+                        {% elif app.status == 'V' %}
+                            <p style="color: green">Выполнена</p>
+                        {% elif app.status == 'P' %}
+                            <p style="color: red">Просрочена</p>
+                        {% elif app.status == 'T' %}
+                            <p style="color: orange">Отклонена</p>
+                        {% endif %}
                         </td>
                         <td class="table__cell">{{ app.type }}</td>
                         <td class="table__cell">{{ app.description|truncatechars:10 }}</td>
@@ -206,7 +210,7 @@
           </div>
         </button>
         <h1 class="form-app__title">
-          Заявка на авто {{ car.registration_number }}
+          Заявка на авто {{ car.registration_number|slice:'0:1'}}-{{ car.registration_number|slice:'1:4'}}-{{ car.registration_number|slice:'4:6'}}
         </h1>
           <div class="form-app__timing">
               {{ app_create_form.errors }}
@@ -269,7 +273,7 @@
       </div>
     </form>
 
-      <form method="post"> {% csrf_token %}
+    <form method="post"> {% csrf_token %}
       <div class="form-doc add">
         <button type="reset">
           <div class="bnt-form-doc-reset-add">

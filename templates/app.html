@@ -5,7 +5,7 @@
     {% static 'css/app.css' %}
 {% endblock static_href %}
 
-{% block title %} {{ app.pk }} {% endblock title%}
+{% block title %} заявка № {{ app.pk }}  {% endblock title%}
 
 
 {% block main %}
@@ -34,13 +34,15 @@
                     <div class="info-app__item">
                         <p class="info-app__title">Статус выполнения</p>
                         {% if app.status == 'O' %}
-                            <p>Ожидает рассмотрения</p>
+                            <p style="color: #ffac50">Ожидает рассмотрения</p>
                         {% elif app.status == 'R' %}
-                            <p>Рассмотрена</p>
+                            <p style="color: #389b4c">Рассмотрена</p>
                         {% elif app.status == 'V' %}
-                            <p>Выполнена</p>
-                        {% else %}
-                            <p>Просрочена</p>
+                            <p style="color: green">Выполнена</p>
+                        {% elif app.status == 'P' %}
+                            <p style="color: red">Просрочена</p>
+                        {% elif app.status == 'T' %}
+                            <p style="color: orange">Отклонена</p>
                         {% endif %}
                     </div>
 
@@ -82,11 +84,41 @@
                             {{ app.description }}
                         </p>
                     </div>
-                    <button class="info-app__btn-submit" type="submit">Изменить заявку  </button>
-                    <button class="info-app__btn-delete" type="submit">Удалить заявку  </button>
+                    {% if app.manager_descr %}
+                    <div class="info-app__item">
+                        <p class="info-app__title">Комментарий:</p>
+                        <p class="info-app__description">
+                            {{ app.manager_descr }}
+                        </p>
+                    </div>
+                    {% endif %}
 
+             {% if app.owner == user %}
+                 <div class="info-app__buttons">
+                    <button style="background: #2badf2" class="info-app__btn-submit" type="submit">Изменить заявку  </button>
+                    <button class="info-app__btn-delete" type="submit">Удалить заявку  </button>
                 </div>
 
+             {% elif user.is_manager %}
+                <div class="info-app__buttons">
+                        {% if app.status == 'O' or app.status == 'T' %}
+                            <button class="info-app__btn-confirm">Подтвердить
+                        {% elif app.status == 'R' %}
+                            <button class="info-app__btn-confirm">Изменить<br>Поддтверджение
+                            <button style="background: #ff7a47" class="info-app__btn-refuse">Вернуть на доработку
+                        {% else %}
+                         <button style="background: #ff7a47" class="info-app__btn-refuse">Вернуть на доработку
+                        {% endif %}
+                    </button>
+{#                    {% if app.status == 'T' %}#}
+{#                           <button class="info-app__btn-confirm">Подтвердить                     #}
+{#                    {% else %}#}
+{#                         <button style="background: #ff7a47" class="info-app__btn-refuse">Вернуть на доработку</button>                       #}
+{#                    {% endif %}#}
+                </div>
+             {% endif %}
+
+             </div>
           </div>
 {% else %}
                 <h1 style="
@@ -132,12 +164,7 @@
 
                <label for="new_descr">Опишите суть заявки:</label>
               {{ form.description }}
-
-{#              <input type="hidden" name="car" id="id_car" value="{{ app.car.pk }}">#}
-{#              <input type="hidden" name="owner" id="id_owner" value="{{ app.owner.pk }}">#}
-{#              <input type="hidden" name="status" value="O" id="id_status">#}
               {{ form.action }}
-
             <button type="submit" value="TRueForm">Отправить</button>
           </div>
      </div>
@@ -152,7 +179,45 @@
         <button  type="reset" id="notsubmit">Нет</button>
       </div>
     </form>
+
+    <form method="post">
+     {% csrf_token %}
+      <div class="confirm-refuse">
+        <h1>Отправить на дороботку<br> заявку №{{ application.pk }}</h1>
+        <input type="hidden" name="action" value="refuse-yes">
+        <button type="submit">Да</button>
+        <button  type="reset" id="notsubmit-refuse">Нет</button>
+      </div>
+    </form>
 {% endif %}
+
+{% if user.is_manager %}
+    <form method="post"> {% csrf_token %}
+      <div class="form-app confirm">
+        <button type="reset">
+          <div class="bnt-form-app-reset-confirm">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <line x1="0" x2="100" y1="0" y2="100" />
+              <line x1="0" x2="100" y1="100" y2="0" />
+            </svg>
+          </div>
+        </button>
+        <h1 class="form-app__title">
+          Подтвердить заявку:
+        </h1>
+          <div class="form-app__timing">
+{#              <label for="descr-confirm">Дополнить заявку:</label>#}
+{#              <textarea name="manager_descr" id="manager_descr" cols="10" rows="2"></textarea>#}
+              {{ manager_commit_form }}
+              <input type="hidden" name="action" value="app_confirm">
+          <button type="submit">Отправить</button>
+          </div>
+      </div>
+    </form>
+{% endif %}
+
+
+
     {% endblock forms %}
 
 {% block js_script %}

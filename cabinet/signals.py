@@ -22,15 +22,19 @@ def post_save_myuser(created, **kwargs):
         #создание папки для хранения документов
         os.mkdir(f'{settings.MEDIA_ROOT}/drivers/{instance.email}/docs')
 
-@receiver(pre_save, sender=MyUser)
-def pre_save_myuser(**kwargs):
-    instance = kwargs['instance']
-    old_email = MyUser.objects.get(pk=instance.pk).email
-    if instance.email != old_email:
-        os.renames(
-            f'{settings.MEDIA_ROOT}/drivers/{old_email}',
-            f'{settings.MEDIA_ROOT}/drivers/{instance.email}'
-        )
+# @receiver(pre_save, sender=MyUser)
+# def pre_save_myuser(instance, **kwargs):
+#     if not (instance._state.adding):
+#         old_user = MyUser.objects.get(pk=instance.pk)
+#         old_email = old_user.email
+#
+#         if instance.email != old_email:
+#             os.renames(
+#                 f'{settings.MEDIA_ROOT}/drivers/{old_email}',
+#                 f'{settings.MEDIA_ROOT}/drivers/{instance.email}'
+#             )
+#             instance.image = f'{settings.MEDIA_ROOT}/drivers/{instance.email}/avatars/{os.path.basename(old_user.image.name)}'
+
 
 @receiver(post_save, sender=Car)
 def post_save_cars(created, **kwargs):
@@ -48,13 +52,14 @@ def post_save_cars(created, **kwargs):
         os.mkdir(f'{settings.MEDIA_ROOT}/cars/{instance.registration_number}/docs')
 
 @receiver(pre_save, sender=Car)
-def pre_save_car(**kwargs):
-    instance = kwargs['instance']
-    old_registration_number = Car.objects.get(pk=instance.pk).registration_number
-    if instance.registration_number != old_registration_number:
-        os.renames(
-            f'{settings.MEDIA_ROOT}/cars/{old_registration_number}',
-            f'{settings.MEDIA_ROOT}/cars/{instance.registration_number}'
-        )
-    print(f"{instance.registration_number=}")
-    print(f"{old_registration_number=}")
+def pre_save_car(instance, **kwargs):
+    print(instance._state.adding)
+    if not (instance._state.adding):
+        old_registration_number = Car.objects.get(pk=instance.pk).registration_number
+        if instance.registration_number != old_registration_number:
+            os.renames(
+                f'{settings.MEDIA_ROOT}/cars/{old_registration_number}',
+                f'{settings.MEDIA_ROOT}/cars/{instance.registration_number}'
+            )
+        print(f"{instance.registration_number=}")
+        print(f"{old_registration_number=}")

@@ -139,7 +139,7 @@ def refact3_filtration_apps(get_params):
         list_of_Q.append(Q(**{"status__in": status}))
 
     if type_of:
-        list_of_Q.append(Q(**{"type_of__in":type_of}))
+        list_of_Q.append(Q(**{"type__in":type_of}))
 
 
     return active_applications.filter(

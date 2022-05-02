@@ -117,13 +117,15 @@
         flex: 1 1 800px;
 
     }
+    
 
     &__description {
         // width: 70%;
         line-height: 150%;
     }
 
-    &__btn-submit,&__btn-delete  {
+
+    &__btn-submit,&__btn-delete, &__btn-confirm, &__btn-refuse {
         margin-top: 20px;
         padding: 10px;
         color: #f5f5f5;
@@ -133,7 +135,7 @@
         border-radius: 7px;
     }
 
-    &__btn-delete {
+    &__btn-delete,  &__btn-refuse {
         background-color: rgb(221, 29, 29);
     }
 }
@@ -273,7 +275,7 @@
     
 }
 
-.confirm-delete {
+.confirm-delete, .confirm-refuse {
 
     position: absolute;
     left: 40%;
@@ -312,7 +314,7 @@
         background-color: rgb(221, 60, 28);
     }
 
-    button[id="notsubmit"]{
+    button[id*="notsubmit"]{
         background-color: rgb(54, 54, 178);
     }
 }

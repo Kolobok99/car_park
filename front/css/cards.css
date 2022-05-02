@@ -484,6 +484,14 @@ body {
   padding-left: -5px;
 }
 
+.table__confiscate {
+  padding: 7px;
+  font-size: 17px;
+  background-color: rgba(23, 151, 226, 0.514);
+  border-radius: 10px;
+  color: white;
+}
+
 .btn-reset {
   font-weight: 400;
   font-size: 18px;
@@ -608,6 +616,10 @@ body {
   -o-transition: .3s all;
   transition: .3s all;
   pointer-events: none;
+}
+
+.errorlist {
+  color: red;
 }
 
 .footer {

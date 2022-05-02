@@ -439,11 +439,181 @@ body {
   background-color: rgba(23, 151, 226, 0.514);
 }
 
+.table__btn-delete-app {
+  font-size: 15px;
+  color: white;
+  background: #005BFF;
+  padding: 6px;
+  border-radius: 5px;
+}
+
+.table__btn-delete-app:active {
+  background: #134cb6;
+}
+
 .btn-reset {
   font-weight: 400;
   font-size: 18px;
   line-height: 144%;
   color: #005BFF;
+}
+
+.form-app, .form-doc, .form-card {
+  position: absolute;
+  left: 40%;
+  top: 20%;
+  visibility: hidden;
+  min-width: 400px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  row-gap: 20px;
+  border: 1px solid rgba(21, 23, 178, 0);
+  border-radius: 10px;
+  padding: 10px 20px 20px 20px;
+  -webkit-box-shadow: 11px 11px 35px 1px rgba(31, 128, 202, 0.3);
+          box-shadow: 11px 11px 35px 1px rgba(31, 128, 202, 0.3);
+  background: #195ac9;
+  color: white;
+}
+
+.form-app p, .form-doc p, .form-card p {
+  font-size: 20px;
+  margin-bottom: -5px;
+}
+
+.form-app__title, .form-doc__title, .form-card__title {
+  position: relative;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.form-app__title::after, .form-doc__title::after, .form-card__title::after {
+  content: '';
+  background: rgba(49, 157, 224, 0.824);
+  display: block;
+  position: absolute;
+  /* Абсолютное позиционирование */
+  left: 1;
+  /* Положение линии слева */
+  bottom: -10px;
+  /* Положение линии */
+  width: 60%;
+  /* Линия на ширину текста */
+  height: 2px;
+  /* Высота линии */
+}
+
+.form-app__timing, .form-doc__timing, .form-card__timing {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  row-gap: 8px;
+  -webkit-box-flex: 0;
+      -ms-flex: 0 1 30%;
+          flex: 0 1 30%;
+  position: relative;
+}
+
+.form-app__timing input[type="radio"], .form-doc__timing input[type="radio"], .form-card__timing input[type="radio"] {
+  position: absolute;
+  width: auto;
+  right: 220px;
+  z-index: -1;
+  opacity: 0;
+}
+
+.form-app__timing input[type="radio"]:checked + label::before, .form-doc__timing input[type="radio"]:checked + label::before, .form-card__timing input[type="radio"]:checked + label::before {
+  border-color: #0b76ef;
+  background-color: #0b76ef;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
+  background-size: 8px;
+}
+
+.form-app__timing input[type="date"], .form-doc__timing input[type="date"], .form-card__timing input[type="date"] {
+  max-width: 35%;
+}
+
+.form-app__timing label[for*='date'], .form-doc__timing label[for*='date'], .form-card__timing label[for*='date'] {
+  font-size: 18px;
+}
+
+.form-app__timing label[for="new_descr"], .form-doc__timing label[for="new_descr"], .form-card__timing label[for="new_descr"] {
+  font-size: 18px;
+  margin-top: 5px;
+}
+
+.form-app__timing label[for*="rdo"], .form-app__timing label[for*="id_type_"], .form-app__timing label[for*="id_urgency"], .form-doc__timing label[for*="rdo"], .form-doc__timing label[for*="id_type_"], .form-doc__timing label[for*="id_urgency"], .form-card__timing label[for*="rdo"], .form-card__timing label[for*="id_type_"], .form-card__timing label[for*="id_urgency"] {
+  padding-left: 8px;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.form-app__timing label[for*="rdo"]::before, .form-app__timing label[for*="id_type_"]::before, .form-app__timing label[for*="id_urgency"]::before, .form-doc__timing label[for*="rdo"]::before, .form-doc__timing label[for*="id_type_"]::before, .form-doc__timing label[for*="id_urgency"]::before, .form-card__timing label[for*="rdo"]::before, .form-card__timing label[for*="id_type_"]::before, .form-card__timing label[for*="id_urgency"]::before {
+  content: '';
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  -webkit-box-flex: 0;
+      -ms-flex-positive: 0;
+          flex-grow: 0;
+  border: 1px solid #adb5bd;
+  border-radius: 50%;
+  margin-right: 5px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 50% 50%;
+}
+
+.form-app__timing textarea, .form-doc__timing textarea, .form-card__timing textarea {
+  resize: none;
+}
+
+.form-app__timing button, .form-doc__timing button, .form-card__timing button {
+  color: #ffffff;
+  font-size: 20px;
+  padding: 7px;
+  border-radius: 5px;
+  background-color: #2badf2;
+}
+
+.form-app__timing button:active, .form-doc__timing button:active, .form-card__timing button:active {
+  background: rgba(43, 172, 242, 0.758);
+}
+
+.form-app svg, .form-doc svg, .form-card svg {
+  display: block;
+  width: 15px;
+  position: absolute;
+  right: 2%;
+  top: 2%;
+}
+
+.form-app svg line, .form-doc svg line, .form-card svg line {
+  stroke: #000;
+  stroke-width: 8;
+}
+
+.form-app svg:hover line, .form-doc svg:hover line, .form-card svg:hover line {
+  stroke: #503bba;
 }
 
 .footer {

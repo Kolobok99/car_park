@@ -48,7 +48,7 @@
         display: flex;
         flex-direction: column;
 
-        row-gap: 20px;
+        row-gap: 10px;
     }
 
     &__item {
@@ -137,7 +137,7 @@
     &__cell {
     }
 
-    &__btn-add-app, &__btn-delete-app, &__btn-change-app, &__btn-save-balance, &__btn-add-doc {
+    &__btn-add-app, &__btn-delete-app, &__btn-change-app, &__btn-save-balance, &__btn-add-doc, &__btn-delete-app, &__btn-add-card {
         font-size: 15px;
         color: white;
         background: #005BFF;
@@ -153,7 +153,7 @@
 
 
 
-.form-app, .form-doc {
+.form-app, .form-doc, .form-card {
     position: absolute;
     left: 40%;
     top:20%;

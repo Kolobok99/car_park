@@ -1,6 +1,5 @@
 import datetime
 import os
-import shutil
 
 from PIL import Image
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
@@ -16,12 +15,8 @@ class Car(models.Model):
     '''машины водилетей'''
 
     def upload_image(self, *args):
-        path = f"cars/{self.registration_number}/avatars/car_avatar{datetime.datetime.today()}.webp"
+        path = f"cars/{self.registration_number}/avatars/car_avatar"
         return path
-
-    # def upload_image(self, *args):
-    #     path = f"drivers/{self.registration_number}/avatars/user_avatar{datetime.datetime.today()}.webp"
-    #     return path
 
     brand = models.ForeignKey('CarBrand', on_delete=models.SET_NULL,
                               related_name='cars', verbose_name='Марка', null=True, blank=True)
@@ -30,7 +25,7 @@ class Car(models.Model):
             validators.RegexValidator(
                 regex='\w{1}\d{3}\w{2}',
                 message='Введите номер правильно!'
-            )],null=True, blank=True )
+            )],  null=True, blank=True)
     region_code = models.PositiveSmallIntegerField(verbose_name='Код региона',
                                                    validators=[
                                                        validators.MaxValueValidator(200, message='Укажите меньше 200!')]
@@ -41,8 +36,7 @@ class Car(models.Model):
     last_inspection = models.DateField("последний осмотр", null=True, blank=True)
 
     image = models.ImageField('фотография', null=True, blank=True, upload_to=upload_image)
-    # image = models.ImageField(verbose_name='Аватарка',
-    #                           null=True, blank=True, upload_to=upload_image)
+
 
     def save(self, *args, **kwargs):
         super().save()
@@ -93,7 +87,7 @@ class FuelCard(models.Model):
     number = models.CharField(verbose_name='номер', unique=True, max_length=16,
                               validators=[validators.MinLengthValidator(16)], blank=True)
 
-    owner = models.ForeignKey('MyUser', on_delete=models.SET_NULL,
+    owner = models.ForeignKey('MyUser', verbose_name='Владелец', on_delete=models.SET_NULL,
                               related_name='my_cards', blank=True, null=True)
 
     balance = models.PositiveIntegerField(verbose_name='остаток', default=None, null=True, blank=True)
@@ -288,6 +282,7 @@ class Application(models.Model):
         ('R', 'Рассмотрена'),
         ('V', 'Выполнена'),
         ('P', 'Просрочена'),
+        ('T', 'Отклонено')
     )
 
     URGENCY_CHOISES = (
@@ -309,6 +304,7 @@ class Application(models.Model):
     urgency = models.CharField(verbose_name='Cрочность', max_length=1, choices=URGENCY_CHOISES, default='N')
 
     description = models.TextField(verbose_name="Описание")
+    manager_descr = models.TextField(verbose_name="Комментарий менеджера", null=True, blank=True)
 
     def __str__(self):
         return f"{self.owner.last_name} + " \

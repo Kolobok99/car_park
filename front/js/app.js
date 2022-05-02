@@ -28,11 +28,62 @@ document.addEventListener('click', function (event) {
     //кнопка закрытия формы btnReset
     const btnResetAppDelete = document.getElementById('notsubmit');
 
-    if (evenClassName == btnChangeApp.className || btnResetAppChange.contains(event.target)) {
-        formChange.classList.toggle('data-show-or-hide-form');
+
+    //Работа с формой refuse заявки
+
+    //кнопка открытия формы:
+    const btnRefuseApp = this.getElementsByClassName('info-app__btn-refuse')[0];
+
+    //формы изменения заявки:
+    const formRefuse = this.getElementsByClassName('confirm-refuse')[0];
+
+    //кнопка закрытия формы btnReset
+    const btnResetAppRefuse= document.getElementById('notsubmit-refuse');
+
+    //Работа с формой подтверждения заявки
+
+    //кнопка открытия формы:
+    const btnConfirmApp = this.getElementsByClassName('info-app__btn-confirm')[0];
+
+    //формы изменения заявки:
+    const formConfirm = this.getElementsByClassName('form-app confirm')[0];
+
+    //кнопка закрытия формы btnReset
+    const btnResetAppConfirm = document.getElementsByClassName('bnt-form-app-reset-confirm')[0];
+
+    try {
+        if (evenClassName == btnConfirmApp.className || btnResetAppConfirm.contains(event.target)) {
+        formConfirm.classList.toggle('data-show-or-hide-form');
         wrapper.classList.toggle('blackout');
-    } else if (evenClassName == btnDeleteApp.className || btnResetAppDelete.contains(event.target)) {
-        formDelete.classList.toggle('data-show-or-hide-form');  
+    } else if (evenClassName == btnRefuseApp.className || btnResetAppRefuse.contains(event.target)) {
+        formRefuse.classList.toggle('data-show-or-hide-form');
         wrapper.classList.toggle('blackout');
     }
+    } catch {
+        if (evenClassName == btnChangeApp.className || btnResetAppChange.contains(event.target)) {
+        formChange.classList.toggle('data-show-or-hide-form');
+        wrapper.classList.toggle('blackout');
+    }
+    else if (evenClassName == btnDeleteApp.className || btnResetAppDelete.contains(event.target)) {
+        formDelete.classList.toggle('data-show-or-hide-form');
+        wrapper.classList.toggle('blackout');
+    }
+    }
+
+
+    // if (evenClassName == btnConfirmApp.className || btnResetAppConfirm.contains(event.target)) {
+    //     formConfirm.classList.toggle('data-show-or-hide-form');
+    //     wrapper.classList.toggle('blackout');
+    // } else if (evenClassName == btnRefuseApp.className || btnResetAppRefuse.contains(event.target)) {
+    //     formRefuse.classList.toggle('data-show-or-hide-form');
+    //     wrapper.classList.toggle('blackout');
+    // }
+    //  if (evenClassName == btnChangeApp.className || btnResetAppChange.contains(event.target)) {
+    //     formChange.classList.toggle('data-show-or-hide-form');
+    //     wrapper.classList.toggle('blackout');
+    // }
+    // else if (evenClassName == btnDeleteApp.className || btnResetAppDelete.contains(event.target)) {
+    //     formDelete.classList.toggle('data-show-or-hide-form');
+    //     wrapper.classList.toggle('blackout');
+    // }
 });

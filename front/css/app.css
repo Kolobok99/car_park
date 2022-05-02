@@ -245,7 +245,7 @@ body {
   line-height: 150%;
 }
 
-.info-app__btn-submit, .info-app__btn-delete {
+.info-app__btn-submit, .info-app__btn-delete, .info-app__btn-confirm, .info-app__btn-refuse {
   margin-top: 20px;
   padding: 10px;
   color: #f5f5f5;
@@ -255,7 +255,7 @@ body {
   border-radius: 7px;
 }
 
-.info-app__btn-delete {
+.info-app__btn-delete, .info-app__btn-refuse {
   background-color: #dd1d1d;
 }
 
@@ -417,7 +417,7 @@ body {
   stroke: #503bba;
 }
 
-.confirm-delete {
+.confirm-delete, .confirm-refuse {
   position: absolute;
   left: 40%;
   top: 20%;
@@ -433,7 +433,7 @@ body {
   background-color: #657ff2;
 }
 
-.confirm-delete button {
+.confirm-delete button, .confirm-refuse button {
   margin-top: 10px;
   font-size: 20px;
   padding: 10px;
@@ -441,11 +441,11 @@ body {
   color: whitesmoke;
 }
 
-.confirm-delete button[type="submit"] {
+.confirm-delete button[type="submit"], .confirm-refuse button[type="submit"] {
   background-color: #dd3c1c;
 }
 
-.confirm-delete button[id="notsubmit"] {
+.confirm-delete button[id*="notsubmit"], .confirm-refuse button[id*="notsubmit"] {
   background-color: #3636b2;
 }
 

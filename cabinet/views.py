@@ -36,6 +36,22 @@ class CarsCreateAndFilterView(Context, LoginRequiredMixin, CreateView):
             context['cars'] = refact3_filtration_car(reguest_GET)
         return context
 
+    def post(self, request, *args, **kwargs):
+        print('post!')
+        action = self.request.POST['action']
+        print(action)
+        if action == 'owner-none':
+            none_owner_pk = self.request.POST.getlist('owner_id')
+            print(none_owner_pk)
+            cars = Car.objects.filter(pk__in=none_owner_pk)
+            print(cars)
+            for car in cars:
+                car.owner = None
+                car.save()
+        else:
+            return super(CarsCreateAndFilterView, self).post(request, *args, **kwargs)
+        return HttpResponseRedirect("")
+
 class DriversFilterView(Context, LoginRequiredMixin, TemplateView):
     """
     Выводит список водителей
@@ -99,8 +115,7 @@ class CardFilterAndCreateView(Context, LoginRequiredMixin, CreateView):
 
     def post(self, request, *args, **kwargs):
         print('post!')
-        # if 'action' in self.request.POST:
-        action = self.request.POST['action']
+        action = self.request.POST.get('action')
         print(action)
         if action == 'owner-none':
             none_owner_pk = self.request.POST.getlist('owner_id')
@@ -110,6 +125,9 @@ class CardFilterAndCreateView(Context, LoginRequiredMixin, CreateView):
             for card in cards:
                 card.owner = None
                 card.save()
+        else:
+            print('111')
+            return super(CardFilterAndCreateView, self).post(request, *args, **kwargs)
         return HttpResponseRedirect("")
 
 class AplicationsView(Context, LoginRequiredMixin, TemplateView):
@@ -147,17 +165,25 @@ class AppView(LoginRequiredMixin,UpdateView, DeletionMixin):
     def get_context_data(self, **kwargs):
         context = super(AppView, self).get_context_data(**kwargs)
         context['app'] = Application.objects.get(pk=self.kwargs['pk'])
+        context['manager_commit_form'] = ManagerCommitAppForm(instance=Application.objects.get(pk=self.kwargs['pk']))
         return context
 
     def post(self, request, *args, **kwargs):
-        if self.request.POST['action'] == 'delete-yes':
+        action = self.request.POST['action']
+        if action == 'delete-yes':
             return self.delete(request, *args, **kwargs)
+        if action == 'refuse-yes':
+            instanse = Application.objects.get(pk=self.kwargs['pk'])
+            instanse.status = 'T'
+            instanse.save()
+        if action == 'app_confirm':
+                form = ManagerCommitAppForm(self.request.POST, instance=Application.objects.get(pk=self.kwargs['pk']))
+                form.instance.status = 'R'
+                if form.is_valid(): form.save()
+
         return super(AppView, self).post(request, *args, **kwargs)
 
-    def form_valid(self, form):
-        if self.request.POST['action'] == 'app_update':
-            if form.is_valid():
-                return super(AppView, self).form_valid(form)
+
 
 
 class RegistrationView(CreateView):
@@ -195,11 +221,17 @@ class AccountView(LoginRequiredMixin, UpdateView):
             doc_pk_to_delete = "".join([i for i in action_type if i.isdigit()])
             doc_to_delete = UserDoc.objects.get(pk=doc_pk_to_delete)
             doc_to_delete.delete()
+        elif action_type == 'doc_create':
+            form = DriverDocForm(self.request.POST, self.request.FILES)
+            form.instance.owner = MyUser.objects.get(pk=self.request.user.pk)
+            if form.is_valid():
+                form.save()
         else:
-            return super(AccountView, self).post(request, *args, **kwargs)
+            return super().post(request, *args, **kwargs)
         return HttpResponseRedirect("")
 
     def form_valid(self, form):
+        # self.post()
         print(form.fields)
         print("YES_VALID!!!")
         action_type = self.request.POST['action']
@@ -265,6 +297,8 @@ class CarView(LoginRequiredMixin, UpdateView):
             form = AppCreateForm(self.request.POST)
             form.instance.car = Car.objects.get(registration_number=self.kwargs['slug'])
             form.instance.owner = self.request.user
+            if self.request.user.is_manager:
+                form.instance.status = 'R'
         elif action_type == 'doc_create':
             form = AutoDocForm(self.request.POST)
             form.instance.owner = Car.objects.get(registration_number=self.kwargs['slug'])
@@ -284,6 +318,21 @@ class DriverView(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         return MyUser.objects.get(pk=self.kwargs['pk'])
+
+    def get_context_data(self, **kwargs):
+        context = super(DriverView, self).get_context_data(**kwargs)
+        context['free_cards'] = FuelCard.objects.filter(owner__isnull=True)
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        action = request.POST.get('action')
+            # action = request.POST['action']
+        if action == 'add-card':
+            card = FuelCard.objects.get(pk=request.POST.get('card'))
+            card.owner = self.get_object()
+            card.save()
+        return HttpResponseRedirect("")
 
 class NewCarView(UpdateView):
     template_name = "car.html"

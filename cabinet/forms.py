@@ -52,12 +52,17 @@ class FuelCardAddForm(forms.ModelForm):
     class Meta:
         model = FuelCard
         exclude = ('balance', )
+        # error_messages = widgets()
 
 class FuelCardChangeBalance(forms.ModelForm):
 
     class Meta:
         model = FuelCard
         fields = ('balance', )
+# class AddToDriverFuelCard(forms.ModelForm):
+#     class Meta:
+#         model = FuelCard
+#         fields = ('')
 
 class UserCreateForm(forms.ModelForm):
     '''Форма регистрации пользователя'''
@@ -121,22 +126,35 @@ class UserCreateForm(forms.ModelForm):
         }
 
 class UserUpdateForm(forms.ModelForm):
-    #
-    # def __init__(self, *args, **kwargs):
-    #     super(UserUpdateForm, self).__init__(*args, **kwargs)
-    #     self.fields['first_name'].widget = forms.widgets.TextInput(
-    #         attrs={
-    #             "placeholder": self.fields['first_name'].value
-    #         }
-    #     )
 
-    # def clean(self):
-    #     cleaned_data = super().clean()
-    #     list_of_fields = ['first_name', 'last_name', 'patronymic',
-    #                       'phone', 'email']
-    #     for field in list_of_fields:
-    #         if cleaned_data[field] is None:
-    #             setattr(self.instance, field, getattr(self.instance.pk, field))
+    def clean(self):
+        errors = {}
+        cleaned_data = super().clean()
+
+        first_name = cleaned_data.get('first_name')
+        last_name = cleaned_data.get('last_name')
+        patronymic = cleaned_data.get('patronymic')
+
+        def name_validate(name: str, verbose_name, key):
+            if not name[0].isupper():
+                errors[key] = ValidationError(f'{verbose_name} должно начинаться с большой буквы!')
+            if re.search(r'[a-zA-Z]|\d', name):
+                errors[key] = ValidationError(f'{verbose_name} может состоять только из Кириллицы!')
+
+        name_validate(first_name, "'имя'", 'first_name')
+        name_validate(last_name, "'фамилия'", 'last_name')
+        name_validate(patronymic, "'отчество'", 'patronymic')
+
+        if errors:
+            raise ValidationError(errors)
+        return cleaned_data
+
+
+    class Meta:
+        model = MyUser
+        exclude = ('role','is_active', 'is_staff', 'is_superuser', 'password')
+
+class NoneUserUpdateForm(forms.ModelForm):
 
     class Meta:
         model = MyUser
@@ -174,6 +192,13 @@ class AppCreateForm(AppForm):
 
 class AppUpdateForm(AppForm):
     action = forms.CharField(widget=forms.HiddenInput(), initial="app_update")
+
+class ManagerCommitAppForm(forms.ModelForm):
+
+
+    class Meta:
+        model=Application
+        fields = ('manager_descr',)
 
 class AutoDocForm(forms.ModelForm):
 
