@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'django_cleanup',
-
+    'easy_thumbnails',
+    
     'cabinet',
 ]
 
@@ -140,3 +141,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_REDIRECT_URL = reverse_lazy('account')
 
 LOGIN_URL = '/login/'
+
+THUMBNAIL_ALIASES = {
+    '': {
+        'avatar': {'size': (50, 50), 'crop': True},
+    },
+}

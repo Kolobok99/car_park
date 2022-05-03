@@ -159,7 +159,9 @@ class AppView(LoginRequiredMixin,UpdateView, DeletionMixin):
     template_name = 'app.html'
 
     def get_success_url(self):
-        if self.request.POST['action'] == 'delete-yes': return "/applications"
+        if self.request.POST['action'] == 'delete-yes':
+            app = Application.objects.get(pk=self.kwargs['pk'])
+            return reverse('choose-car', args=[app.car.registration_number])
         elif self.request.POST['action'] == 'app_update': return ""
 
     def get_context_data(self, **kwargs):
@@ -255,7 +257,9 @@ class CarView(LoginRequiredMixin, UpdateView):
 
     template_name = 'car.html'
     form_class = CarUpdateForm
-    success_url = ''
+
+    def get_success_url(self):
+        return ""
 
     def get_object(self, queryset=None):
         return Car.objects.get(registration_number=self.kwargs['slug'])
@@ -303,6 +307,7 @@ class CarView(LoginRequiredMixin, UpdateView):
             form = AutoDocForm(self.request.POST)
             form.instance.owner = Car.objects.get(registration_number=self.kwargs['slug'])
         if form.is_valid():
+            form.save()
             return super().form_valid(form)
         return HttpResponseRedirect("")
 
