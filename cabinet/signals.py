@@ -34,11 +34,20 @@ def pre_save_myuser(instance, **kwargs):
                 f'{settings.MEDIA_ROOT}/drivers/{old_email}',
                 f'{settings.MEDIA_ROOT}/drivers/{instance.email}'
             )
+            #Переносим аватарку:
             image = open(f'{settings.MEDIA_ROOT}/drivers/{instance.email}/avatars/{os.path.basename(old_user.image.name)}', 'rb')
             django_image = File(image)
             instance.image = django_image
-            # instance.image = f'{settings.MEDIA_ROOT}/drivers/{instance.email}/avatars/{os.path.basename(old_user.image.name)}'
             os.remove(f'{settings.MEDIA_ROOT}/drivers/{instance.email}/avatars/{os.path.basename(old_user.image.name)}')
+
+            #Переносим документы
+            pathes = [f'{settings.MEDIA_ROOT}/drivers/{instance.email}/docs/{os.path.basename(doc.file.name)}' for doc in old_user.my_docs.all()]
+            files = [open(path, 'rb') for path in pathes]
+            django_files = [File(file) for file in files]
+            for id, obj in enumerate(instance.my_docs.all()):
+                obj.file = django_files[id]
+                obj.save()
+                os.remove(pathes[id])
 
 @receiver(post_save, sender=Car)
 def post_save_cars(created, **kwargs):
