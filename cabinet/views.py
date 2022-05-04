@@ -3,7 +3,9 @@ from itertools import chain
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.views.generic.edit import FormMixin, DeletionMixin, UpdateView
 
@@ -17,7 +19,7 @@ from cabinet.services.filtration import *
 from cabinet.services.services import Context
 
 
-class CarsCreateAndFilterView(Context, LoginRequiredMixin, CreateView):
+class CarsCreateAndFilterView(Context, LoginRequiredMixin, CreateView, SuccessMessageMixin):
     """
     Выводит список автомобилей
     Фильтрует автомобили
@@ -26,6 +28,7 @@ class CarsCreateAndFilterView(Context, LoginRequiredMixin, CreateView):
     template_name = "cars.html"
     success_url = '/cars'
     form_class = CarForm
+    success_message = "Машина добавлена!"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -38,7 +41,7 @@ class CarsCreateAndFilterView(Context, LoginRequiredMixin, CreateView):
 
     def post(self, request, *args, **kwargs):
         print('post!')
-        action = self.request.POST['action']
+        action = self.request.POST.get('action')
         print(action)
         if action == 'owner-none':
             none_owner_pk = self.request.POST.getlist('owner_id')
@@ -51,6 +54,10 @@ class CarsCreateAndFilterView(Context, LoginRequiredMixin, CreateView):
         else:
             return super(CarsCreateAndFilterView, self).post(request, *args, **kwargs)
         return HttpResponseRedirect("")
+    
+    def form_valid(self, form):
+        messages.success(self.request, "Машина добавлена")
+        return super(CarsCreateAndFilterView, self).form_valid(form)
 
 class DriversFilterView(Context, LoginRequiredMixin, TemplateView):
     """
@@ -219,14 +226,17 @@ class AccountView(LoginRequiredMixin, UpdateView):
             card = FuelCard.objects.get(pk=card_id)
             card.balance = self.request.POST['balance']
             card.save()
+            messages.success(self.request, "Баланс карты изменен!")
         elif "doc-" in action_type:
             doc_pk_to_delete = "".join([i for i in action_type if i.isdigit()])
             doc_to_delete = UserDoc.objects.get(pk=doc_pk_to_delete)
             doc_to_delete.delete()
+            messages.error(self.request, "Документ успешно удален!")
         elif action_type == 'doc_create':
             form = DriverDocForm(self.request.POST, self.request.FILES)
             form.instance.owner = MyUser.objects.get(pk=self.request.user.pk)
             if form.is_valid():
+                messages.success(self.request, "Документ успешно добавлен")
                 form.save()
         else:
             return super().post(request, *args, **kwargs)
@@ -245,22 +255,24 @@ class AccountView(LoginRequiredMixin, UpdateView):
             for field in list_of_fields:
                 if form.cleaned_data[field] is None:
                     setattr(form.instance, field, getattr(self.request.user, field))
-        elif action_type == 'doc_create':
-            form = DriverDocForm(self.request.POST, self.request.FILES)
-            form.instance.owner = MyUser.objects.get(pk=self.request.user.pk)
         if form.is_valid():
+            messages.success(self.request, "Данные аккаунта изменены!")
             return super().form_valid(form)
+        # else:
+            # print("error")
+            # messages.error(self.request, "Ошибка ввода!")
         return HttpResponseRedirect("")
+
 
 class CarView(LoginRequiredMixin, UpdateView):
     """Обработка страницы Машины"""
 
     template_name = 'car.html'
     form_class = CarUpdateForm
+    success_url = reverse_lazy('account')
 
-    def get_success_url(self):
-        return ""
-
+    # def get_success_url(self):
+    #     if
     def get_object(self, queryset=None):
         return Car.objects.get(registration_number=self.kwargs['slug'])
 
@@ -304,7 +316,7 @@ class CarView(LoginRequiredMixin, UpdateView):
             if self.request.user.is_manager:
                 form.instance.status = 'R'
         elif action_type == 'doc_create':
-            form = AutoDocForm(self.request.POST)
+            form = AutoDocForm(self.request.POST, self.request.FILES)
             form.instance.owner = Car.objects.get(registration_number=self.kwargs['slug'])
         if form.is_valid():
             form.save()
@@ -358,3 +370,7 @@ import os
 def show_pdf(request):
     filepath = os.path.join('static', 'sample.pdf')
     return FileResponse(open(filepath, 'rb'), content_type='application/pdf')
+
+def example(request):
+    messages.info(request, "Документ удален!")
+    return render(request, 'example.html')

@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
-
+{% load bootstrap5 %}
 {% block static_href %}
     {% static 'css/account.css' %}
+
 {% endblock static_href %}
 
 {% block title %} Личный кабинет {% endblock title%}
@@ -11,7 +12,9 @@
 {% block main %}
       <div class="main">
         <div class="main__container">
+
           <div class="main__account account-area">
+
             <form method="post" enctype="multipart/form-data">{% csrf_token %}
             <div class="account-area__avatar">
               {% if user.image %}
@@ -422,7 +425,9 @@
         <button id="btn-refuse-delete" type="reset">Нет</button>
       </div>
     </form>
+
 {% endblock forms %}
+
 
 {% block js_script %}
 <script src="{% static 'js/account.js' %}"></script>

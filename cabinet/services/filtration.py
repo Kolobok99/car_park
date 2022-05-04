@@ -36,7 +36,7 @@ def refact3_filtration_car(get_params):
         Q_region_code = Q(**{region_code_parameter: region_code})
         list_of_Q.append(Q_region_code)
     if applications:
-        applications_parameter = "applications__type_of_id__in"
+        applications_parameter = "applications__type_id__in"
         Q_applications = Q(**{applications_parameter: applications})
         Q_active_apps = Q(**{"applications__is_active": True})
         list_of_Q.append(Q_applications)

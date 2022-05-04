@@ -66,6 +66,21 @@
 
 {% endblock forms %}
 
+
+{% block messages %}
+{% if messages %}
+    <ul class="messages {{ message.tags }}">
+        {% for message in messages %}
+            <li class="{{ message.tags }}">
+                {{ message|safe }}
+                <a  style="color: white;" href="#" class="close">✖</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+{% endblock messages %}
+
 {% block js_script %}
 
 {% endblock js_script %}

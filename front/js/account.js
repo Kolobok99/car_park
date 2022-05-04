@@ -62,6 +62,12 @@ document.addEventListener('click', function (event) {
     // добавить этот id в value скрытого поля формы подтверждения
     // wrapper blackout и форма подтверждения show
 
+    // Форма сообщения:
+    const message_box = this.getElementsByClassName('messages')[0];
+    // Кнопка закрытия сообщения:
+    const message_close = this.getElementsByClassName('close')[0];
+    console.log(message_box)
+    console.log(message_close)
     if (evenClassName == 'table__btn-delete-app') {
         const buttonDeleteId = event.target.id;
         console.log(buttonDeleteId);
@@ -75,6 +81,10 @@ document.addEventListener('click', function (event) {
         console.log('456');
         formToConfirmDelete.classList.toggle('data-show-or-hide-form');
         wrapper.classList.toggle('blackout');
+    }
+    if (evenClassName == message_close.className){
+        console.log('YES!')
+        message_box.style.display = "none"
     }
     
     

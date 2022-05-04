@@ -467,7 +467,7 @@ body {
   left: 40%;
   top: 20%;
   visibility: hidden;
-  min-width: 400px;
+  width: 400px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -620,6 +620,19 @@ body {
 
 .form-car svg:hover line {
   stroke: #503bba;
+}
+
+.success {
+  z-index: 10;
+  display: block;
+  padding: 30px;
+  border-radius: 7px;
+  font-size: 20px;
+  position: absolute;
+  left: 45%;
+  top: 40%;
+  background-color: #12e15ac9;
+  color: #58773f;
 }
 
 .data-show-or-hide-form {

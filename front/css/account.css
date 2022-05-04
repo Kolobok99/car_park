@@ -496,6 +496,19 @@ body {
   background-color: #3636b2;
 }
 
+.success {
+  z-index: 10;
+  display: block;
+  padding: 30px;
+  border-radius: 7px;
+  font-size: 20px;
+  position: absolute;
+  left: 45%;
+  top: 40%;
+  background-color: #12e15ac9;
+  color: #58773f;
+}
+
 .data-show-or-hide-form {
   -webkit-transition: opacity 400ms ease-in;
   -o-transition: opacity 400ms ease-in;

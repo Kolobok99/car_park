@@ -39,22 +39,23 @@ class Car(models.Model):
 
 
     def save(self, *args, **kwargs):
-        super().save()
         # avatars = os.listdir(f'{settings.MEDIA_ROOT}/cars/{self.registration_number}/avatars/')
         # for avatar in avatars:
         #     path_to_delete = f'{settings.MEDIA_ROOT}/cars/{self.registration_number}/avatars/{avatar}'
         #     if self.image.path != path_to_delete:
         #         os.remove(path_to_delete)
+        super(Car, self).save(**kwargs)
+        try:
+            img = Image.open(self.image.path)
 
-        img = Image.open(self.image.path)
-
-        if img.height > 300 or img.width > 300:
-            output_size = (300, 300)
-            img.thumbnail(output_size)
-            img.save(self.image.path)
-
-        self.registration_number = self.registration_number.upper()
-        super(Car, self).save(*args, **kwargs)
+            if img.height > 300 or img.width > 300:
+                output_size = (300, 300)
+                img.thumbnail(output_size)
+                img.save(self.image.path, 'png')
+        except:
+            pass
+        # self.registration_number = self.registration_number.upper()
+        # super(Car, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
         return f"/cars/{self.registration_number}"
@@ -87,7 +88,7 @@ class FuelCard(models.Model):
     number = models.CharField(verbose_name='номер', unique=True, max_length=16,
                               validators=[validators.MinLengthValidator(16)], blank=True)
 
-    owner = models.ForeignKey('MyUser', verbose_name='Владелец', on_delete=models.SET_NULL,
+    owner = models.OneToOneField('MyUser', verbose_name='Владелец', on_delete=models.SET_NULL,
                               related_name='my_cards', blank=True, null=True)
 
     balance = models.PositiveIntegerField(verbose_name='остаток', default=None, null=True, blank=True)
@@ -185,7 +186,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         if img.height > 300 or img.width > 300:
             output_size = (300, 300)
             img.thumbnail(output_size)
-            img.save(self.image.path)
+            img.save(self.image.path, 'png')
 
     def update_last_login(sender, user, **kwargs):
         pass
@@ -243,10 +244,17 @@ class UserDoc(Document):
 class AutoDoc(Document):
     '''Документа водителя'''
 
+    def upload_file(self, *args):
+        path = f"cars/{self.owner.registration_number}/docs/car_doc_{self.type}_{self.end_date}"
+        return path
+
     type = models.ForeignKey('DocType', on_delete=models.SET_NULL,
                              related_name='auto_docs', null=True, blank=True)
     owner = models.ForeignKey(Car, on_delete=models.CASCADE,
                               related_name='my_docs')
+    file = models.FileField(verbose_name='Копия документа', upload_to=upload_file, null=True, blank=True)
+
+
     def __str__(self):
         return f"{self.type} - {self.owner}"
 

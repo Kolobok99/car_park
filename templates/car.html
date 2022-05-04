@@ -160,11 +160,14 @@
                     <!-- Дата создания -->                 <col style="width:15%">
                     <!-- Дата окнчания -->                 <col style="width:15%">
                     <!-- Дата окнчания -->                 <col style="width:15%">
+                                    <!-- Дата окнчания -->                 <col style="width:15%">
+
 
                                         <tr class="table__titles">
                                           <th class="table__title">Тип документа</th>
                                           <th class="table__title">Дата получения</th>
                                           <th class="table__title">Дата окончания</th>
+                                          <th class="table__title">Копия файла</th>
                                           <th class="table__title">Удалить?</th>
                                         </tr>
                                 {% for doc in car.my_docs.all %}
@@ -172,6 +175,8 @@
                                           <td class="table__cell">{{ doc.type }}</td>
                                           <td class="table__cell">{{ doc.start_date|date:"d-m-Y"}}</td>
                                           <td class="table__cell">{{ doc.end_date|date:"d-m-Y"}}</td>
+                                        <td class="table__cell"><a target="_blank" href="{{ doc.file.url }}"><img width="50px" height="50px" src="{% static '/img/account/file.png' %}" alt="копия файла"></a>
+                                          </td>
                                           <td class="table__cell">
                                               <button class="table__btn-delete-app" id="doc-{{ doc.pk }}" style="background: red">Удалить</button>
                                           </td>
@@ -273,7 +278,7 @@
       </div>
     </form>
 
-    <form method="post"> {% csrf_token %}
+    <form method="post" enctype="multipart/form-data"> {% csrf_token %}
       <div class="form-doc add">
         <button type="reset">
           <div class="bnt-form-doc-reset-add">
@@ -302,11 +307,9 @@
 
           {{ doc_create_form.end_date.label }}:
           {{ doc_create_form.end_date }}
-
-{#            <input type="hidden" title="owner" id="id_owner" value="{{ car.pk }}">#}
+          {{ doc_create_form.file.label }}
+          {{ doc_create_form.file }}
           <input type="hidden" name="action" value="doc_create">
-{#            <label for="doc-copy">Прикрепите документа</label>#}
-{#            <input type="file">#}
             <button type="submit">Отправить</button>
           </div>
       </div>
@@ -323,6 +326,8 @@
       </div>
     </form>
 {% endif %}
+
+
     {% endblock forms %}
 
 

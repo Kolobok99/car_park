@@ -26,22 +26,22 @@ def post_save_myuser(created, **kwargs):
 @receiver(pre_save, sender=MyUser)
 def pre_save_myuser(instance, **kwargs):
     if not (instance._state.adding):
-        old_user = MyUser.objects.get(pk=instance.pk)
-        old_email = old_user.email
-
+        user = MyUser.objects.get(pk=instance.pk)
+        old_email = user.email
         if instance.email != old_email:
             os.renames(
                 f'{settings.MEDIA_ROOT}/drivers/{old_email}',
                 f'{settings.MEDIA_ROOT}/drivers/{instance.email}'
             )
             #Переносим аватарку:
-            image = open(f'{settings.MEDIA_ROOT}/drivers/{instance.email}/avatars/{os.path.basename(old_user.image.name)}', 'rb')
+            avatar_path = f'{settings.MEDIA_ROOT}/drivers/{instance.email}/avatars/{os.path.basename(user.image.name)}'
+            image = open(avatar_path, 'rb')
             django_image = File(image)
             instance.image = django_image
-            os.remove(f'{settings.MEDIA_ROOT}/drivers/{instance.email}/avatars/{os.path.basename(old_user.image.name)}')
+            os.remove(avatar_path)
 
             #Переносим документы
-            pathes = [f'{settings.MEDIA_ROOT}/drivers/{instance.email}/docs/{os.path.basename(doc.file.name)}' for doc in old_user.my_docs.all()]
+            pathes = [f'{settings.MEDIA_ROOT}/drivers/{instance.email}/docs/{os.path.basename(doc.file.name)}' for doc in user.my_docs.all()]
             files = [open(path, 'rb') for path in pathes]
             django_files = [File(file) for file in files]
             for id, obj in enumerate(instance.my_docs.all()):
@@ -66,13 +66,37 @@ def post_save_cars(created, **kwargs):
 
 @receiver(pre_save, sender=Car)
 def pre_save_car(instance, **kwargs):
-    print(instance._state.adding)
-    if not (instance._state.adding):
-        old_registration_number = Car.objects.get(pk=instance.pk).registration_number
+    print(f"asdsada {instance._state.adding=}")
+    instance.registration_number = instance.registration_number.upper()
+    if not instance._state.adding:
+        car = Car.objects.get(pk=instance.pk)
+        old_registration_number = car.registration_number
         if instance.registration_number != old_registration_number:
             os.renames(
                 f'{settings.MEDIA_ROOT}/cars/{old_registration_number}',
                 f'{settings.MEDIA_ROOT}/cars/{instance.registration_number}'
             )
-        print(f"{instance.registration_number=}")
-        print(f"{old_registration_number=}")
+            # Переносим аватарку:
+            avatar_path = f'{settings.MEDIA_ROOT}/cars/{instance.registration_number}/avatars/{os.path.basename(car.image.name)}'
+            image = open(avatar_path, 'rb')
+            django_image = File(image)
+            instance.image = django_image
+            os.remove(avatar_path)
+
+            # Переносим документы
+            pathes = [f'{settings.MEDIA_ROOT}/cars/{instance.registration_number}/docs/{os.path.basename(doc.file.name)}' for doc in car.my_docs.all()]
+            files = [open(path, 'rb') for path in pathes]
+            django_files = [File(file) for file in files]
+            for id, obj in enumerate(instance.my_docs.all()):
+                obj.file = django_files[id]
+                obj.save()
+                os.remove(pathes[id])
+
+            # pathes = [f'{settings.MEDIA_ROOT}/drivers/{instance.email}/docs/{os.path.basename(doc.file.name)}' for doc
+            #           in user.my_docs.all()]
+            # files = [open(path, 'rb') for path in pathes]
+            # django_files = [File(file) for file in files]
+            # for id, obj in enumerate(instance.my_docs.all()):
+            #     obj.file = django_files[id]
+            #     obj.save()
+            #     os.remove(pathes[id])

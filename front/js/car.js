@@ -45,6 +45,11 @@ document.addEventListener('click', function (event) {
     const buttonRefuseDelete = this.getElementById('btn-refuse-delete');
     const actionInputDelete = this.getElementById('action-delete');
 
+
+      // Форма сообщения:
+    const message_box = this.getElementsByClassName('messages')[0];
+    // Кнопка закрытия сообщения:
+    const message_close = this.getElementsByClassName('close')[0];
     // При нажатии на кнопку удаления документа
     // Получить ее id
     // добавить этот id в value скрытого поля формы подтверждения
@@ -64,17 +69,9 @@ document.addEventListener('click', function (event) {
         formToConfirmDelete.classList.toggle('data-show-or-hide-form');
         wrapper.classList.toggle('blackout');
     }
-    
-    console.log(evenClassName);
-    // if (evenClassName == btnChangeApp.className) {
-    //     const eventTargetId = event.target.id;
-    //     const eventTargetOnlyId = eventTargetId.replace(/[^\d]/g, '')
-    //     const titleAppId = this.getElementById('data-title-app-id');
-        
-    //     titleAppId.textContent = parseInt(eventTargetOnlyId);
-        
-    //     // const appChangeHidden = this.getElementById(`app-change-hidden-${eventTargetOnlyId}`);
-    //     // appChangeHidden.value = "";
-    // }
 
+    if (evenClassName == message_close.className){
+        console.log('YES!')
+        message_box.style.display = "none"
+    }
 });

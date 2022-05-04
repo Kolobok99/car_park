@@ -24,7 +24,9 @@ urlpatterns = [
     path('registration/', RegistrationView.as_view(), name='registration'),
     path('', LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', LogoutView.as_view(template_name='login.html', next_page='login'), name='logout'),
-    path('account/', AccountView.as_view(), name='account')
+    path('account/', AccountView.as_view(), name='account'),
+
+    path('example/', example, name='example')
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

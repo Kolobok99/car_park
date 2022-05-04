@@ -336,6 +336,32 @@
 }
         
 
+.success {
+    z-index: 10;
+    display: block;
+    padding: 30px;
+    border-radius: 7px;
+    font-size: 20px;
+    position: absolute;
+    left: 45%;
+    top: 40%;
+    background-color: #12e15ac9;
+    color: rgb(88, 119, 63);
+}
+
+// .error {
+//     display: block;
+//     padding: 30px;
+//     border-radius: 7px;
+//     font-size: 20px;
+//     position: absolute;
+//     left: 45%;
+//     top: 40%;
+//     background-color: #f94f31b9;
+//     color: rgb(88, 119, 63);
+// }
+
+
 .data-show-or-hide-form{
 transition: opacity 400ms ease-in;
 visibility: visible;
@@ -347,3 +373,5 @@ visibility: visible;
     transition: .3s all;
     pointer-events: none;
  }
+
+ 
