@@ -18,18 +18,18 @@ class Car(models.Model):
         path = f"cars/{self.registration_number}/avatars/car_avatar"
         return path
 
-    brand = models.ForeignKey('CarBrand', on_delete=models.SET_NULL,
-                              related_name='cars', verbose_name='Марка', null=True, blank=True)
+    brand = models.ForeignKey('CarBrand', on_delete=models.SET(1),
+                              related_name='cars', verbose_name='Марка')
     registration_number = models.CharField(verbose_name='Регистрационный номер',
                                            unique=True, max_length=6, validators=[
             validators.RegexValidator(
-                regex='\w{1}\d{3}\w{2}',
+                regex='\b\w{1}\d{3}\w{2}\b',
                 message='Введите номер правильно!'
             )],  null=True, blank=True)
     region_code = models.PositiveSmallIntegerField(verbose_name='Код региона',
                                                    validators=[
                                                        validators.MaxValueValidator(200, message='Укажите меньше 200!')]
-                                                   , null=True, blank=True)
+                                                   )
     owner = models.ForeignKey('MyUser', on_delete=models.SET(None),
                               related_name='my_cars', null=True, blank=True)
 
@@ -156,7 +156,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(verbose_name='Имя', max_length=20, null=True, blank=True)
     last_name = models.CharField(verbose_name='Фамилия', max_length=20, null=True, blank=True)
     patronymic = models.CharField(verbose_name='Отчество', max_length=20, null=True, blank=True)
-    phone = models.CharField(verbose_name='номер телефона', null=True, blank=True, max_length=12)
+    phone = models.CharField(verbose_name='номер телефона', null=True, blank=True, max_length=11)
 
     image = models.ImageField(verbose_name='Аватарка',
                               null=True, blank=True, upload_to=upload_image)
@@ -181,12 +181,16 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         #     if self.image.path != path_to_delete:
         #         os.remove(path_to_delete)
         #
-        img = Image.open(self.image.path)
+        try:
+            img = Image.open(self.image.path)
 
-        if img.height > 300 or img.width > 300:
-            output_size = (300, 300)
-            img.thumbnail(output_size)
-            img.save(self.image.path, 'png')
+            if img.height > 300 or img.width > 300:
+                output_size = (300, 300)
+                img.thumbnail(output_size)
+                img.save(self.image.path, 'png')
+        except:
+            pass
+        super(MyUser, self).save()
 
     def update_last_login(sender, user, **kwargs):
         pass

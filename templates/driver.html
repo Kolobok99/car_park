@@ -14,6 +14,7 @@
 {% block main %}
       <div class="main">
         <div class="main__container">
+        {% if user.is_manager %}
           <div class="main__account account-area">
             <div class="account-area__avatar">
               <img src="{% static '/img/account/full-avatar.jpeg' %}" alt="" />
@@ -266,12 +267,20 @@
             </div>
 
           </div>
-
+        {% else %}
+            <h1 style="
+            margin-left: 36%;
+            margin-top: 20%;
+            font-size: 30px;
+            opacity: 0.7;
+                        ">Страница недоступна</h1>
+        {% endif %}
         </div>
-      </div>
+</div>
 {% endblock main %}
 
 {% block forms %}
+    {% if user.is_manager %}
     <form method="post"> {% csrf_token %}
             <div class="form-card add" style="min-width: 200px">
               <button type="reset">
@@ -296,6 +305,7 @@
              </div>
            </div>
           </form>
+    {% endif %}
 {% endblock forms %}
 
 {% block js_script %}

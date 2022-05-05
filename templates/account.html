@@ -392,9 +392,9 @@
           <div class="form-app__timing">
             {{ doc_create_form.errors }}
            {% for radio in doc_create_form.type %}
-               {% if 'a' in radio.choice_label %}
+               {% if 'm' in radio.choice_label %}
                   {{ radio.tag }}
-                  <label for="{{ radio.id_for_label }}">{{ radio.choice_label|cut:"(a)"}}</label>
+                  <label for="{{ radio.id_for_label }}">{{ radio.choice_label|cut:"(m)"}}</label>
                {% endif %}
 {#                   {{ radio.tag }}#}
 {#                  <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>#}

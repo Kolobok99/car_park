@@ -20,8 +20,15 @@ document.addEventListener('click', function (event) {
     if (evenClassName == btnAddDoc.className || btnResetDocAdd.contains(event.target)) {
         formAddDoc.classList.toggle('data-show-or-hide-form');
         wrapper.classList.toggle('blackout');
-    };    
+    }
+      const message_box = this.getElementsByClassName('messages')[0];
+    // Кнопка закрытия сообщения:
+    const message_close = this.getElementsByClassName('close')[0];
 
+      if (evenClassName == message_close.className){
+        console.log('YES!')
+        message_box.style.display = "none"
+    }
     
     // if (evenClassName == 'table__btn-add-app') {
     //     formAdd.classList.toggle('data-show-or-hide-form');

@@ -635,6 +635,19 @@ body {
   color: #58773f;
 }
 
+.error {
+  z-index: 10;
+  display: block;
+  padding: 30px;
+  border-radius: 7px;
+  font-size: 20px;
+  position: absolute;
+  left: 45%;
+  top: 40%;
+  background-color: #e11212c9;
+  color: rgba(6, 2, 2, 0.568);
+}
+
 .data-show-or-hide-form {
   -webkit-transition: opacity 400ms ease-in;
   -o-transition: opacity 400ms ease-in;

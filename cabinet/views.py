@@ -59,6 +59,9 @@ class CarsCreateAndFilterView(Context, LoginRequiredMixin, CreateView, SuccessMe
         messages.success(self.request, "Машина добавлена")
         return super(CarsCreateAndFilterView, self).form_valid(form)
 
+    def form_invalid(self, form):
+        messages.error(self.request, "Ошибка добавления!")
+        return super(CarsCreateAndFilterView, self).form_invalid(form)
 class DriversFilterView(Context, LoginRequiredMixin, TemplateView):
     """
     Выводит список водителей
@@ -200,8 +203,14 @@ class RegistrationView(CreateView):
 
     template_name = 'registration.html'
     form_class = UserCreateForm
-    success_url = reverse_lazy('login')
+    # success_url = reverse_lazy('account')
 
+    def get_success_url(self):
+        return reverse_lazy('login')
+
+    def form_valid(self, form):
+        form.instance.set_password(form.cleaned_data['password'])
+        return super(RegistrationView, self).form_valid(form)
 
 class AccountView(LoginRequiredMixin, UpdateView):
     '''Обработка страницы ЛК'''

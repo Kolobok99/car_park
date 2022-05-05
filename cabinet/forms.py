@@ -88,6 +88,8 @@ class UserCreateForm(forms.ModelForm):
                 errors[key] = ValidationError(f'{verbose_name} должно начинаться с большой буквы!')
             if re.search(r'[a-zA-Z]|\d', name):
                 errors[key] = ValidationError(f'{verbose_name} может состоять только из Кириллицы!')
+            if not name.isalpha():
+                errors[key] = ValidationError(f'{verbose_name} может состоять только из Кириллицы!')
 
         if email not in white_emails:
             errors['email'] = ValidationError('Ваша почта не указана в списке допустимых. '
@@ -104,12 +106,14 @@ class UserCreateForm(forms.ModelForm):
             raise ValidationError(errors)
         return cleaned_data
 
+
     class Meta:
         model = MyUser
         fields = (
             'email',
             'password',
             'password_repeat',
+            'phone',
             'first_name',
             'last_name',
             'patronymic',
@@ -139,6 +143,8 @@ class UserUpdateForm(forms.ModelForm):
             if not name[0].isupper():
                 errors[key] = ValidationError(f'{verbose_name} должно начинаться с большой буквы!')
             if re.search(r'[a-zA-Z]|\d', name):
+                errors[key] = ValidationError(f'{verbose_name} может состоять только из Кириллицы!')
+            if not name.isalpha():
                 errors[key] = ValidationError(f'{verbose_name} может состоять только из Кириллицы!')
 
         name_validate(first_name, "'имя'", 'first_name')
