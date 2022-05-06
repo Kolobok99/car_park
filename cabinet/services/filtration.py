@@ -66,11 +66,11 @@ def refact3_filtration_driver(get_params):
         list_of_Q.append(Q(**{"phone__icontains":phone}))
 
     if card_balance == 200:
-        list_of_Q.append(Q(**{"my_cards__balance__lte": card_balance}))
+        list_of_Q.append(Q(**{"my_card__balance__lt": card_balance}))
     elif card_balance == 500:
-        list_of_Q.append(Q(**{"my_cards__balance__gte": card_balance}))
+        list_of_Q.append(Q(**{"my_card__balance__gte": card_balance}))
     elif card_balance == 1:
-        list_of_Q.append(Q(**{"my_cards__balance__isnull": card_balance}))
+        list_of_Q.append(Q(**{"my_card__balance__isnull": True}))
 
     if applications:
         list_of_Q.append(Q(**{"my_apps__type_id__in": applications}))

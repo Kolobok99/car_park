@@ -622,6 +622,10 @@ body {
   stroke: #503bba;
 }
 
+.errorlist {
+  color: red;
+}
+
 .success {
   z-index: 10;
   display: block;

@@ -34,7 +34,7 @@
                           {% for brand in view.get_car_brands %}
                             <label for="{{ brand.id }}" class="filtr-items__check-label">
                                 <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="brand" value="{{ brand.id }}" id="{{ brand.id }}">
-                                    <label for="{{ brand.id }}" class="filtr-items__check-label">{{ brand.name }}
+                                    <label for="{{ brand.id }}" class="filtr-items__check-label">{{ brand.title }}
                                 </li>
                             </label>
                           {% endfor %}
@@ -95,7 +95,7 @@
 
                 <div class="main__information">
                 {% if cars.count %}
-                    <table class="main__table table">
+                    <table class="main__table table" style="text-align: center">
                         <tr class="table__titles">
                           <th class="table__title">Номер</th>
                           <th class="table__title">Водитель</th>
@@ -115,10 +115,10 @@
                                   {{ car.registration_number|slice:'0:1'}}-{{ car.registration_number|slice:'1:4'}}-{{ car.registration_number|slice:'4:6'}}
                               </a>
                           </td>
-                          <td class="table__cell">{{ car.owner.last_name}} {{ car.owner.first_name|first}}.{{ car.owner.patronymic|first}}.</td>
+                          <td class="table__cell"><a href="{{ car.owner.get_absolute_url }}">{{ car.owner.last_name}} {{ car.owner.first_name|first}}.{{ car.owner.patronymic|first}}.</a></td>
                           <td class="table__cell">{{ car.brand }}</td>
                           <td class="table__cell">{{ car.region_code }}</td>
-                          <td class="table__cell">{{ car.last_inspection}}</td>
+                          <td class="table__cell">{{ car.last_inspection|date:"d-m-Y"}}</td>
                           <td class="table__cell">
                               {% for application in car.applications.all %}
                                 <table>
@@ -126,7 +126,7 @@
                                         <td>
                                             <a href="{% url 'app' application.pk %}">{{ application.type_of }}</a>
                                         </td>
-                                        <td>{{ application.start_date }}</td>
+                                        <td>{{ application.type }}</td>
                                     </tr>
                                 </table>
                                 {% endfor %}
@@ -206,18 +206,20 @@
 {##}
 {#                <label for="car_image"><p>Прикрепить фото:</p></label>#}
 {#                <input type="file" id="car_image">#}
+{#                    {{ form }}#}
 
-                  <p style="color: red">{{ form.errors.registration_number.as_text }}</p>
-                  <label for="{{ form.registration_number.id_for_label }}"><p>{{ form.registration_number.label}}</p></label>
-                    <input type="text"  value="{{ form.registration_number.initial }}" name="{{ form.registration_number.html_name }}" id="{{ form.registration_number.id_for_label }}">
-
+{#                  <p class="errorlist" style="color: red">{{ form.errors.registration_number.as_text }}</p>#}
+                {{ form.registration_number.errors }}
+                <label for="{{ form.registration_number.id_for_label }}"><p>{{ form.registration_number.label}}</p></label>
+{#                    <input type="text"  name="{{ form.registration_number.html_name }}" id="{{ form.registration_number.id_for_label }}">#}
+                    {{ form.registration_number }}
                   <label for=""><p> {{ form.brand.label}} </p></label>
                     {{ form.brand }}
-
-                <p style="color: red">{{ form.errors.region_code.as_text }}</p>
+                 {{ form.region_code.errors }}
+{#                <p class="errorlist" style="color: red">{{ form.errors.region_code.as_text }}</p>#}
                   <label for="{{ form.region_code.id_for_label }}"><p>{{ form.region_code.label}}</p></label>
-                    <input type="text" name="{{ form.region_code.html_name}}"  id="{{ form.region_code.id_for_label }}">
-
+                    <input type="text" name="{{ form.region_code.html_name}}"  id="{{ form.region_code.id_for_label }}" value="{{ form.region_code.value|default:'' }}">
+{#                    {{ form.region_code }}#}
                   <label for="{{ form.last_inspection.id_for_label }}"><p>{{ form.last_inspection.label }}</p></label>
                     <input type="date"  name="{{ form.last_inspection.html_name}}"  id="{{ form.last_inspection.id_for_label }}">
 

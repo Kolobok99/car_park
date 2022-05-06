@@ -199,7 +199,6 @@
 {#                {% endif %}#}
 
                 <table>
-
                     <!-- ID -->                            <col style="width:5%">
                     <!-- Дата создания -->                 <col style="width:15%">
                     <!-- Дата окнчания -->                 <col style="width:15%">
@@ -215,15 +214,15 @@
                                           <th class="table__title">Действия</th>
                                         </tr>
                                         <!-- <label for="1"> -->
-                                        {% for card in user.my_cards.all %}
+                             {% if user.my_card %}
                                         <form method="post"> {% csrf_token %}
                                           <tr class="table__row">
-                                            <td class="table__cell">{{ card.id }}</td>
-                                            <td class="table__cell">{{ card.number|slice:"0:4" }}-{{ card.number|slice:"4:8" }}-{{ card.number|slice:"8:12" }}-{{ card.number|slice:"12:16" }}</td>
-                                            <td class="table__cell">{{ card.limit }} л.</td>
+                                            <td class="table__cell">{{ user.my_card.id }}</td>
+                                            <td class="table__cell">{{  user.my_card.number|slice:"0:4" }}-{{ user.my_card.number|slice:"4:8" }}-{{  user.my_card.number|slice:"8:12" }}-{{ user.my_card.number|slice:"12:16" }}</td>
+                                            <td class="table__cell">{{ user.my_card.limit }} л.</td>
                                             <td class="table__cell">
-                                             <input type="hidden" name="action" value="change_balance_{{ card.pk }}">
-                                            <input class="table__card-balance" type="text" name="balance" value="{{ card.balance }}" placeholder="{{ card.balance }}">л
+                                             <input type="hidden" name="action" value="change_balance_{{ user.my_card.id }}">
+                                            <input class="table__card-balance" type="text" name="balance" value="{{ user.my_card.balance }}" placeholder="{{ user.my_card.balance }}">л
                                             </td>
                                             <td class="table__cell">
                                               <button class="table__btn-save-balance">изменить баланс</button>
@@ -231,8 +230,8 @@
                                         <!-- </label> -->
                                         </tr>
                                         </form>
-                                        {% endfor %}
-                                        <!-- </label> -->
+                            {% endif %}
+                <!-- </label> -->
                 </table>
 
             </div>

@@ -21,7 +21,7 @@
             <form action="{% url 'drivers' %}" method="get">
                 <ul class="main__filtration filtr-items">
                     <li class="filtr-items__item placeholder">
-                        <input type="text" name="last_name" placeholder="ФИО">
+                        <input type="text" name="last_name" placeholder="Фамилия">
                     </li>
                     <li class="filtr-items__item placeholder">
                         <input type="text" name="phone" placeholder="Номер телефона">
@@ -70,14 +70,14 @@
 
                 <div class="main__information">
                 {% if drivers.count %}
-                    <table class="main__table table">
+                    <table class="main__table table" style="text-align: center">
                         <tr class="table__titles">
                           <th class="table__title">ID</th>
                           <th class="table__title">ФИО</th>
                           <th class="table__title">Номер телефона</th>
                           <th class="table__title">Записанные<br>Машины</th>
                           <th class="table__title">Активные <br>заявки</th>
-                          <th class="table__title">Карты</th>
+                          <th class="table__title">Остаток <br>на карте</th>
                           <th class="table__title">Прикрепленные <br>документы</th>
                         </tr>
                         {% for driver in drivers %}
@@ -86,11 +86,13 @@
                           <td class="table__cell"><a href="{{ driver.get_absolute_url }}">{{ driver.pk }}</a></td>
 {#                          {{ driver.last_name}} {{ driver.first_name|first}}.{{ driver.patronymic|first}}.#}
                             <td class="table__cell">
-                          {{ driver.last_name}} {{ driver.first_name|first}}.{{ driver.patronymic|first}}.
+                                <a href="{{ driver.get_absolute_url }}">{{ driver.last_name}} {{ driver.first_name|first}}.{{ driver.patronymic|first}}.</a>
                             </td>
-                          <td class="table__cell">{{ driver.phone}}</td>
+                          <td class="table__cell">{{ driver.phone|first}}-({{ driver.phone|slice:"1:4"}})-{{ driver.phone|slice:"4:7"}}-{{ driver.phone|slice:"7:9"}}-{{ driver.phone|slice:"9:11"}}</td>
                           <td class="table__cell">{% for car in driver.my_cars.all %}
-                                    {{ car.registration_number }}<br>
+                              <p style="margin-bottom: 10px;"><a href="{{ car.get_absolute_url }}">
+                                  {{ car.registration_number|slice:'0:1'}}-{{ car.registration_number|slice:'1:4'}}-{{ car.registration_number|slice:'4:6'}}
+                              </a></p>
                           {% endfor %}
                           </td>
                           <td class="table__cell">
@@ -102,9 +104,11 @@
 
                           </td>
                           <td class="table__cell">
-                              {% for my_card in driver.my_cards.all %}
-                                    {{ my_card.pk }} ({{ my_card.balance }})<br>
-                              {% endfor %}
+                              {% if driver.my_card %}
+                                 {{ driver.my_card.balance }} Л<br>
+                              {% else %}
+                              . . .
+                              {% endif %}
                           </td>
                           <td class="table__cell">
                                  паспорт <br>

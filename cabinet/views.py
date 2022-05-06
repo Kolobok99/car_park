@@ -19,7 +19,7 @@ from cabinet.services.filtration import *
 from cabinet.services.services import Context
 
 
-class CarsCreateAndFilterView(Context, LoginRequiredMixin, CreateView, SuccessMessageMixin):
+class CarsCreateAndFilterView(Context, LoginRequiredMixin, CreateView):
     """
     Выводит список автомобилей
     Фильтрует автомобили
@@ -28,7 +28,7 @@ class CarsCreateAndFilterView(Context, LoginRequiredMixin, CreateView, SuccessMe
     template_name = "cars.html"
     success_url = '/cars'
     form_class = CarForm
-    success_message = "Машина добавлена!"
+    # success_message = "Машина добавлена!"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -59,9 +59,10 @@ class CarsCreateAndFilterView(Context, LoginRequiredMixin, CreateView, SuccessMe
         messages.success(self.request, "Машина добавлена")
         return super(CarsCreateAndFilterView, self).form_valid(form)
 
-    def form_invalid(self, form):
-        messages.error(self.request, "Ошибка добавления!")
-        return super(CarsCreateAndFilterView, self).form_invalid(form)
+    # def form_invalid(self, form):
+    #     messages.error(self.request, "Ошибка добавления!")
+    #     form = CarForm(self.request.POST)
+    #     return super(CarsCreateAndFilterView, self).form_invalid(form)
 class DriversFilterView(Context, LoginRequiredMixin, TemplateView):
     """
     Выводит список водителей
@@ -280,8 +281,6 @@ class CarView(LoginRequiredMixin, UpdateView):
     form_class = CarUpdateForm
     success_url = reverse_lazy('account')
 
-    # def get_success_url(self):
-    #     if
     def get_object(self, queryset=None):
         return Car.objects.get(registration_number=self.kwargs['slug'])
 
@@ -332,6 +331,25 @@ class CarView(LoginRequiredMixin, UpdateView):
             return super().form_valid(form)
         return HttpResponseRedirect("")
 
+    def form_invalid(self, form):
+        action_type = self.request.POST['action']
+        print("YES_IS_IN_valid")
+        if action_type == 'doc_create':
+            form = DriverDocForm(self.request.POST)
+            form.instance.owner = MyUser.objects.get(pk=self.request.user.pk)
+        if action_type == 'app_create':
+            form = AppCreateForm(self.request.POST)
+            form.instance.car = Car.objects.get(registration_number=self.kwargs['slug'])
+            form.instance.owner = self.request.user
+            if self.request.user.is_manager:
+                form.instance.status = 'R'
+        elif action_type == 'doc_create':
+            form = AutoDocForm(self.request.POST, self.request.FILES)
+            form.instance.owner = Car.objects.get(registration_number=self.kwargs['slug'])
+        if form.is_valid():
+            form.save()
+            return super().form_valid(form)
+        return HttpResponseRedirect("")
 
 class DriverView(LoginRequiredMixin, UpdateView):
     """Страница выбранного водителя"""

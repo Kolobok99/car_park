@@ -156,14 +156,14 @@
 
             <div class="main__table table">
                 <h1 class="table__table-title _doc-title">Топливные карты</h1>
-                            <button class="table__btn-add-card">Добавить</button>
+
 
 {#                {% if user.is_manager %}#}
 {#                <button class="table__btn-add-doc">Добавить</button>#}
 {#                {% else %}#}
 {#                <button class="table__btn-add-doc">Запросить</button>#}
 {#                {% endif %}#}
-                {% if driver.my_cards.all %}
+                {% if driver.my_card %}
                 <table>
 
                     <!-- ID -->                            <col style="width:5%">
@@ -179,15 +179,15 @@
                                           <th class="table__title">Остаток</th>
                                         </tr>
                                         <!-- <label for="1"> -->
-                                        {% for card in driver.my_cards.all %}
+{#                                        {% for card in driver.my_cards.all %}#}
 {#                                        <form method="post">#}
 {#                                            {% csrf_token %}#}
                                           <tr class="table__row">
-                                            <td class="table__cell">{{ card.id }}</td>
-                                            <td class="table__cell">{{ card.number|slice:"0:4" }}-{{ card.number|slice:"4:8" }}-{{ card.number|slice:"8:12" }}-{{ card.number|slice:"12:16" }}</td>
-                                            <td class="table__cell">{{ card.limit }} л.</td>
+                                            <td class="table__cell">{{ driver.my_card.id }}</td>
+                                            <td class="table__cell">{{ driver.my_card|slice:"0:4" }}{{ card.number|slice:"4:8" }}{{ card.number|slice:"8:12" }}{{ card.number|slice:"12:16" }}</td>
+                                            <td class="table__cell">{{  driver.my_card.limit }} л.</td>
                                             <td class="table__cell">
-                                                {{ card.balance }} Л.
+                                                {{ driver.my_card.balance }} Л.
 {#                                             <input type="hidden" name="action" value="change_balance_{{ card.pk }}">#}
 {#                                            <input class="table__card-balance" type="text" name="balance" value="{{ card.balance }}" placeholder="{{ card.balance }}">л#}
                                             </td>
@@ -195,11 +195,11 @@
                                         <!-- </label> -->
                                         </tr>
 {#                                        </form>#}
-                                        {% endfor %}
+{#                                        {% endfor %}#}
                                         <!-- </label> -->
                 </table>
                 {% else %}
-                Карт нет
+                <button class="table__btn-add-card">Добавить</button> Карт нет
                 {% endif %}
             </div>
 

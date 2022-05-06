@@ -23,9 +23,9 @@ class Car(models.Model):
     registration_number = models.CharField(verbose_name='Регистрационный номер',
                                            unique=True, max_length=6, validators=[
             validators.RegexValidator(
-                regex='\b\w{1}\d{3}\w{2}\b',
+                regex='[a-zA-Z][0-9]{3}[a-zA-Z]{2}',
                 message='Введите номер правильно!'
-            )],  null=True, blank=True)
+            )], null=True, blank=True)
     region_code = models.PositiveSmallIntegerField(verbose_name='Код региона',
                                                    validators=[
                                                        validators.MaxValueValidator(200, message='Укажите меньше 200!')]
@@ -36,7 +36,6 @@ class Car(models.Model):
     last_inspection = models.DateField("последний осмотр", null=True, blank=True)
 
     image = models.ImageField('фотография', null=True, blank=True, upload_to=upload_image)
-
 
     def save(self, *args, **kwargs):
         # avatars = os.listdir(f'{settings.MEDIA_ROOT}/cars/{self.registration_number}/avatars/')
@@ -89,10 +88,9 @@ class FuelCard(models.Model):
                               validators=[validators.MinLengthValidator(16)], blank=True)
 
     owner = models.OneToOneField('MyUser', verbose_name='Владелец', on_delete=models.SET_NULL,
-                              related_name='my_cards', blank=True, null=True)
+                                 related_name='my_card', blank=True, null=True)
 
     balance = models.PositiveIntegerField(verbose_name='остаток', default=None, null=True, blank=True)
-
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -100,6 +98,8 @@ class FuelCard(models.Model):
             self.balance = self.limit
         super().save(*args, **kwargs)
 
+    def __str__(self):
+        return f"{self.number[0:4]}-{self.number[4:8]}-{self.number[8:12]}-{self.number[12:16]}"
 
     class Meta:
         verbose_name = 'Топливная карта'
@@ -142,6 +142,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         ('d', 'driver'),
     )
     last_login = None
+
     def upload_image(self, *args):
         path = f"drivers/{self.email}/avatars/user_avatar{datetime.datetime.today()}.webp"
         return path
@@ -210,6 +211,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
 
+
 class Document(models.Model):
     '''абстрактная модель документа'''
 
@@ -219,10 +221,8 @@ class Document(models.Model):
     start_date = models.DateField(verbose_name='Дата выдачи')
     end_date = models.DateField(verbose_name='Дата окончания')
 
-
     class Meta:
         abstract = True
-
 
 
 class UserDoc(Document):
@@ -231,6 +231,7 @@ class UserDoc(Document):
     def upload_file(self, *args):
         path = f"drivers/{self.owner.email}/docs/user_doc_{self.type}_{self.end_date}"
         return path
+
     type = models.ForeignKey('DocType', on_delete=models.SET_NULL,
                              related_name='people_docs', null=True, blank=True)
     owner = models.ForeignKey(MyUser, on_delete=models.CASCADE,
@@ -257,7 +258,6 @@ class AutoDoc(Document):
     owner = models.ForeignKey(Car, on_delete=models.CASCADE,
                               related_name='my_docs')
     file = models.FileField(verbose_name='Копия документа', upload_to=upload_file, null=True, blank=True)
-
 
     def __str__(self):
         return f"{self.type} - {self.owner}"
@@ -338,18 +338,16 @@ class Application(models.Model):
             self.end_date = self.start_date + timedelta(days=self.time_to_execute)
         super().save(*args, **kwargs)
 
-
     class Meta:
         verbose_name = 'Заявка'
         verbose_name_plural = 'Заявки'
-
 
 
 class TypeOfAppl(models.Model):
     """Типы заявок"""
 
     title = models.CharField(verbose_name='Наименование', max_length=50)
-    car_is = models.BooleanField(verbose_name='Машина или Сотрудник', default=True)
+    car_is = models.BooleanField(verbose_name='Машина?', default=True)
 
     def __str__(self):
         return self.title
@@ -357,6 +355,7 @@ class TypeOfAppl(models.Model):
     class Meta:
         verbose_name = 'Тип заявки'
         verbose_name_plural = 'Типы заявок'
+
 
 class WhiteListEmail(models.Model):
     """Чек лист разрешенных для регистрации email'ов"""
