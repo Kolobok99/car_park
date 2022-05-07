@@ -232,14 +232,14 @@ class AutoDocForm(forms.ModelForm):
     def clean(self):
         errors = {}
         cleaned_data = super().clean()
-        print(f"{cleaned_data}")
-        print(f"{cleaned_data['start_date']=}")
-        print(f"{cleaned_data['end_date']=}")
+        # print(f"{cleaned_data}")
+        # print(f"{cleaned_data['start_date']=}")
+        # print(f"{cleaned_data['end_date']=}")
         # print(f"{cleaned_data['start_date'] < cleaned_data['end_date']=}")
 
         if cleaned_data['start_date'] > cleaned_data['end_date']:
             errors['end_date'] = ValidationError("Дата окончания меньше start_date!")
-        print(f"{errors=}")
+        # print(f"{errors=}")
         if errors:
 
             raise ValidationError(errors)

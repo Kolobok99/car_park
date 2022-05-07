@@ -3,11 +3,12 @@ from django.contrib import admin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path
 
+from cabinet import car_view
 from cabinet.views import *
 
 urlpatterns = [
     path('cars/', CarsCreateAndFilterView.as_view(), name='cars'),
-    path('cars/<str:slug>', CarView.as_view(), name='choose-car'),
+    path('cars/<str:slug>', car_view.PerfectCarView.as_view(), name='choose-car'),
 
     path('drivers/', DriversFilterView.as_view(), name='drivers'),
     path('drivers/<int:pk>', DriverView.as_view(), name='choose-driver'),
