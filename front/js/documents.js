@@ -15,6 +15,7 @@ document.addEventListener('click', function (event) {
     const block_to_hide_man = this.getElementById("block-to_hide-man");
 
 
+
     // Если нажат чек (авто) -> toogle("sub-item_hidy") к отпуск(m)
 
     // Если нажата возле label
@@ -24,9 +25,6 @@ document.addEventListener('click', function (event) {
     // Если нажат label или check:
         // filtr-items__check-label
         // filtr-items__check
-
-    const filterButton =  this.getElementsByClassName('filtr-items__button')[0];
-    console.log(filterButton)
 
 
     if (input_check_auto.checked) {

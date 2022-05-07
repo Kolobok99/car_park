@@ -156,9 +156,9 @@ def refact3_filtration_documents(model, get_params):
     list_of_Q = []
 
     if start_date != '':
-        list_of_Q.append(Q(**{"date_start__gte": start_date}))
+        list_of_Q.append(Q(**{"start_date__gte": start_date}))
     if end_date != '':
-        list_of_Q.append(Q(**{"date_end__lte": end_date}))
+        list_of_Q.append(Q(**{"end_date__lte": end_date}))
     if doc_type:
         # list_with_type_id = [int(str_id) for str_id in doc_type]
         list_of_Q.append(Q(**{"type__in": doc_type}))

@@ -293,8 +293,7 @@
         </h1>
         <p>Тип:</p>
           <div class="form-app__timing">
-            {{ doc_create_form.errors }}
-           {% for radio in doc_create_form.type %}
+              {% for radio in doc_create_form.type %}
                {% if 'a' in radio.choice_label %}
                   {{ radio.tag }}
                   <label for="{{ radio.id_for_label }}">{{ radio.choice_label|cut:"(a)"}}</label>
@@ -307,6 +306,7 @@
 
           {{ doc_create_form.end_date.label }}:
           {{ doc_create_form.end_date }}
+          {{ doc_create_form.errors }}
           {{ doc_create_form.file.label }}
           {{ doc_create_form.file }}
           <input type="hidden" name="action" value="doc_create">

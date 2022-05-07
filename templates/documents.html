@@ -15,7 +15,9 @@
             {% if user.is_manager %}
                 <div class="main__title">
                     <h1>Документы</h1>
-                    <p>{{ all_docs|length}}</p>
+                    <p>
+                        {{ all_docs|length }}
+                    </p>
                 </div>
             <form action="{% url 'documents' %}" method="get">
                 <ul class="main__filtration filtr-items">
@@ -49,7 +51,7 @@
                                 {% for car_type_of_docs in view.get_car_types_of_docs %}
                                     <label for="{{ car_type_of_docs.id }}" class="filtr-items__check-label">
                                         <li class="filtr-items__sub-item"><input class="filtr-items__check" value="{{ car_type_of_docs.id }}" type="checkbox" name="doc_type" id="{{ car_type_of_docs.id }}">
-                                            <label for="{{ car_type_of_docs.id }}" class="filtr-items__check-label">{{ car_type_of_docs.name }}</label>
+                                            <label for="{{ car_type_of_docs.id }}" class="filtr-items__check-label">{{ car_type_of_docs.title }}</label>
                                         </li>
                                     </label>
                                {% endfor %}
@@ -65,7 +67,7 @@
                                 {% for man_type_of_docs in view.get_man_types_of_docs %}
                                     <label for="{{ man_type_of_docs.id }}" class="filtr-items__check-label">
                                         <li class="filtr-items__sub-item"><input class="filtr-items__check"  value="{{ man_type_of_docs.id }}" type="checkbox" name="doc_type" id="{{ man_type_of_docs.id }}">
-                                            <label for="{{ man_type_of_docs.id }}" class="filtr-items__check-label">{{ man_type_of_docs.name }}</label>
+                                            <label for="{{ man_type_of_docs.id }}" class="filtr-items__check-label">{{ man_type_of_docs.title }}</label>
                                         </li>
                                     </label>
                                 {% endfor %}
@@ -84,7 +86,7 @@
             </form>
 
                 <div class="main__information">
-                {% if all_docs.count %}
+                {% if all_docs %}
                     <table class="main__table table">
 
     <!-- ID -->                            <col style="width:5%">
@@ -104,8 +106,8 @@
                     {% for doc in all_docs %}
                         <tr class="table__row">
                           <td class="table__cell">{{ doc.type }}</td>
-                          <td class="table__cell">{{ doc.date_start|date:"d-m-Y"}}</td>
-                          <td class="table__cell">{{ doc.date_end|date:"d-m-Y"}}</td>
+                          <td class="table__cell">{{ doc.start_date|date:"d-m-Y"}}</td>
+                          <td class="table__cell">{{ doc.end_date|date:"d-m-Y"}}</td>
                           <td class="table__cell">
                               {% if doc.type.type == 'm' %}
                                    Водитель

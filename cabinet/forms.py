@@ -49,9 +49,23 @@ class CarUpdateForm(CarForm):
 
 class FuelCardAddForm(forms.ModelForm):
 
+    owner = forms.ModelChoiceField(queryset=MyUser.objects.filter(my_card__isnull=True), required=False)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        errors = {}
+
+        if not cleaned_data['number'].isdigit():
+            errors['number'] = ValidationError('номер карты может состоять только из цифр!')
+        if errors:
+            raise ValidationError(errors)
+        return cleaned_data
+
+
     class Meta:
         model = FuelCard
         exclude = ('balance', )
+
         # error_messages = widgets()
 
 class FuelCardChangeBalance(forms.ModelForm):
@@ -213,6 +227,24 @@ class AutoDocForm(forms.ModelForm):
         self.fields['type'].empty_label = "Не выбран"
 
     action = forms.CharField(widget=forms.widgets.HiddenInput(), initial="doc_create")
+
+
+    def clean(self):
+        errors = {}
+        cleaned_data = super().clean()
+        print(f"{cleaned_data}")
+        print(f"{cleaned_data['start_date']=}")
+        print(f"{cleaned_data['end_date']=}")
+        # print(f"{cleaned_data['start_date'] < cleaned_data['end_date']=}")
+
+        if cleaned_data['start_date'] > cleaned_data['end_date']:
+            errors['end_date'] = ValidationError("Дата окончания меньше start_date!")
+        print(f"{errors=}")
+        if errors:
+
+            raise ValidationError(errors)
+        return cleaned_data
+
     class Meta:
         model = AutoDoc
         # fields = '__all__'

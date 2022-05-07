@@ -157,7 +157,10 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(verbose_name='Имя', max_length=20, null=True, blank=True)
     last_name = models.CharField(verbose_name='Фамилия', max_length=20, null=True, blank=True)
     patronymic = models.CharField(verbose_name='Отчество', max_length=20, null=True, blank=True)
-    phone = models.CharField(verbose_name='номер телефона', null=True, blank=True, max_length=11)
+    phone = models.CharField(verbose_name='номер телефона', null=True, blank=True, max_length=11, validators=[
+        validators.RegexValidator("^\d{11}$", "Номер телефона состоит из 11 цифр"),
+
+    ])
 
     image = models.ImageField(verbose_name='Аватарка',
                               null=True, blank=True, upload_to=upload_image)
@@ -319,7 +322,7 @@ class Application(models.Model):
     manager_descr = models.TextField(verbose_name="Комментарий менеджера", null=True, blank=True)
 
     def __str__(self):
-        return f"{self.owner.last_name} + " \
+        return f"{self.pk}-{self.owner.last_name} + " \
                f"{self.start_date} + {self.type} + {self.car.registration_number}"
 
     def get_absolute_url(self):

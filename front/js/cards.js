@@ -8,8 +8,20 @@ document.addEventListener('click', function (event) {
 
     const evenClassName = event.target.className;
 
-    //Работа с формой добавления документов:
-    
+
+    const filterButton =  this.getElementsByClassName('filtr-items__button')[0];
+    const OwnerYES = this.getElementById("auto")
+    const OwnerNO = this.getElementById("man")
+
+    if ( !OwnerYES.checked && !OwnerNO.checked ){
+        filterButton.disabled=true;
+        filterButton.style.opacity=0.5;
+    } else {
+        filterButton.disabled=false;
+        filterButton.style.opacity=1;
+    }
+
+     //Работа с формой добавления документов:
     //кнопка открытия формы:
     const btnAddDoc = this.getElementsByClassName('main__btn-add-card')[0];
     //кнопка закрытия формы btnReset
@@ -18,7 +30,16 @@ document.addEventListener('click', function (event) {
     if (evenClassName == btnAddDoc.className || btnResetDocAdd.contains(event.target)) {
         formAddDoc.classList.toggle('data-show-or-hide-form');
         wrapper.classList.toggle('blackout');
-    };
+    }
+     const message_box = this.getElementsByClassName('messages')[0];
+    // Кнопка закрытия сообщения:
+    const message_close = this.getElementsByClassName('close')[0];
+
+
+     if (evenClassName == message_close.className){
+        console.log('YES!')
+        message_box.style.display = "none"
+    }
 });
 
 const errorList = document.getElementsByClassName("errorlist");

@@ -93,10 +93,10 @@ class DocumentsView(Context, LoginRequiredMixin, TemplateView):
             context['all_docs'] = super().get_all_docs()
         else:
             if len(request_GET.getlist('aorm')) == 2:
-                context['all_docs'] = chain(
+                context['all_docs'] = list(chain(
                     refact3_filtration_documents(model=AutoDoc, get_params=request_GET),
                     refact3_filtration_documents(model=UserDoc, get_params=request_GET)
-                )
+                ))
             elif request_GET.get('aorm') == 'car':
                 context['all_docs'] = refact3_filtration_documents(model=AutoDoc, get_params=request_GET)
             elif request_GET.get('aorm') == 'man':
@@ -140,6 +140,10 @@ class CardFilterAndCreateView(Context, LoginRequiredMixin, CreateView):
             print('111')
             return super(CardFilterAndCreateView, self).post(request, *args, **kwargs)
         return HttpResponseRedirect("")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Карта добавлена!")
+        return super(CardFilterAndCreateView, self).form_valid(form)
 
 class AplicationsView(Context, LoginRequiredMixin, TemplateView):
     """
@@ -268,9 +272,9 @@ class AccountView(LoginRequiredMixin, UpdateView):
         if form.is_valid():
             messages.success(self.request, "Данные аккаунта изменены!")
             return super().form_valid(form)
-        # else:
-            # print("error")
-            # messages.error(self.request, "Ошибка ввода!")
+        else:
+            print("error")
+            messages.error(self.request, "Ошибка ввода!")
         return HttpResponseRedirect("")
 
 
@@ -279,29 +283,51 @@ class CarView(LoginRequiredMixin, UpdateView):
 
     template_name = 'car.html'
     form_class = CarUpdateForm
-    success_url = reverse_lazy('account')
+
+    def get_success_url(self):
+        return self.request.path_info
 
     def get_object(self, queryset=None):
         return Car.objects.get(registration_number=self.kwargs['slug'])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['app_create_form'] = AppCreateForm()
-        context['doc_create_form'] = AutoDocForm()
-
+        action_type = self.request.POST.get('action')
+        if action_type == 'app_create':
+            context['app_create_form'] = AppCreateForm(self.request.POST)
+        else:
+            context['app_create_form'] = AppCreateForm()
+        if action_type == 'doc_create':
+            context['doc_create_form'] = AutoDocForm(self.request.POST)
+        else:
+            context['doc_create_form'] = AutoDocForm()
         return context
 
     def post(self, request, *args, **kwargs):
         print("YES_IS_POST")
         action_type = self.request.POST.get('action')
+        form = None
         print(action_type)
         if "doc-" in action_type:
             doc_pk_to_delete = "".join([i for i in action_type if i.isdigit()])
             doc_to_delete = AutoDoc.objects.get(pk=doc_pk_to_delete)
             doc_to_delete.delete()
+        if action_type == 'app_create':
+            form = AppCreateForm(self.request.POST)
+            form.instance.car = Car.objects.get(registration_number=self.kwargs['slug'])
+            form.instance.owner = self.request.user
+            # print(f"{self.request.user.role=}")
+            if self.request.user.role == 'm':
+                form.instance.status = 'R'
+        elif action_type == 'doc_create':
+            form = AutoDocForm(self.request.POST, self.request.FILES)
+            form.instance.owner = Car.objects.get(registration_number=self.kwargs['slug'])
         else:
             return super().post(request, *args, **kwargs)
 
+        if form.is_valid():
+            print("form-valid!")
+            form.save()
         return HttpResponseRedirect("")
 
     def form_valid(self, form):
@@ -314,42 +340,36 @@ class CarView(LoginRequiredMixin, UpdateView):
             for field in list_of_fields:
                 if form.cleaned_data[field] is None:
                     setattr(form.instance, field, getattr(self.get_object(), field))
-        elif action_type == 'doc_create':
-            form = DriverDocForm(self.request.POST)
-            form.instance.owner = MyUser.objects.get(pk=self.request.user.pk)
-        if action_type == 'app_create':
-            form = AppCreateForm(self.request.POST)
-            form.instance.car = Car.objects.get(registration_number=self.kwargs['slug'])
-            form.instance.owner = self.request.user
-            if self.request.user.is_manager:
-                form.instance.status = 'R'
-        elif action_type == 'doc_create':
-            form = AutoDocForm(self.request.POST, self.request.FILES)
-            form.instance.owner = Car.objects.get(registration_number=self.kwargs['slug'])
-        if form.is_valid():
-            form.save()
-            return super().form_valid(form)
-        return HttpResponseRedirect("")
+            return super(CarView, self).form_valid(form)
+        else:
+            return HttpResponseRedirect("")
+        # elif action_type == 'doc_create':
+        #     form = DriverDocForm(self.request.POST)
+        #     form.instance.owner = MyUser.objects.get(pk=self.request.user.pk)
+        # if action_type == 'app_create':
+        #     form = AppCreateForm(self.request.POST)
+        #     form.instance.car = Car.objects.get(registration_number=self.kwargs['slug'])
+        #     form.instance.owner = self.request.user
+        #     # if self.request.user.is_manager:
+        #     #     form.instance.status = 'R'
+        # elif action_type == 'doc_create':
+        #     form = AutoDocForm(self.request.POST, self.request.FILES)
+        #     form.instance.owner = Car.objects.get(registration_number=self.kwargs['slug'])
+        # if form.is_valid():
+        #     form.save()
+        #     return super().form_valid(form)
+        # return HttpResponseRedirect("")
 
-    def form_invalid(self, form):
-        action_type = self.request.POST['action']
-        print("YES_IS_IN_valid")
-        if action_type == 'doc_create':
-            form = DriverDocForm(self.request.POST)
-            form.instance.owner = MyUser.objects.get(pk=self.request.user.pk)
-        if action_type == 'app_create':
-            form = AppCreateForm(self.request.POST)
-            form.instance.car = Car.objects.get(registration_number=self.kwargs['slug'])
-            form.instance.owner = self.request.user
-            if self.request.user.is_manager:
-                form.instance.status = 'R'
-        elif action_type == 'doc_create':
-            form = AutoDocForm(self.request.POST, self.request.FILES)
-            form.instance.owner = Car.objects.get(registration_number=self.kwargs['slug'])
-        if form.is_valid():
-            form.save()
-            return super().form_valid(form)
-        return HttpResponseRedirect("")
+    # def form_invalid(self, form):
+    #     action_type = self.request.POST['action']
+    #     print("YES_IS_IN_valid")
+    #     if form.is_valid():
+    #         form.save()
+    #     return super().form_invalid(form)
+
+
+class NewCarView(LoginRequiredMixin, UpdateView):
+
 
 class DriverView(LoginRequiredMixin, UpdateView):
     """Страница выбранного водителя"""
