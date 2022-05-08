@@ -259,7 +259,7 @@ class AutoDoc(Document):
     type = models.ForeignKey('DocType', on_delete=models.SET_NULL,
                              related_name='auto_docs', null=True, blank=True)
     owner = models.ForeignKey(Car, on_delete=models.CASCADE,
-                              related_name='my_docs')
+                              related_name='my_docs', default=42)
     file = models.FileField(verbose_name='Копия документа', upload_to=upload_file, null=True, blank=True)
 
     def __str__(self):

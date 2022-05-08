@@ -186,16 +186,20 @@ class NoneUserUpdateForm(forms.ModelForm):
 class AppForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        # self.car = kwargs.pop('car', None)
         super().__init__(*args, **kwargs)
-        self.fields['type'].empty_label = "Не выбран"
 
-    # action = forms.CharField(widget=forms.HiddenInput(), initial="app_create")
-
+    def save(self, **kwargs):
+        self.instance.owner = self.user
+        # self.instance.car = self.car
+        return super(AppForm, self).save()
     class Meta:
         model = Application
         fields = ('type',
                   'urgency',
                   'description',
+                  # 'owner'
                   # 'car',
                   # 'owner',
                   # 'status'
@@ -209,7 +213,7 @@ class AppForm(forms.ModelForm):
 
 class AppCreateForm(AppForm):
     action = forms.CharField(widget=forms.HiddenInput(), initial="app_create")
-
+    owner = forms.MultipleChoiceField(required=False)
 class AppUpdateForm(AppForm):
     action = forms.CharField(widget=forms.HiddenInput(), initial="app_update")
 
@@ -232,14 +236,10 @@ class AutoDocForm(forms.ModelForm):
     def clean(self):
         errors = {}
         cleaned_data = super().clean()
-        # print(f"{cleaned_data}")
-        # print(f"{cleaned_data['start_date']=}")
-        # print(f"{cleaned_data['end_date']=}")
-        # print(f"{cleaned_data['start_date'] < cleaned_data['end_date']=}")
 
         if cleaned_data['start_date'] > cleaned_data['end_date']:
             errors['end_date'] = ValidationError("Дата окончания меньше start_date!")
-        # print(f"{errors=}")
+
         if errors:
 
             raise ValidationError(errors)

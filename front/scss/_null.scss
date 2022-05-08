@@ -53,3 +53,30 @@ input {
   	/* Обнуляем margin */
   	margin: 0;
 }
+
+.success {
+    z-index: 10;
+    display: block;
+    padding: 30px;
+    border-radius: 7px;
+    font-size: 20px;
+    position: absolute;
+    left: 45%;
+    top: 40%;
+    background-color: #12e15ac9;
+    color: rgb(88, 119, 63);
+}
+
+
+.error {
+    z-index: 10;
+    display: block;
+    padding: 30px;
+    border-radius: 7px;
+    font-size: 20px;
+    position: absolute;
+    left: 45%;
+    top: 40%;
+    background-color: #e11212c9;
+    color: rgba(6, 2, 2, 0.568);
+}
