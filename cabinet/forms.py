@@ -30,6 +30,22 @@ class CarForm(forms.ModelForm):
 
     # last_inspection = forms.DateField(widget=forms.DateInput(format="%m/%d/%Y"))
 
+    def __init__(self, *args, **kwargs):
+        self.car = kwargs.pop('car', None)
+        super().__init__(*args, **kwargs)
+
+
+    def save(self, **kwargs):
+        list_of_fields = ['registration_number', 'brand', 'region_code',
+                          'last_inspection']
+        print("cleaned-last: ", self.cleaned_data['last_inspection'])
+        print("self-last: ", self.car.last_inspection)
+        for field in list_of_fields:
+            if self.cleaned_data[field] is None:
+                setattr(self.instance, field, getattr(self.car, field))
+
+        return super(CarForm, self).save(**kwargs)
+
     class Meta:
         model = Car
         fields = ('registration_number', 'brand', 'region_code', 'last_inspection', 'owner', 'image')
@@ -187,12 +203,13 @@ class AppForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
-        # self.car = kwargs.pop('car', None)
+        self.car = kwargs.pop('car', None)
         super().__init__(*args, **kwargs)
 
     def save(self, **kwargs):
         self.instance.owner = self.user
-        # self.instance.car = self.car
+        self.instance.car = self.car
+        if self.user.is_manager(): self.instance.status = 'R'
         return super(AppForm, self).save()
     class Meta:
         model = Application
@@ -227,8 +244,8 @@ class ManagerCommitAppForm(forms.ModelForm):
 class AutoDocForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
+        self.car = kwargs.pop('car', None)
         super().__init__(*args, **kwargs)
-        self.fields['type'].empty_label = "Не выбран"
 
     action = forms.CharField(widget=forms.widgets.HiddenInput(), initial="doc_create")
 
@@ -244,6 +261,10 @@ class AutoDocForm(forms.ModelForm):
 
             raise ValidationError(errors)
         return cleaned_data
+
+    def save(self, **kwargs):
+        self.instance.owner = self.car
+        return super(AutoDocForm, self).save(**kwargs)
 
     class Meta:
         model = AutoDoc
