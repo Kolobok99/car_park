@@ -18,8 +18,45 @@ from cabinet.services.filtration import *
 
 from cabinet.services.services import Context
 
-# 1. рендерядтся form_class,
 
+class CarsCreateAndFilterView(Context, LoginRequiredMixin, CreateView):
+    """
+    Выводит список автомобилей
+    Фильтрует автомобили
+    Добавляет новый автомобиль
+    """
+    template_name = "cars.html"
+    success_url = '/cars'
+    form_class = CarForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        reguest_GET = self.request.GET
+        if len(reguest_GET) == 0:
+            context['cars'] = Car.objects.all()
+        else:
+            context['cars'] = refact3_filtration_car(reguest_GET)
+        return context
+
+    def post(self, request, *args, **kwargs):
+        print('post!')
+        action = self.request.POST.get('action')
+        print(action)
+        if action == 'owner-none':
+            none_owner_pk = self.request.POST.getlist('owner_id')
+            print(none_owner_pk)
+            cars = Car.objects.filter(pk__in=none_owner_pk)
+            print(cars)
+            for car in cars:
+                car.owner = None
+                car.save()
+        else:
+            return super(CarsCreateAndFilterView, self).post(request, *args, **kwargs)
+        return HttpResponseRedirect("")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Машина добавлена")
+        return super(CarsCreateAndFilterView, self).form_valid(form)
 
 
 

@@ -44,7 +44,7 @@ def refact3_filtration_car(get_params):
 
     return Car.objects.filter(
         *list_of_Q
-    )
+    ).distinct()
 
 def refact3_filtration_driver(get_params):
     last_name = get_params.get('last_name')
@@ -78,7 +78,7 @@ def refact3_filtration_driver(get_params):
 
     return drivers.filter(
         *list_of_Q
-    )
+    ).distinct()
 
 def refact3_filtration_cards(get_params):
     print("YES")
@@ -114,7 +114,7 @@ def refact3_filtration_cards(get_params):
 
     return FuelCard.objects.filter(
         *list_of_Q
-    )
+    ).distinct()
 
 def refact3_filtration_apps(get_params):
     start_date = get_params.get('start_date')
@@ -144,7 +144,7 @@ def refact3_filtration_apps(get_params):
 
     return active_applications.filter(
         *list_of_Q
-    )
+    ).distinct()
 
 def refact3_filtration_documents(model, get_params):
 
@@ -165,4 +165,4 @@ def refact3_filtration_documents(model, get_params):
 
     return model.objects.filter(
         *list_of_Q
-    )
+    ).distinct()

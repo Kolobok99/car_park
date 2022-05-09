@@ -7,7 +7,7 @@ from cabinet import car_view
 from cabinet.views import *
 
 urlpatterns = [
-    path('cars/', CarsCreateAndFilterView.as_view(), name='cars'),
+    path('cars/', car_view.CarsCreateAndFilterView.as_view(), name='cars'),
     path('cars/<str:slug>', car_view.PerfectCarView.as_view(), name='choose-car'),
 
     path('drivers/', DriversFilterView.as_view(), name='drivers'),
