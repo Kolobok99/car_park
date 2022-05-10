@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'django_filters',
     'django_cleanup',
     'easy_thumbnails',
-    'bootstrap5',
     
     'cabinet',
 ]

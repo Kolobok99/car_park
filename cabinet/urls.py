@@ -8,24 +8,22 @@ from cabinet.views import *
 
 urlpatterns = [
     path('cars/', car_view.CarsCreateAndFilterView.as_view(), name='cars'),
-    path('cars/<str:slug>', car_view.PerfectCarView.as_view(), name='choose-car'),
+    path('cars/<str:slug>', car_view.CarView.as_view(), name='choose-car'),
 
-    path('drivers/', DriversFilterView.as_view(), name='drivers'),
-    path('drivers/<int:pk>', DriverView.as_view(), name='choose-driver'),
+    path('drivers/', car_view.DriversFilterView.as_view(), name='drivers'),
+    path('drivers/<int:pk>', car_view.DriverView.as_view(), name='choose-driver'),
 
-    path('documents/', DocumentsView.as_view(), name='documents'),
+    path('documents/', car_view.DocumentsView.as_view(), name='documents'),
 
-    path('cards/', CardFilterAndCreateView.as_view(), name='cards'),
+    path('cards/', car_view.CardFilterAndCreateView.as_view(), name='cards'),
 
-    path('applications', AplicationsView.as_view(), name='applications'),
-    path('applications/<int:pk>', AppView.as_view(), name='app'),
+    path('applications', car_view.AplicationsView.as_view(), name='applications'),
+    path('applications/<int:pk>', car_view.AppView.as_view(), name='app'),
 
-    path('doc/<str:path>', show_pdf, name="open_pdf"),
-
-    path('registration/', RegistrationView.as_view(), name='registration'),
+    path('registration/', car_view.RegistrationView.as_view(), name='registration'),
     path('', LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', LogoutView.as_view(template_name='login.html', next_page='login'), name='logout'),
-    path('account/', AccountView.as_view(), name='account'),
+    path('account/', car_view.AccountView.as_view(), name='account'),
 
     path('example/', example, name='example')
 ]

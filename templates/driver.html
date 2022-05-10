@@ -301,6 +301,7 @@
                          <option value="{{ card.pk }}">{{ card.number|slice:"0:4"}} - {{ card.number|slice:"4:8"}} - {{ card.number|slice:"8:12"}} - {{ card.number|slice:"12:16"}}</option>
                     {% endfor %}
                 </select>
+{#                 {{ form }}#}
                 <button type="submit">Отправить</button>
              </div>
            </div>

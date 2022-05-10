@@ -11,6 +11,11 @@ from .models import *
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import MyUser
 
+
+
+
+# -----------------------  ADMIN -----------------------
+
 class MyUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm):
         model = MyUser
@@ -21,10 +26,13 @@ class MyUserCreationForm(UserCreationForm):
                   'phone',
                   'role',
                   )
+
 class MyUserChangeForm(UserChangeForm):
     class Meta:
         model = MyUser
         fields = ('email',)
+
+# -----------------------  CAR -----------------------
 
 class CarForm(forms.ModelForm):
 
@@ -44,7 +52,7 @@ class CarForm(forms.ModelForm):
             if self.cleaned_data[field] is None:
                 setattr(self.instance, field, getattr(self.car, field))
 
-        return super(CarForm, self).save(**kwargs)
+        return super().save(**kwargs)
 
     class Meta:
         model = Car
@@ -63,36 +71,7 @@ class CarAddForm(CarForm):
 class CarUpdateForm(CarForm):
     action = forms.CharField(widget=forms.HiddenInput(), initial="car_update")
 
-class FuelCardAddForm(forms.ModelForm):
-
-    owner = forms.ModelChoiceField(queryset=MyUser.objects.filter(my_card__isnull=True), required=False)
-
-    def clean(self):
-        cleaned_data = super().clean()
-        errors = {}
-
-        if not cleaned_data['number'].isdigit():
-            errors['number'] = ValidationError('номер карты может состоять только из цифр!')
-        if errors:
-            raise ValidationError(errors)
-        return cleaned_data
-
-
-    class Meta:
-        model = FuelCard
-        exclude = ('balance', )
-
-        # error_messages = widgets()
-
-class FuelCardChangeBalance(forms.ModelForm):
-
-    class Meta:
-        model = FuelCard
-        fields = ('balance', )
-# class AddToDriverFuelCard(forms.ModelForm):
-#     class Meta:
-#         model = FuelCard
-#         fields = ('')
+# -----------------------  DRIVER -----------------------
 
 class UserCreateForm(forms.ModelForm):
     '''Форма регистрации пользователя'''
@@ -136,6 +115,10 @@ class UserCreateForm(forms.ModelForm):
             raise ValidationError(errors)
         return cleaned_data
 
+    def save(self, **kwargs):
+        self.instance.set_password(self.cleaned_data['password'])
+        return super().save(**kwargs)
+
 
     class Meta:
         model = MyUser
@@ -161,6 +144,11 @@ class UserCreateForm(forms.ModelForm):
 
 class UserUpdateForm(forms.ModelForm):
 
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super(UserUpdateForm, self).__init__(*args, **kwargs)
+
+
     def clean(self):
         errors = {}
         cleaned_data = super().clean()
@@ -170,12 +158,13 @@ class UserUpdateForm(forms.ModelForm):
         patronymic = cleaned_data.get('patronymic')
 
         def name_validate(name: str, verbose_name, key):
-            if not name[0].isupper():
-                errors[key] = ValidationError(f'{verbose_name} должно начинаться с большой буквы!')
-            if re.search(r'[a-zA-Z]|\d', name):
-                errors[key] = ValidationError(f'{verbose_name} может состоять только из Кириллицы!')
-            if not name.isalpha():
-                errors[key] = ValidationError(f'{verbose_name} может состоять только из Кириллицы!')
+            if name is not None:
+                if not name[0].isupper():
+                    errors[key] = ValidationError(f'{verbose_name} должно начинаться с большой буквы!')
+                if re.search(r'[a-zA-Z]|\d', name):
+                    errors[key] = ValidationError(f'{verbose_name} может состоять только из Кириллицы!')
+                if not name.isalpha():
+                    errors[key] = ValidationError(f'{verbose_name} может состоять только из Кириллицы!')
 
         name_validate(first_name, "'имя'", 'first_name')
         name_validate(last_name, "'фамилия'", 'last_name')
@@ -185,32 +174,50 @@ class UserUpdateForm(forms.ModelForm):
             raise ValidationError(errors)
         return cleaned_data
 
-
+    def save(self, **kwargs):
+        list_of_fields = ['first_name', 'last_name', 'patronymic',
+                          'phone', 'email']
+        for field in list_of_fields:
+            if self.cleaned_data[field] is None:
+                setattr(self.instance, field, getattr(self.user, field))
+        return super().save(**kwargs)
     class Meta:
         model = MyUser
         exclude = ('role','is_active', 'is_staff', 'is_superuser', 'password')
 
-class NoneUserUpdateForm(forms.ModelForm):
+# -----------------------  CARD -----------------------
+
+class FuelCardAddForm(forms.ModelForm):
+
+    owner = forms.ModelChoiceField(queryset=MyUser.objects.filter(my_card__isnull=True), required=False)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        errors = {}
+
+        if not cleaned_data['number'].isdigit():
+            errors['number'] = ValidationError('номер карты может состоять только из цифр!')
+        if errors:
+            raise ValidationError(errors)
+        return cleaned_data
+
 
     class Meta:
-        model = MyUser
-        exclude = ('role','is_active', 'is_staff', 'is_superuser', 'password')
+        model = FuelCard
+        exclude = ('balance', )
 
+        # error_messages = widgets()
 
+class FuelCardChangeBalance(forms.ModelForm):
 
+    class Meta:
+        model = FuelCard
+        fields = ('balance', )
+
+# -----------------------  APP -----------------------
 
 class AppForm(forms.ModelForm):
 
-    def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user', None)
-        self.car = kwargs.pop('car', None)
-        super().__init__(*args, **kwargs)
-
-    def save(self, **kwargs):
-        self.instance.owner = self.user
-        self.instance.car = self.car
-        if self.user.is_manager(): self.instance.status = 'R'
-        return super(AppForm, self).save()
     class Meta:
         model = Application
         fields = ('type',
@@ -230,16 +237,32 @@ class AppForm(forms.ModelForm):
 
 class AppCreateForm(AppForm):
     action = forms.CharField(widget=forms.HiddenInput(), initial="app_create")
-    owner = forms.MultipleChoiceField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        self.car = kwargs.pop('car', None)
+        super().__init__(*args, **kwargs)
+
+    def save(self, **kwargs):
+        self.instance.owner = self.user
+        self.instance.car = self.car
+        if self.user.is_manager(): self.instance.status = 'R'
+        return super(AppForm, self).save()
+
 class AppUpdateForm(AppForm):
     action = forms.CharField(widget=forms.HiddenInput(), initial="app_update")
 
 class ManagerCommitAppForm(forms.ModelForm):
 
+    def save(self, **kwargs):
+        self.instance.status = 'R'
+        return super(ManagerCommitAppForm, self).save(**kwargs)
 
     class Meta:
-        model=Application
+        model = Application
         fields = ('manager_descr',)
+
+# -----------------------  APP -----------------------
 
 class AutoDocForm(forms.ModelForm):
 
@@ -288,9 +311,12 @@ class AutoDocForm(forms.ModelForm):
 class DriverDocForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-        self.fields['type'].empty_label = "Не выбран"
 
+    def save(self, **kwargs):
+        self.instance.owner = self.user
+        return super(DriverDocForm, self).save(**kwargs)
     action = forms.CharField(widget=forms.widgets.HiddenInput())
     class Meta:
         model = UserDoc
@@ -311,3 +337,17 @@ class DriverDocForm(forms.ModelForm):
             )
         }
 
+
+# class DriverAddCard(forms.ModelForm):
+#     '''Добавление карты водителям'''
+#
+#     my_card = forms.ModelChoiceField(label="Выберите карту:", queryset=FuelCard.objects.filter(owner__isnull=True))
+#
+#     def save(self, **kwargs):
+#         print(self.cleaned_data['my_card'])
+#         self.instance.my_card = self.cleaned_data['my_card']
+#         return super(DriverAddCard, self).save(**kwargs)
+#
+#     class Meta:
+#         model = MyUser
+#         fields = ('my_card',)

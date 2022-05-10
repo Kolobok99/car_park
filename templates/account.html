@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load bootstrap5 %}
+
 {% block static_href %}
     {% static 'css/account.css' %}
 
@@ -221,7 +221,7 @@
                                             <td class="table__cell">{{  user.my_card.number|slice:"0:4" }}-{{ user.my_card.number|slice:"4:8" }}-{{  user.my_card.number|slice:"8:12" }}-{{ user.my_card.number|slice:"12:16" }}</td>
                                             <td class="table__cell">{{ user.my_card.limit }} л.</td>
                                             <td class="table__cell">
-                                             <input type="hidden" name="action" value="change_balance_{{ user.my_card.id }}">
+                                             <input type="hidden" name="action" value="change_balance">
                                             <input class="table__card-balance" type="text" name="balance" value="{{ user.my_card.balance }}" placeholder="{{ user.my_card.balance }}">л
                                             </td>
                                             <td class="table__cell">

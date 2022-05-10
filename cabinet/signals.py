@@ -1,8 +1,9 @@
 import os
+import shutil
 
 from django.core.files import File
 from django.dispatch import receiver
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_save, pre_save, pre_delete
 from django.conf import settings
 
 from cabinet.models import MyUser, Car
@@ -48,6 +49,12 @@ def pre_save_myuser(instance, **kwargs):
                 obj.file = django_files[id]
                 obj.save()
                 os.remove(pathes[id])
+
+@receiver(pre_delete, sender=MyUser)
+def pre_delete_car(instance, **kwargs):
+    user_dir = f"{settings.MEDIA_ROOT}/drivers/{instance.email}"
+    shutil.rmtree(user_dir)
+
 
 @receiver(post_save, sender=Car)
 def post_save_cars(created, **kwargs):
@@ -100,3 +107,8 @@ def pre_save_car(instance, **kwargs):
             #     obj.file = django_files[id]
             #     obj.save()
             #     os.remove(pathes[id])
+
+@receiver(pre_delete, sender=Car)
+def pre_delete_car(instance, **kwargs):
+    car_dir = f"{settings.MEDIA_ROOT}/cars/{instance.registration_number}"
+    shutil.rmtree(car_dir)
