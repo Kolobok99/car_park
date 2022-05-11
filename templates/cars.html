@@ -106,6 +106,7 @@
                        <form method="post"> {% csrf_token %}
 
                           <th class="table__title"><button class="table__confiscate" type="submit">Изъять</button></th>
+{#                           <th class="table__title"><button class="table__delete" type="submit">Удалить</button></th>#}
                         </tr>
                     <input type="hidden" name="action" value="owner-none">
                         {% for car in cars %}
@@ -134,13 +135,19 @@
                         <td class="table__cell">
                             {% if car.owner %}
                             <label class="table__check-label">
-                              <input type="checkbox" class="table__check" name="owner_id" value="{{ car.pk }}">
+                              <input type="checkbox" class="table__check" name="owner_refuse_id" value="{{ car.pk }}">
                             </label>
                              {% else %}
                               изъята
                               {% endif %}
-                          </td>
-                        </tr>
+                        </td>
+{#                        <td class="table__cell">#}
+{#                            <label class="table__check-label">#}
+{#                              <input type="checkbox" class="table__check" name="owner_delete_id" value="{{ car.pk }}">#}
+{#                            </label>#}
+{#                        </td>#}
+{##}
+{#                        </tr>#}
 
                         </form>
                          {% endfor %}

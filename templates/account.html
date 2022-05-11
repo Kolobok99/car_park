@@ -389,7 +389,6 @@
         </h1>
         <p>Тип:</p>
           <div class="form-app__timing">
-            {{ doc_create_form.errors }}
            {% for radio in doc_create_form.type %}
                {% if 'm' in radio.choice_label %}
                   {{ radio.tag }}
@@ -400,6 +399,8 @@
            {% endfor %}
           {{ doc_create_form.start_date.label }}:
           {{ doc_create_form.start_date }}
+
+           <span style="color:red"> {{ doc_create_form.start_date.errors }} </span>
 
           {{ doc_create_form.end_date.label }}:
           {{ doc_create_form.end_date }}

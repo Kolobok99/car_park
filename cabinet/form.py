@@ -1,5 +1,4 @@
 import re
-
 from django import forms
 from django.core import validators
 from django.core.exceptions import ValidationError
@@ -10,8 +9,6 @@ from .models import *
 
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import MyUser
-
-
 
 
 # -----------------------  ADMIN -----------------------
@@ -36,24 +33,6 @@ class MyUserChangeForm(UserChangeForm):
 
 class CarForm(forms.ModelForm):
 
-    # last_inspection = forms.DateField(widget=forms.DateInput(format="%m/%d/%Y"))
-
-    def __init__(self, *args, **kwargs):
-        self.car = kwargs.pop('car', None)
-        super().__init__(*args, **kwargs)
-
-
-    def save(self, **kwargs):
-        list_of_fields = ['registration_number', 'brand', 'region_code',
-                          'last_inspection']
-        print("cleaned-last: ", self.cleaned_data['last_inspection'])
-        print("self-last: ", self.car.last_inspection)
-        for field in list_of_fields:
-            if self.cleaned_data[field] is None:
-                setattr(self.instance, field, getattr(self.car, field))
-
-        return super().save(**kwargs)
-
     class Meta:
         model = Car
         fields = ('registration_number', 'brand', 'region_code', 'last_inspection', 'owner', 'image')
@@ -71,6 +50,22 @@ class CarAddForm(CarForm):
 class CarUpdateForm(CarForm):
     action = forms.CharField(widget=forms.HiddenInput(), initial="car_update")
 
+    def __init__(self, *args, **kwargs):
+        self.car = kwargs.pop('car', None)
+        super().__init__(*args, **kwargs)
+
+    def save(self, **kwargs):
+        list_of_fields = ['registration_number', 'brand', 'region_code',
+                          'last_inspection']
+        print("cleaned-last: ", self.cleaned_data['last_inspection'])
+        print("self-last: ", self.car.last_inspection)
+        for field in list_of_fields:
+            if self.cleaned_data[field] is None:
+                setattr(self.instance, field, getattr(self.car, field))
+
+        return super().save(**kwargs)
+
+
 # -----------------------  DRIVER -----------------------
 
 class UserCreateForm(forms.ModelForm):
@@ -78,6 +73,9 @@ class UserCreateForm(forms.ModelForm):
     password_repeat = forms.CharField(label='Повторите пароль',
                                       widget=forms.widgets.PasswordInput()
                                       )
+    def save(self, **kwargs):
+        self.instance.set_password(self.cleaned_data['password'])
+        return super().save(**kwargs)
 
     def clean(self):
         cleaned_data = super().clean()
@@ -88,37 +86,16 @@ class UserCreateForm(forms.ModelForm):
         pass1 = cleaned_data.get('password')
         pass2 = cleaned_data.get('password_repeat')
 
-        first_name = cleaned_data.get('first_name')
-        last_name = cleaned_data.get('last_name')
-        patronymic = cleaned_data.get('patronymic')
-
-        def name_validate(name:str, verbose_name, key):
-            if not name[0].isupper():
-                errors[key] = ValidationError(f'{verbose_name} должно начинаться с большой буквы!')
-            if re.search(r'[a-zA-Z]|\d', name):
-                errors[key] = ValidationError(f'{verbose_name} может состоять только из Кириллицы!')
-            if not name.isalpha():
-                errors[key] = ValidationError(f'{verbose_name} может состоять только из Кириллицы!')
+        if pass1 != pass2:
+            errors['password_repeat'] =  ValidationError('Пароли не совпадают!')
 
         if email not in white_emails:
             errors['email'] = ValidationError('Ваша почта не указана в списке допустимых. '
                                               'Обратитесь к администратору')
-
-        if pass1 != pass2:
-            errors['password'] = ValidationError('Пароли не совпадают!')
-
-        name_validate(first_name, "'имя'", 'first_name')
-        name_validate(last_name, "'фамилия'", 'last_name')
-        name_validate(patronymic, "'отчество'", 'patronymic')
-
         if errors:
-            raise ValidationError(errors)
-        return cleaned_data
-
-    def save(self, **kwargs):
-        self.instance.set_password(self.cleaned_data['password'])
-        return super().save(**kwargs)
-
+            raise errors
+        else:
+            return cleaned_data
 
     class Meta:
         model = MyUser
@@ -130,17 +107,16 @@ class UserCreateForm(forms.ModelForm):
             'first_name',
             'last_name',
             'patronymic',
-
         )
 
         widgets = {
-            'login': forms.widgets.TextInput(),
             'email': forms.widgets.EmailInput(),
             'password': forms.widgets.PasswordInput(),
             'first_name': forms.widgets.TextInput(),
             'last_name': forms.widgets.TextInput(),
             'patronymic': forms.widgets.TextInput(),
         }
+
 
 class UserUpdateForm(forms.ModelForm):
 
@@ -149,31 +125,6 @@ class UserUpdateForm(forms.ModelForm):
         super(UserUpdateForm, self).__init__(*args, **kwargs)
 
 
-    def clean(self):
-        errors = {}
-        cleaned_data = super().clean()
-
-        first_name = cleaned_data.get('first_name')
-        last_name = cleaned_data.get('last_name')
-        patronymic = cleaned_data.get('patronymic')
-
-        def name_validate(name: str, verbose_name, key):
-            if name is not None:
-                if not name[0].isupper():
-                    errors[key] = ValidationError(f'{verbose_name} должно начинаться с большой буквы!')
-                if re.search(r'[a-zA-Z]|\d', name):
-                    errors[key] = ValidationError(f'{verbose_name} может состоять только из Кириллицы!')
-                if not name.isalpha():
-                    errors[key] = ValidationError(f'{verbose_name} может состоять только из Кириллицы!')
-
-        name_validate(first_name, "'имя'", 'first_name')
-        name_validate(last_name, "'фамилия'", 'last_name')
-        name_validate(patronymic, "'отчество'", 'patronymic')
-
-        if errors:
-            raise ValidationError(errors)
-        return cleaned_data
-
     def save(self, **kwargs):
         list_of_fields = ['first_name', 'last_name', 'patronymic',
                           'phone', 'email']
@@ -181,6 +132,7 @@ class UserUpdateForm(forms.ModelForm):
             if self.cleaned_data[field] is None:
                 setattr(self.instance, field, getattr(self.user, field))
         return super().save(**kwargs)
+
     class Meta:
         model = MyUser
         exclude = ('role','is_active', 'is_staff', 'is_superuser', 'password')
@@ -216,6 +168,7 @@ class FuelCardChangeBalance(forms.ModelForm):
 
 # -----------------------  APP -----------------------
 
+
 class AppForm(forms.ModelForm):
 
     class Meta:
@@ -223,15 +176,8 @@ class AppForm(forms.ModelForm):
         fields = ('type',
                   'urgency',
                   'description',
-                  # 'owner'
-                  # 'car',
-                  # 'owner',
-                  # 'status'
                   )
         widgets = {
-            # 'car': forms.widgets.HiddenInput(),
-            # 'owner': forms.widgets.HiddenInput(),
-            # 'status': forms.widgets.HiddenInput(),
             'urgency': forms.widgets.RadioSelect(),
         }
 
@@ -262,7 +208,7 @@ class ManagerCommitAppForm(forms.ModelForm):
         model = Application
         fields = ('manager_descr',)
 
-# -----------------------  APP -----------------------
+# -----------------------  DOC -----------------------
 
 class AutoDocForm(forms.ModelForm):
 
@@ -272,18 +218,6 @@ class AutoDocForm(forms.ModelForm):
 
     action = forms.CharField(widget=forms.widgets.HiddenInput(), initial="doc_create")
 
-
-    def clean(self):
-        errors = {}
-        cleaned_data = super().clean()
-
-        if cleaned_data['start_date'] > cleaned_data['end_date']:
-            errors['end_date'] = ValidationError("Дата окончания меньше start_date!")
-
-        if errors:
-
-            raise ValidationError(errors)
-        return cleaned_data
 
     def save(self, **kwargs):
         self.instance.owner = self.car
@@ -309,6 +243,7 @@ class AutoDocForm(forms.ModelForm):
         }
 
 class DriverDocForm(forms.ModelForm):
+    action = forms.CharField(widget=forms.widgets.HiddenInput())
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
@@ -317,7 +252,8 @@ class DriverDocForm(forms.ModelForm):
     def save(self, **kwargs):
         self.instance.owner = self.user
         return super(DriverDocForm, self).save(**kwargs)
-    action = forms.CharField(widget=forms.widgets.HiddenInput())
+
+
     class Meta:
         model = UserDoc
         # fields = '__all__'
@@ -337,17 +273,3 @@ class DriverDocForm(forms.ModelForm):
             )
         }
 
-
-# class DriverAddCard(forms.ModelForm):
-#     '''Добавление карты водителям'''
-#
-#     my_card = forms.ModelChoiceField(label="Выберите карту:", queryset=FuelCard.objects.filter(owner__isnull=True))
-#
-#     def save(self, **kwargs):
-#         print(self.cleaned_data['my_card'])
-#         self.instance.my_card = self.cleaned_data['my_card']
-#         return super(DriverAddCard, self).save(**kwargs)
-#
-#     class Meta:
-#         model = MyUser
-#         fields = ('my_card',)

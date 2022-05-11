@@ -1,8 +1,10 @@
 import datetime
 import os
+import re
 
 from PIL import Image
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.core import validators
@@ -210,6 +212,31 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     def get_absolute_url(self):
         return f"/drivers/{self.pk}"
 
+    def clean(self):
+        cleaned_data = super().clean()
+        errors = {}
+
+        first_name = self.first_name
+        last_name = self.last_name
+        patronymic = self.patronymic
+
+        def name_validate(name:str, verbose_name, key):
+            if name is not None:
+                if not name[0].isupper():
+                    errors[key] = ValidationError(f'{verbose_name} должно начинаться с большой буквы!')
+                if re.search(r'[a-zA-Z]|\d', name):
+                    errors[key] = ValidationError(f'{verbose_name} может состоять только из Кириллицы!')
+                if not name.isalpha():
+                    errors[key] = ValidationError(f'{verbose_name} может состоять только из Кириллицы!')
+
+        name_validate(first_name, "'имя'", 'first_name')
+        name_validate(last_name, "'фамилия'", 'last_name')
+        name_validate(patronymic, "'отчество'", 'patronymic')
+
+        if errors:
+            raise ValidationError(errors)
+        return cleaned_data
+
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
@@ -223,6 +250,20 @@ class Document(models.Model):
                                   auto_now_add=True)
     start_date = models.DateField(verbose_name='Дата выдачи')
     end_date = models.DateField(verbose_name='Дата окончания')
+
+    def clean(self):
+        errors = {}
+        cleaned_data = super().clean()
+        print(f"{self.start_date=}")
+        print(f"{self.end_date=}")
+        if self.start_date > self.end_date:
+            print("ERROR DATE!")
+            errors['start_date'] = ValidationError("Дата окончания меньше start_date!")
+
+        if errors:
+            print(errors)
+            raise ValidationError(errors)
+        return cleaned_data
 
     class Meta:
         abstract = True
@@ -243,6 +284,20 @@ class UserDoc(Document):
 
     def __str__(self):
         return f"{self.type} - {self.owner}"
+
+    # def clean(self):
+    #     errors = {}
+    #     cleaned_data = super().clean()
+    #     print(f"{self.start_date=}")
+    #     print(f"{self.end_date=}")
+    #     if self.start_date > self.end_date:
+    #         print("ERROR DATE!")
+    #         errors['start_date'] = ValidationError("Дата окончания меньше start_date!")
+    #
+    #     if errors:
+    #         print(errors)
+    #         raise ValidationError(errors)
+    #     return cleaned_data
 
     class Meta:
         verbose_name = 'Водительский документ'

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import *
-from .forms import *
+from .early_forms import *
 # Register your models here.
 list_of_moderls = [Car, CarBrand, FuelCard,
                    UserDoc, AutoDoc, DocType,

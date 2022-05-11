@@ -92,6 +92,34 @@ input {
   color: rgba(6, 2, 2, 0.568);
 }
 
+a:link {
+  color: #013a53;
+}
+
+a:visited {
+  color: #16617a;
+}
+
+a:focus {
+  border-bottom: 1px solid;
+}
+
+a:hover {
+  border-bottom: 1px solid;
+}
+
+input[type='text'] {
+  font-weight: 400;
+  font-size: 18px;
+  font-family: serif;
+}
+
+input[type='date'] {
+  font-weight: 400;
+  font-size: 15px;
+  font-family: serif;
+}
+
 body {
   line-height: 1;
   font-family: "CoFo Sans";
@@ -473,12 +501,16 @@ body {
   background-color: rgba(23, 151, 226, 0.514);
 }
 
-.table__confiscate {
+.table__confiscate, .table__delete {
   padding: 7px;
   font-size: 17px;
   background-color: rgba(23, 151, 226, 0.514);
   border-radius: 10px;
   color: white;
+}
+
+.table__delete {
+  background-color: rgba(255, 0, 0, 0.523);
 }
 
 .btn-reset {

@@ -54,6 +54,8 @@ input {
   	margin: 0;
 }
 
+// Messages-sytyle
+
 .success {
     z-index: 10;
     display: block;
@@ -80,3 +82,44 @@ input {
     background-color: #e11212c9;
     color: rgba(6, 2, 2, 0.568);
 }
+
+// links-style
+
+a:link {
+    color: #013a53;
+  }
+  
+a:visited {
+  color: #16617a;
+}
+
+a:focus {
+  border-bottom: 1px solid;
+  // background: #98e4de;
+}
+
+a:hover {
+  border-bottom: 1px solid;
+}
+
+// a:active {
+//   background: #013c53;
+//   color: #161815;
+// }
+
+
+input[type='text'] {
+  font-weight: 400;
+  font-size: 18px;
+  font-family: serif;
+
+}
+
+
+input[type='date'] {
+  font-weight: 400;
+  font-size: 15px;
+  font-family: serif;
+
+}
+

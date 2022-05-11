@@ -9,7 +9,7 @@ from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.views.generic.edit import FormMixin, DeletionMixin, UpdateView
 
-from .forms import *
+from .early_forms import *
 from .models import *
 
 from django.views.generic import ListView, TemplateView, CreateView, DetailView

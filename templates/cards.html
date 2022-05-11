@@ -70,6 +70,8 @@
     <!-- Срочность -->                     <col style="width:15%">
     <!-- Статус -->                        <col style="width:15%">
     <!-- Тип -->                           <col style="width:2%">
+                        <!-- Тип -->                           <col style="width:2%">
+
 
                         <tr class="table__titles">
                           <th class="table__title">ID</th>
@@ -79,6 +81,7 @@
                           <th class="table__title">Владелец</th>
                         <form method="post"> {% csrf_token %}
                           <th><button class="table__confiscate" type="submit">Изъять</button></th>
+                          <th><button class="table__confiscate" type="submit">Удалить</button></th>
                         </tr>
 
                     <input type="hidden" name="action" value="owner-none">
@@ -93,12 +96,18 @@
                           <td class="table__cell">
                             {% if card.owner %}
                             <label class="table__check-label">
-                              <input type="checkbox" class="table__check" name="owner_id" value="{{ card.pk }}">
+                              <input type="checkbox" class="table__check" name="owner_id_to_none" value="{{ card.pk }}">
                             </label>
                              {% else %}
                               изъята
                               {% endif %}
                           </td>
+
+                            <td class="table__cell">
+                                <label class="table__check-label">
+                                  <input type="checkbox" class="table__check" name="owner_id_to_delete" value="{{ card.pk }}">
+                                </label>
+                            </td>
                         </tr>
                     {% endfor %}
                     </table>

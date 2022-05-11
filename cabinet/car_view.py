@@ -9,7 +9,8 @@ from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.views.generic.edit import FormMixin, DeletionMixin, UpdateView
 
-from .forms import *
+from . import form
+from .form import *
 from .models import *
 
 from django.views.generic import ListView, TemplateView, CreateView, DetailView
@@ -27,7 +28,7 @@ class CarsCreateAndFilterView(Context, LoginRequiredMixin, CreateView):
     """
     template_name = "cars.html"
     success_url = '/cars'
-    form_class = CarForm
+    form_class = CarAddForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -38,11 +39,19 @@ class CarsCreateAndFilterView(Context, LoginRequiredMixin, CreateView):
     def post(self, request, *args, **kwargs):
         action = self.request.POST.get('action')
         if action == 'owner-none':
-            none_owner_pk = self.request.POST.getlist('owner_id')
-            cars = Car.objects.filter(pk__in=none_owner_pk)
-            for car in cars:
+            none_owner_pk = self.request.POST.getlist('owner_refuse_id')
+            print(f"{none_owner_pk=}")
+            cars_none = Car.objects.filter(pk__in=none_owner_pk)
+            for car in cars_none:
                 car.owner = None
                 car.save()
+            #
+            # delete_owner_pk = self.request.POST.getlist('owner_delete_id')
+            # print(f"{delete_owner_pk}")
+            # cars_delete = Car.objects.filter(pk__in=delete_owner_pk)
+            # for car in cars_delete:
+            #     car.delete()
+
         else:
             return super().post(request, *args, **kwargs)
         return HttpResponseRedirect("")
@@ -185,11 +194,17 @@ class CardFilterAndCreateView(Context, LoginRequiredMixin, CreateView):
     def post(self, request, *args, **kwargs):
         action = self.request.POST.get('action')
         if action == 'owner-none':
-            none_owner_pk = self.request.POST.getlist('owner_id')
-            cards = FuelCard.objects.filter(pk__in=none_owner_pk)
-            for card in cards:
+            owner_id_to_none = self.request.POST.getlist('owner_id_to_none')
+            print(f"{owner_id_to_none=}")
+            cards_to_none = FuelCard.objects.filter(pk__in=owner_id_to_none)
+            for card in cards_to_none:
                 card.owner = None
                 card.save()
+
+            owner_id_to_delete = self.request.POST.getlist('owner_id_to_delete')
+            cards_to_delete = FuelCard.objects.filter(pk__in=owner_id_to_delete)
+            for card in cards_to_delete:
+                card.delete()
         else:
             return super(CardFilterAndCreateView, self).post(request, *args, **kwargs)
         return HttpResponseRedirect("")
@@ -264,16 +279,17 @@ class AccountView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['doc_create_form'] = DriverDocForm
         action_type = self.request.POST.get('action')
 
-        context['form_add_doc'] = self.form_add_doc(self.request.POST) \
+        print(f"{action_type=}")
+        print(self.request.POST)
+        context['doc_create_form'] = self.form_add_doc(self.request.POST) \
             if action_type == 'doc_create' else self.form_add_doc()
         context['form_change_balance'] = self.form_change_balance(self.request.POST) \
             if action_type == 'change_balance' else self.form_change_balance()
         context['form'] = self.form_class(self.request.POST) \
             if action_type == 'user_update' else self.form_class(instance=self.get_object())
-
+        print(f"{context=}")
         return context
 
     def form_invalid(self, **kwargs):
