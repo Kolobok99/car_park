@@ -45,12 +45,12 @@ class CarsCreateAndFilterView(Context, LoginRequiredMixin, CreateView):
             for car in cars_none:
                 car.owner = None
                 car.save()
-            #
-            # delete_owner_pk = self.request.POST.getlist('owner_delete_id')
-            # print(f"{delete_owner_pk}")
-            # cars_delete = Car.objects.filter(pk__in=delete_owner_pk)
-            # for car in cars_delete:
-            #     car.delete()
+
+            delete_owner_pk = self.request.POST.getlist('owner_delete_id')
+            print(f"{delete_owner_pk}")
+            cars_delete = Car.objects.filter(pk__in=delete_owner_pk)
+            for car in cars_delete:
+                car.delete()
 
         else:
             return super().post(request, *args, **kwargs)
