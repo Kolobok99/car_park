@@ -135,7 +135,7 @@ class UserUpdateForm(forms.ModelForm):
 
     class Meta:
         model = MyUser
-        exclude = ('role','is_active', 'is_staff', 'is_superuser', 'password')
+        exclude = ('role', 'is_active', 'is_staff', 'is_superuser', 'password')
 
 # -----------------------  CARD -----------------------
 

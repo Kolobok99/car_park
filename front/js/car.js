@@ -75,3 +75,4 @@ document.addEventListener('click', function (event) {
         message_box.style.display = "none"
     }
 });
+

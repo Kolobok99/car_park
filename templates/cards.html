@@ -26,14 +26,14 @@
                     <li class="filtr-items__item">
                         <p class="filtr-items__title">Владелец</p>
                         <ul class="filtr-items__sub-menu">
-                            <label for="auto" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check data-auto-check" checked type="checkbox" name="owner" id="auto" value="1">
-                                    <label for="auto" class="filtr-items__check-label">Есть</label>
+                            <label for="yes" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check data-auto-check" checked type="checkbox" name="owner" id="yes" value="1">
+                                    <label for="yes" class="filtr-items__check-label">Есть</label>
                                 </li>
                             </label>
-                            <label for="man" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check data-driver-check" checked type="checkbox" name="owner" id="man" value="">
-                                    <label for="man" class="filtr-items__check-label">Нет
+                            <label for="no" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check data-driver-check" checked type="checkbox" name="owner" id="no" value="">
+                                    <label for="no" class="filtr-items__check-label">Нет
                                 </li>
                             </label>
                         </ul>
@@ -163,6 +163,6 @@
 {% endif %}
 {% block js_script %}
 {% if user.is_manager %}
-<script src="{% static 'js/cards.js' %}"></script>
+<script src="{% static 'js/new_cards.js' %}"></script>
 {% endif %}
 {% endblock js_script %}

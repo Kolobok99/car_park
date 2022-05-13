@@ -175,8 +175,13 @@
                                           <td class="table__cell">{{ doc.type }}</td>
                                           <td class="table__cell">{{ doc.start_date|date:"d-m-Y"}}</td>
                                           <td class="table__cell">{{ doc.end_date|date:"d-m-Y"}}</td>
-                                        <td class="table__cell"><a target="_blank" href="{{ doc.file.url }}"><img width="50px" height="50px" src="{% static '/img/account/file.png' %}" alt="копия файла"></a>
-                                          </td>
+                                        <td class="table__cell">
+                                            {% if doc.file %}
+                                                <a target="_blank" href="{{ doc.file.url }}"><img width="50px" height="50px" src="{% static '/img/account/file.png' %}" alt="копия файла"></a>
+                                            {% else %}
+                                            НЕТ
+                                            {% endif %}
+                                        </td>
                                           <td class="table__cell">
                                               <button class="table__btn-delete-app" id="doc-{{ doc.pk }}" style="background: red">Удалить</button>
                                           </td>
@@ -333,6 +338,6 @@
 
 {% block js_script %}
     {% if user.is_manager or user.pk == car.owner.pk %}
-<script src="{% static 'js/car.js' %}"></script>
+<script src="{% static 'js/new_car.js' %}"></script>
     {% endif %}
 {% endblock js_script %}

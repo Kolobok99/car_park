@@ -222,6 +222,6 @@
 
 {% block js_script %}
 {% if user.is_manager or user.pk == app.owner.pk %}
-<script src="{% static 'js/app.js' %}"></script>
+<script src="{% static 'js/new_app.js' %}"></script>
 {% endif %}
 {% endblock js_script %}

@@ -43,7 +43,7 @@ document.addEventListener('click', function (event) {
 
 const errorList = document.getElementsByClassName("errorlist");
 console.log(errorList.length);
-if (errorList.length != 0) {
+if (errorList.length !== 0) {
     console.log('YES!');
     formAddDoc.classList.add('data-show-or-hide-form');
     wrapper.classList.add('blackout');
