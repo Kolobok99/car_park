@@ -9,335 +9,303 @@
 
 
 {% block main %}
-      <div class="main">
+    <div class="main">
         <div class="main__container">
-        {% if user.is_manager or user.pk == car.owner.pk %}
-          <div class="main__car car-area">
-          {% if user.is_manager %}
-            <form method="post" enctype="multipart/form-data">{% csrf_token %}
-            <div class="car-area__avatar">
-                {% if car.image %}
-                <img src="{{ car.image.url }}" alt="" />
-                {% endif %}
-                    <input type="file" name="image" accept="image/*" id="id_image">
-{#                {{ form.image }}#}
-                {{ form.action }}
-                {{ form.errors }}
-            </div>
-            <div class="car-area__info">
-              <div class="car-area__item">
-                <p>Марка:</p>
-                {{ form.brand}}
-              </div>
-
-              <div class="car-area__item">
-                <p>Номер:</p>
-                {{ form.registration_number }}
-              </div>
-
-              <div class="car-area__item">
-                <p>Код:</p>
-                {{ form.region_code }}
-              </div>
-
-              <div class="car-area__item">
-                <p>Последний осмотр:</p>
-                {{ form.last_inspection }}
-              </div>
-              <div class="car-area__item">
-                <p>Водитель:</p>
-                {{ form.owner}}
-              </div>
-              {{ form.action }}
-              <input class="car-area__btn-submit" type="submit">
-              </form>
-            {% else %}
-              <div class="car-area__avatar">
-                <img src="../img/cars/tesla.jpg" alt="" />
-{#                <input type="file" name="avatar" id="image" />#}
-            </div>
-            <div class="car-area__info">
-              <div class="car-area__item">
-                <p>Марка:</p>
-                <span>{{ car.brand }}</span>
-              </div>
-
-              <div class="car-area__item">
-                <p>Номер:</p>
-                <span>{{ car.registration_number|slice:'0:1'}}-{{ car.registration_number|slice:'1:4'}}-{{ car.registration_number|slice:'4:6'}}</span>
-              </div>
-
-              <div class="car-area__item">
-                <p>Код:</p>
-                <span>{{ car.region_code }}</span>
-              </div>
-
-              <div class="car-area__item">
-                <p>Последний осмотр:</p>
-                <span>{{ car.last_inspection|date:"d-m-Y" }}</span>
-              </div>
-
-              <div class="car-area__item">
-                <p>Водитель:</p>
-                <span>{{ car.owner.last_name}} {{ car.owner.first_name|first}}.{{ car.owner.patronymic|first}}.</span>
-              </div>
-            {% endif %}
-            </div>
-          </div>
-
-          <div class="main__tables">
-            <div class="main__table table">
-                <h1 class="table__table-title">Заявки</h1>
-                <button class="table__btn-add-app">Добавить</button>
-            {% if car.applications.count != 0 %}
-                <table>
-                    <!--  -->
-    <!-- ID -->                            <col style="width:1%">
-    <!-- Дата создания -->                 <col style="width:10%">
-    <!-- Дата окнчания -->                 <col style="width:10%">
-    <!-- Срочность -->                     <col style="width:10%">
-    <!-- Статус -->                        <col style="width:10%">
-    <!-- Тип -->                           <col style="width:20%">
-
-
-
-
-                    <tr class="table__titles">
-                      <th class="table__title">ID</th>
-                      <th class="table__title">Дата</th>
-                      <th class="table__title">Срочность</th>
-                      <th class="table__title">Статус</th>
-                      <th class="table__title">Тип</th>
-                      <th class="table__title">Краткое<br> описание</th>
-                    </tr>
-                    {% for app in car.applications.all %}
-                    <tr class="table__row">
-                        <td class="table__cell"><a href="{% url 'app'  app.pk %}">{{ app.id }}</a></td>
-                        <td class="table__cell">
-                            {{ app.start_date}}
-                            <br>-<br>
-                            {{ app.end_date}}
-                        </td>
-                        <td class="table__cell">
-                            {% if app.urgency == 'N' %}
-                                  Не срочно
-                            {% elif app.urgency == 'U' %}
-                                  Срочно
-                            {% else %}
-                                  Очень срочно
+            {% if user.is_manager or user.pk == car.owner.pk %}
+                <div class="main__car car-area">
+                {% if user.is_manager %}
+                    <form method="post" enctype="multipart/form-data">{% csrf_token %}
+                        <div class="car-area__avatar">
+                            {% if car.image %}
+                                <img src="{{ car.image.url }}" alt="" />
                             {% endif %}
-                        </td>
-                        <td class="table__cell">
-                        {% if app.status == 'O' %}
-                            <p style="color: #ffac50">Ожидает рассмотрения</p>
-                        {% elif app.status == 'R' %}
-                            <p style="color: #389b4c">Рассмотрена</p>
-                        {% elif app.status == 'V' %}
-                            <p style="color: green">Выполнена</p>
-                        {% elif app.status == 'P' %}
-                            <p style="color: red">Просрочена</p>
-                        {% elif app.status == 'T' %}
-                            <p style="color: orange">Отклонена</p>
+                            <input type="file" name="image" accept="image/*" id="id_image">
+                            {{ form.action }}
+                            {{ form.errors }}
+                        </div>
+                        <div class="car-area__info">
+                            <div class="car-area__item">
+                                <p>Марка:</p>{{ form.brand}}
+                            </div>
+
+                            <div class="car-area__item">
+                                <p>Номер:</p>{{ form.registration_number }}
+                            </div>
+
+                            <div class="car-area__item">
+                                <p>Код:</p>{{ form.region_code }}
+                            </div>
+
+                            <div class="car-area__item">
+                                <p>Последний осмотр:</p>{{ form.last_inspection }}
+                            </div>
+                            <div class="car-area__item">
+                                <p>Водитель:</p>
+                                {{ form.owner}}
+                            </div>
+                            {{ form.action }}
+                            <input class="car-area__btn-submit" type="submit">
+
+                    </form>
+                {% else %}
+                    <div class="car-area__avatar">
+                        <img src="../img/cars/tesla.jpg" alt="" />
+                    </div>
+                    <div class="car-area__info">
+                        <div class="car-area__item">
+                            <p>Марка:</p><span>{{ car.brand }}</span>
+                        </div>
+
+                        <div class="car-area__item">
+                            <p>Номер:</p><span>{{ car.registration_number|slice:'0:1'}}-{{ car.registration_number|slice:'1:4'}}-{{ car.registration_number|slice:'4:6'}}</span>
+                        </div>
+
+                        <div class="car-area__item">
+                            <p>Код:</p><span>{{ car.region_code }}</span>
+                        </div>
+
+                        <div class="car-area__item">
+                            <p>Последний осмотр:</p><span>{{ car.last_inspection|date:"d-m-Y" }}</span>
+                        </div>
+
+                        <div class="car-area__item">
+                            <p>Водитель:</p><span>{{ car.owner.last_name}} {{ car.owner.first_name|first}}.{{ car.owner.patronymic|first}}.</span>
+                        </div>
+                {% endif %}
+                    </div>
+                </div>
+                <div class="main__tables">
+                    <div class="main__table table">
+                        <h1 class="table__table-title">Заявки</h1>
+                        <button class="table__btn-add-app">Добавить</button>
+                        {% if car.applications.count != 0 %}
+                            <table>
+                                <!--  -->
+                                <!-- ID -->                            <col style="width:1%">
+                                <!-- Дата создания -->                 <col style="width:10%">
+                                <!-- Дата окнчания -->                 <col style="width:10%">
+                                <!-- Срочность -->                     <col style="width:10%">
+                                <!-- Статус -->                        <col style="width:10%">
+                                <!-- Тип -->                           <col style="width:20%">
+
+                                <tr class="table__titles">
+                                    <th class="table__title">ID</th>
+                                    <th class="table__title">Дата</th>
+                                    <th class="table__title">Срочность</th>
+                                    <th class="table__title">Статус</th>
+                                    <th class="table__title">Тип</th>
+                                    <th class="table__title">Краткое<br> описание</th>
+                                </tr>
+                                {% for app in car.applications.all %}
+                                    <tr class="table__row">
+                                        <td class="table__cell"><a href="{% url 'app'  app.pk %}">{{ app.id }}</a></td>
+                                        <td class="table__cell">
+                                            {{ app.start_date}}
+                                            <br>-<br>
+                                            {{ app.end_date}}
+                                        </td>
+                                        <td class="table__cell">
+                                            {% if app.urgency == 'N' %}
+                                                Не срочно
+                                            {% elif app.urgency == 'U' %}
+                                                Срочно
+                                            {% else %}
+                                                Очень срочно
+                                            {% endif %}
+                                        </td>
+                                        <td class="table__cell">
+                                            {% if app.status == 'O' %}
+                                                <p style="color: #ffac50">Ожидает рассмотрения</p>
+                                            {% elif app.status == 'R' %}
+                                                <p style="color: #389b4c">Рассмотрена</p>
+                                            {% elif app.status == 'V' %}
+                                                <p style="color: green">Выполнена</p>
+                                            {% elif app.status == 'P' %}
+                                                <p style="color: red">Просрочена</p>
+                                            {% elif app.status == 'T' %}
+                                                <p style="color: orange">Отклонена</p>
+                                            {% endif %}
+                                        </td>
+                                        <td class="table__cell">{{ app.type }}</td>
+                                        <td class="table__cell">{{ app.description|truncatechars:10 }}</td>
+                                    </tr>
+                                {% endfor %}
+                        </table>
+                        {% else %}
+                            Заявок нет!
                         {% endif %}
-                        </td>
-                        <td class="table__cell">{{ app.type }}</td>
-                        <td class="table__cell">{{ app.description|truncatechars:10 }}</td>
-                      </tr>
-                    {% endfor %}
-                </table>
-            {% else %}
-                Заявок нет!
-            {% endif %}
-            </div>
+                    </div>
 
-            <div class="main__table table">
-                <h1 class="table__table-title">Документы</h1>
-                <button class="table__btn-add-doc">Добавить</button>
-            {% if car.my_docs.count != 0 %}
-                <table>
+                    <div class="main__table table">
+                        <h1 class="table__table-title">Документы</h1>
+                        <button class="table__btn-add-doc">Добавить</button>
+                        {% if car.my_docs.count != 0 %}
+                            <table>
 
-                    <!-- ID -->                            <col style="width:5%">
-                    <!-- Дата создания -->                 <col style="width:15%">
-                    <!-- Дата окнчания -->                 <col style="width:15%">
-                    <!-- Дата окнчания -->                 <col style="width:15%">
-                                    <!-- Дата окнчания -->                 <col style="width:15%">
+                                <!-- ID -->                            <col style="width:5%">
+                                <!-- Дата создания -->                 <col style="width:15%">
+                                <!-- Дата окнчания -->                 <col style="width:15%">
+                                <!-- Дата окнчания -->                 <col style="width:15%">
+                                <!-- Дата окнчания -->                 <col style="width:15%">
 
-
-                                        <tr class="table__titles">
-                                          <th class="table__title">Тип документа</th>
-                                          <th class="table__title">Дата получения</th>
-                                          <th class="table__title">Дата окончания</th>
-                                          <th class="table__title">Копия файла</th>
-                                          <th class="table__title">Удалить?</th>
-                                        </tr>
+                                <tr class="table__titles">
+                                    <th class="table__title">Тип документа</th>
+                                    <th class="table__title">Дата получения</th>
+                                    <th class="table__title">Дата окончания</th>
+                                    <th class="table__title">Копия файла</th>
+                                    <th class="table__title">Удалить?</th>
+                                </tr>
                                 {% for doc in car.my_docs.all %}
                                     <tr class="table__row">
-                                          <td class="table__cell">{{ doc.type }}</td>
-                                          <td class="table__cell">{{ doc.start_date|date:"d-m-Y"}}</td>
-                                          <td class="table__cell">{{ doc.end_date|date:"d-m-Y"}}</td>
+                                        <td class="table__cell">{{ doc.type }}</td>
+                                        <td class="table__cell">{{ doc.start_date|date:"d-m-Y"}}</td>
+                                        <td class="table__cell">{{ doc.end_date|date:"d-m-Y"}}</td>
                                         <td class="table__cell">
                                             {% if doc.file %}
                                                 <a target="_blank" href="{{ doc.file.url }}"><img width="50px" height="50px" src="{% static '/img/account/file.png' %}" alt="копия файла"></a>
                                             {% else %}
-                                            НЕТ
+                                                НЕТ
                                             {% endif %}
                                         </td>
-                                          <td class="table__cell">
-                                              <button class="table__btn-delete-app" id="doc-{{ doc.pk }}" style="background: red">Удалить</button>
-                                          </td>
-                                        </tr>
+                                        <td class="table__cell">
+                                            <button class="table__btn-delete-app" id="doc-{{ doc.pk }}" style="background: red">Удалить</button>
+                                        </td>
+                                    </tr>
                                 {% endfor %}
-                                            
-                </table>
+
+                            </table>
+                        {% else %}
+                            Документов нет!
+                        {% endif %}
+                    </div>
+                </div>
             {% else %}
-                Документов нет!
-            {% endif %}
-            </div>
-          </div>
-{% else %}
                 <h1 style="
-                margin-left: 36%;
-                margin-top: 20%;
-                font-size: 30px;
-                opacity: 0.7;
-                            ">Страница недоступна</h1>
-{% endif %}
+            margin-left: 36%;
+            margin-top: 20%;
+            font-size: 30px;
+            opacity: 0.7;
+                ">Страница недоступна</h1>
+            {% endif %}
         </div>
-      </div>
+    </div>
 {% endblock main %}
 
 {% block forms %}
 {% if user.is_manager or user.pk == car.owner.pk %}
     <form method="post" action="{% url 'choose-car' car.registration_number %}">
-    {% csrf_token %}
-      <div class="form-app add">
-        <button type="reset">
-          <div class="bnt-form-app-reset-add">
-            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-              <line x1="0" x2="100" y1="0" y2="100" />
-              <line x1="0" x2="100" y1="100" y2="0" />
-            </svg>
-          </div>
-        </button>
-        <h1 class="form-app__title">
-          Заявка на авто {{ car.registration_number|slice:'0:1'}}-{{ car.registration_number|slice:'1:4'}}-{{ car.registration_number|slice:'4:6'}}
-        </h1>
-          <div class="form-app__timing">
-              {{ app_create_form.errors }}
+        {% csrf_token %}
+        <div class="form-app add">
+            <button type="reset">
+            <div class="bnt-form-app-reset-add">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="0" x2="100" y1="0" y2="100" />
+                    <line x1="0" x2="100" y1="100" y2="0" />
+                </svg>
+            </div>
+            </button>
+            <h1 class="form-app__title">
+                Заявка на авто {{ car.registration_number|slice:'0:1'}}-{{ car.registration_number|slice:'1:4'}}-{{ car.registration_number|slice:'4:6'}}
+            </h1>
+            <div class="form-app__timing">
+                {{ app_create_form.errors }}
 
-              <p>{{ app_create_form.type.label }}:</p>
+                <p>{{ app_create_form.type.label }}:</p>
                 {{ app_create_form.type }}
-              <p>Срочность:</p>
+                <p>Срочность:</p>
                 <br>
                 {% for radio in app_create_form.urgency %}
-                      {{ radio.tag }}
-                      <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                    {{ radio.tag }}
+                    <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
                 {% endfor %}
 
-               <label for="new_descr">Опишите суть заявки:</label>
-              {{ app_create_form.description }}
-
-{#              <input type="hidden" title="car" id="id_car" value="{{ car.pk }}">#}
-{#              <input type="hidden" title="owner" id="id_owner" value="{{ user.pk }}">#}
-{#              <input type="hidden" title="status" value="O" id="id_status">#}
-{#              <input type="hidden" name="action" value="app_create">#}
+                <label for="new_descr">Опишите суть заявки:</label>
+                {{ app_create_form.description }}
                 {{ app_create_form.action }}
-
-            <button type="submit" value="TRueForm">Отправить</button>
-          </div>
-     </div>
+                <button type="submit" value="TRueForm">Отправить</button>
+            </div>
+        </div>
     </form>
 
-
     <form method="post">
-      <div class="form-app change">
-        <button type="reset">
-          <div class="bnt-form-app-reset-change">
-            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-              <line x1="0" x2="100" y1="0" y2="100" />
-              <line x1="0" x2="100" y1="100" y2="0" />
-            </svg>
-          </div>
-        </button>
-        <h1 class="form-app__title">
-          Заявка № <span id="data-title-app-id"></span>
-        </h1>
-        <p>Срочность:</p>
-          <div class="form-app__timing">
+        <div class="form-app change">
+            <button type="reset">
+                <div class="bnt-form-app-reset-change">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <line x1="0" x2="100" y1="0" y2="100" />
+                        <line x1="0" x2="100" y1="100" y2="0" />
+                    </svg>
+                </div>
+            </button>
+            <h1 class="form-app__title">Заявка № <span id="data-title-app-id"></span></h1>
+            <p>Срочность:</p>
+            <div class="form-app__timing">
+                <input type="radio" checked name="timing-change" id="rdo-noturgent-c">
+                <label for="rdo-noturgent-c">Не срочно</label>
 
-            <input type="radio" checked name="timing-change" id="rdo-noturgent-c">
-            <label for="rdo-noturgent-c">Не срочно</label>
+                <input type="radio" name="timing-change" id="rdo-urgent-c">
+                <label for="rdo-urgent-c">Срочно</label>
 
+                <input type="radio" name="timing-change" id="rdo-veryurgent-c">
+                <label for="rdo-veryurgent-c">Очень срочно</label>
 
-            <input type="radio" name="timing-change" id="rdo-urgent-c">
-            <label for="rdo-urgent-c">Срочно</label>
+                <label for="descr-change">Опишите суть заявки:</label>
+                <input type="hidden" name="action" value="doc_create">
 
-            <input type="radio" name="timing-change" id="rdo-veryurgent-c">
-            <label for="rdo-veryurgent-c">Очень срочно</label>
-
-            <label for="descr-change">Опишите суть заявки:</label>
-            <input type="hidden" name="action" value="doc_create">
-            <textarea name="description" id="descr-change" cols="30" rows="10"></textarea>
-            <button type="submit">Отправить</button>
-          </div>
-      </div>
+                <textarea name="description" id="descr-change" cols="30" rows="10"></textarea>
+                <button type="submit">Отправить</button>
+            </div>
+        </div>
     </form>
 
     <form method="post" enctype="multipart/form-data"> {% csrf_token %}
-      <div class="form-doc add">
-        <button type="reset">
-          <div class="bnt-form-doc-reset-add">
-            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-              <line x1="0" x2="100" y1="0" y2="100" />
-              <line x1="0" x2="100" y1="100" y2="0" />
-            </svg>
-          </div>
-        </button>
-        <h1 class="form-app__title">
-          Добавление документов:
-        </h1>
-        <p>Тип:</p>
-          <div class="form-app__timing">
-              {% for radio in doc_create_form.type %}
-               {% if 'a' in radio.choice_label %}
-                  {{ radio.tag }}
-                  <label for="{{ radio.id_for_label }}">{{ radio.choice_label|cut:"(a)"}}</label>
-               {% endif %}
-{#                   {{ radio.tag }}#}
-{#                  <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>#}
-           {% endfor %}
-          {{ doc_create_form.start_date.label }}:
-          {{ doc_create_form.start_date }}
+        <div class="form-doc add">
+            <button type="reset">
+                <div class="bnt-form-doc-reset-add">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <line x1="0" x2="100" y1="0" y2="100" />
+                        <line x1="0" x2="100" y1="100" y2="0" />
+                    </svg>
+                </div>
+            </button>
+            <h1 class="form-app__title">Добавление документов:</h1>
+            <p>Тип:</p>
+            <div class="form-app__timing">
+                {% for radio in doc_create_form.type %}
+                    {% if 'a' in radio.choice_label %}
+                        {{ radio.tag }}
+                        <label for="{{ radio.id_for_label }}">{{ radio.choice_label|cut:"(a)"}}</label>
+                    {% endif %}
+                {% endfor %}
+                {{ doc_create_form.start_date.label }}:
+                {{ doc_create_form.start_date }}
 
-          {{ doc_create_form.end_date.label }}:
-          {{ doc_create_form.end_date }}
-          {{ doc_create_form.errors }}
-          {{ doc_create_form.file.label }}
-          {{ doc_create_form.file }}
-          <input type="hidden" name="action" value="doc_create">
-            <button type="submit">Отправить</button>
-          </div>
-      </div>
+                {{ doc_create_form.end_date.label }}:
+                {{ doc_create_form.end_date }}
+                {{ doc_create_form.errors }}
+                {{ doc_create_form.file.label }}
+                {{ doc_create_form.file }}
+                <input type="hidden" name="action" value="doc_create">
+                <button type="submit">Отправить</button>
+            </div>
+        </div>
     </form>
 
-    <form method="post">
-     {% csrf_token %}
-      <div class="confirm-delete">
-        <h1>Удалить?</h1>
-        <input id="action-delete" type="hidden" name="action" value="">
+    <form method="post">{% csrf_token %}
+        <div class="confirm-delete">
+            <h1>Удалить?</h1>
+            <input id="action-delete" type="hidden" name="action" value="">
 
-        <button id="btn-confirm-delete" type="submit">Да</button>
-        <button id="btn-refuse-delete" type="reset">Нет</button>
-      </div>
+            <button id="btn-confirm-delete" type="submit">Да</button>
+            <button id="btn-refuse-delete" type="reset">Нет</button>
+        </div>
     </form>
 {% endif %}
-
-
-    {% endblock forms %}
+{% endblock forms %}
 
 
 {% block js_script %}
     {% if user.is_manager or user.pk == car.owner.pk %}
-<script src="{% static 'js/new_car.js' %}"></script>
+        <script src="{% static 'js/new_car.js' %}"></script>
     {% endif %}
 {% endblock js_script %}

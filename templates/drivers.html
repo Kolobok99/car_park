@@ -11,18 +11,18 @@
 
 {% block main %}
 <div class="main">
-            <div class="main__container">
-            {% if user.is_manager %}
-
-                <div class="main__title">
-                    <h1>Водители</h1>
-                    <p>{{ drivers.count }}</p>
-                </div>
+    <div class="main__container">
+        {% if user.is_manager %}
+            <div class="main__title">
+                <h1>Водители</h1>
+                <p>{{ drivers.count }}</p>
+            </div>
             <form action="{% url 'drivers' %}" method="get">
                 <ul class="main__filtration filtr-items">
                     <li class="filtr-items__item placeholder">
                         <input type="text" name="last_name" placeholder="Фамилия">
                     </li>
+
                     <li class="filtr-items__item placeholder">
                         <input type="text" name="phone" placeholder="Номер телефона">
                     </li>
@@ -31,15 +31,16 @@
                         <p class="filtr-items__title">Тип заявки</p>
                         <ul class="filtr-items__sub-menu">
                             {% for type_of_app in view.get_types_of_app %}
-                             <label for="{{ type_of_app.id }}"  class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="applications" id="{{ type_of_app.id }}" value="{{ type_of_app.id }}">
-                                    <label for="{{ type_of_app.id }}" class="filtr-items__check-label">{{ type_of_app.title }}</label>
-                                </li>
-                            </label>
+                                 <label for="{{ type_of_app.id }}"  class="filtr-items__check-label">
+                                    <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="applications" id="{{ type_of_app.id }}" value="{{ type_of_app.id }}">
+                                        <label for="{{ type_of_app.id }}" class="filtr-items__check-label">{{ type_of_app.title }}</label>
+                                    </li>
+                                </label>
                             {% endfor %}
                         </ul>
                     </li>
-                     <li class="filtr-items__item">
+
+                    <li class="filtr-items__item">
                         <p class="filtr-items__title">Карты</p>
                         <ul class="filtr-items__sub-menu">
                             <label for="less_200" class="filtr-items__check-label">
@@ -47,17 +48,18 @@
                                     <label for="less_200" class="filtr-items__check-label">Баланс меньше 200</label>
                                 </li>
                             </label>
+
                             <label for="no_cards" class="filtr-items__check-label">
                                 <li class="filtr-items__sub-item"><input class="filtr-items__check" type="radio" name="card_balance" id="no_cards" value="1">
-                                    <label for="no_cards" class="filtr-items__check-label">Нет карт
-                                </li>
-                            </label>
-                            <label for="more_500" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="radio" name="card_balance" id="more_500" value="500">
-                                    <label for="more_500" class="filtr-items__check-label">Достаточно
+                                    <label for="no_cards" class="filtr-items__check-label">Нет карт</label>
                                 </li>
                             </label>
 
+                            <label for="more_500" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="radio" name="card_balance" id="more_500" value="500">
+                                    <label for="more_500" class="filtr-items__check-label">Достаточно</label>
+                                </li>
+                            </label>
                         </ul>
                     </li>
 
@@ -65,73 +67,71 @@
                         <img src="{% static 'img/filtr/lupa.svg' %}" alt="поиск">
                     </button>
                 </ul>
-            <a class="btn-reset" href="{% url 'drivers' %}">Сбросить</a>
+                <a class="btn-reset" href="{% url 'drivers' %}">Сбросить</a>
             </form>
 
-                <div class="main__information">
+            <div class="main__information">
                 {% if drivers.count %}
                     <table class="main__table table" style="text-align: center">
                         <tr class="table__titles">
-                          <th class="table__title">ID</th>
-                          <th class="table__title">ФИО</th>
-                          <th class="table__title">Номер телефона</th>
-                          <th class="table__title">Записанные<br>Машины</th>
-                          <th class="table__title">Активные <br>заявки</th>
-                          <th class="table__title">Остаток <br>на карте</th>
-                          <th class="table__title">Прикрепленные <br>документы</th>
+                            <th class="table__title">ID</th>
+                            <th class="table__title">ФИО</th>
+                            <th class="table__title">Номер телефона</th>
+                            <th class="table__title">Записанные<br>Машины</th>
+                            <th class="table__title">Активные <br>заявки</th>
+                            <th class="table__title">Остаток <br>на карте</th>
+                            <th class="table__title">Прикрепленные <br>документы</th>
                         </tr>
                         {% for driver in drivers %}
-
-                        <tr class="table__row">
-                          <td class="table__cell"><a href="{{ driver.get_absolute_url }}">{{ driver.pk }}</a></td>
-{#                          {{ driver.last_name}} {{ driver.first_name|first}}.{{ driver.patronymic|first}}.#}
-                            <td class="table__cell">
-                                <a href="{{ driver.get_absolute_url }}">{{ driver.last_name}} {{ driver.first_name|first}}.{{ driver.patronymic|first}}.</a>
-                            </td>
-                          <td class="table__cell">{{ driver.phone|first}}-({{ driver.phone|slice:"1:4"}})-{{ driver.phone|slice:"4:7"}}-{{ driver.phone|slice:"7:9"}}-{{ driver.phone|slice:"9:11"}}</td>
-                          <td class="table__cell">{% for car in driver.my_cars.all %}
-                              <p style="margin-bottom: 10px;"><a href="{{ car.get_absolute_url }}">
-                                  {{ car.registration_number|slice:'0:1'}}-{{ car.registration_number|slice:'1:4'}}-{{ car.registration_number|slice:'4:6'}}
-                              </a></p>
-                          {% endfor %}
-                          </td>
-                          <td class="table__cell">
-                              {% for my_app in driver.my_apps.all %}
-                                    {% if my_app.is_active == True %}
-                                        {{ my_app.type_of }}
-                                    {% endif %}  <br>
-                              {% endfor %}
-
-                          </td>
-                          <td class="table__cell">
-                              {% if driver.my_card %}
-                                 {{ driver.my_card.balance }} Л<br>
-                              {% else %}
-                              . . .
-                              {% endif %}
-                          </td>
-                          <td class="table__cell">
-                                 паспорт <br>
-                                  снилс
-                          </td>
-                        </tr>
-
+                            <tr class="table__row">
+                                <td class="table__cell"><a href="{{ driver.get_absolute_url }}">{{ driver.pk }}</a></td>
+                                <td class="table__cell">
+                                    <a href="{{ driver.get_absolute_url }}">{{ driver.last_name}} {{ driver.first_name|first}}.{{ driver.patronymic|first}}.</a>
+                                </td>
+                                <td class="table__cell">{{ driver.phone|first}}-({{ driver.phone|slice:"1:4"}})-{{ driver.phone|slice:"4:7"}}-{{ driver.phone|slice:"7:9"}}-{{ driver.phone|slice:"9:11"}}</td>
+                                <td class="table__cell">
+                                    {% for car in driver.my_cars.all %}
+                                        <p style="margin-bottom: 10px;">
+                                        <a href="{{ car.get_absolute_url }}">
+                                            {{ car.registration_number|slice:'0:1'}}-{{ car.registration_number|slice:'1:4'}}-{{ car.registration_number|slice:'4:6'}}
+                                        </a>
+                                        </p>
+                                    {% endfor %}
+                                </td>
+                                <td class="table__cell">
+                                    {% for my_app in driver.my_apps.all %}
+                                        {% if my_app.is_active == True %}
+                                            {{ my_app.type_of }}
+                                        {% endif %}
+                                        <br>
+                                    {% endfor %}
+                                </td>
+                                <td class="table__cell">
+                                    {% if driver.my_card %}
+                                        {{ driver.my_card.balance }} Л<br>
+                                    {% else %}
+                                        . . .
+                                    {% endif %}
+                                </td>
+                                <td class="table__cell">
+                                    паспорт <br>
+                                    снилс
+                                </td>
+                            </tr>
                         {% endfor %}
-
                     </table>
                 {% else %}
                     <p style="text-align: center; font-size: 30px; opacity: 0.8">Не найдено </p>
                 {% endif %}
-
-                </div>
-            {% else %}
-             <h1 style="
+            </div>
+        {% else %}
+            <h1 style="
                 text-align: center;
                 margin-top: 20%;
                 font-size: 30px;
                 opacity: 0.7;
                             ">Страница недоступна</h1>
-            {% endif %}
-            </div>
-        </div>
+        {% endif %}
+    </div>
+</div>
 {% endblock main %}

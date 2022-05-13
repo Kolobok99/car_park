@@ -10,13 +10,13 @@
 {% block apps_active %}  active-page  {% endblock apps_active %}
 
 {% block main %}
- <div class="main">
-            <div class="main__container">
-            {% if user.is_manager %}
-                <div class="main__title">
-                    <h1>Заявок</h1>
-                    <p>{{ all_apps.count }}</p>
-                </div>
+<div class="main">
+    <div class="main__container">
+        {% if user.is_manager %}
+            <div class="main__title">
+                <h1>Заявок</h1>
+                <p>{{ all_apps.count }}</p>
+            </div>
             <form action="{% url 'applications' %}" method="get">
                 <ul class="main__filtration filtr-items">
                     <li class="filtr-items__item">
@@ -61,92 +61,89 @@
                             {% endfor %}
                         </ul>
                     </li>
-
-
                     <button type="submit" class="filtr-items__button">
                         <img src="{% static 'img/filtr/lupa.svg' %}" alt="поиск">
                     </button>
                 </ul>
-            <a class="btn-reset" href="{% url 'applications' %}">Сбросить</a>
+                <a class="btn-reset" href="{% url 'applications' %}">Сбросить</a>
             </form>
 
-                <div class="main__information">
-                {% if all_apps.count %}
-                    <table class="main__table table">
-                        <!--  -->
-    <!-- ID -->                            <col style="width:5%">
-    <!-- Дата создания -->                 <col style="width:10%">
-    <!-- Дата окнчания -->                 <col style="width:10%">
-    <!-- Срочность -->                     <col style="width:10%">
-    <!-- Статус -->                        <col style="width:10%">
-    <!-- Тип -->                           <col style="width:10%">
-    <!-- Создатель -->                     <col style="width:10%">
-    <!-- Авто -->                           <col style="width: 10%">
-    <!-- описание -->                      <col style="width: 30%">
+            <div class="main__information">
+                    {% if all_apps.count %}
+                        <table class="main__table table">
+                            <!--  -->
+        <!-- ID -->                            <col style="width:5%">
+        <!-- Дата создания -->                 <col style="width:10%">
+        <!-- Дата окнчания -->                 <col style="width:10%">
+        <!-- Срочность -->                     <col style="width:10%">
+        <!-- Статус -->                        <col style="width:10%">
+        <!-- Тип -->                           <col style="width:10%">
+        <!-- Создатель -->                     <col style="width:10%">
+        <!-- Авто -->                           <col style="width: 10%">
+        <!-- описание -->                      <col style="width: 30%">
 
 
-                        <tr class="table__titles">
-                          <th class="table__title">ID</th>
-                          <th class="table__title">Дата создания</th>
-                          <th class="table__title">Дата окнчания</th>
-                          <th class="table__title">Срочность</th>
-                          <th class="table__title">Статус <br> выполнения</th>
-                          <th class="table__title">Тип</th>
-                          <th class="table__title">Создатель</th>
-                          <th class="table__title">Авто</th>
-                          <th class="table__title">Краткое<br> описание</th>
-                        </tr>
-                        {% for app in all_apps %}
-                            <tr class="table__row">
-                              <td class="table__cell"><a href="{{ app.get_absolute_url }}">{{ app.pk }}</a></td>
-                              <td class="table__cell">{{ app.start_date|date:"d-m-Y" }}</td>
-                              <td class="table__cell">{{ app.end_date|date:"d-m-Y" }}</td>
-                              <td class="table__cell">
-                                  {% if app.urgency == 'N' %}
-                                  Не срочно
-                                  {% elif app.urgency == 'U' %}
-                                  Срочно
-                                  {% else %}
-                                  Очень срочно
-                                  {% endif %}
-                              </td>
-                              <td class="table__cell">
-                                  {% if app.status == 'O' %}
-                                  Ожидает рассмотрения
-                                  {% elif app.status == 'R' %}
-                                  Рассмотрена
-                                  {% elif app.status == 'V' %}
-                                  Выполнена
-                                  {% else %}
-                                  Просрочена
-                                  {% endif %}
-                              </td>
-                              <td class="table__cell">{{ app.type }}</td>
-                              <td class="table__cell">{{ app.owner.last_name}} {{ app.owner.first_name|slice:'0:1' }}. {{ app.owner.patronymic|slice:"0:1" }}.</td>
-                              <td class="table__cell">
-                                  <a href="{% url 'choose-car' app.car.registration_number %}">
-                                    {{ app.car.registration_number|slice:'0:1'}}-{{ app.car.registration_number|slice:'1:4'}}-{{ app.car.registration_number|slice:'4:6'}}
-                                  </a>
-                              </td>
-                              <td class="table__cell"> {{ app.description |truncatechars:50}}</td>
+                            <tr class="table__titles">
+                              <th class="table__title">ID</th>
+                              <th class="table__title">Дата создания</th>
+                              <th class="table__title">Дата окнчания</th>
+                              <th class="table__title">Срочность</th>
+                              <th class="table__title">Статус <br> выполнения</th>
+                              <th class="table__title">Тип</th>
+                              <th class="table__title">Создатель</th>
+                              <th class="table__title">Авто</th>
+                              <th class="table__title">Краткое<br> описание</th>
                             </tr>
-                        {% endfor %}
-                    </table>
-                {% else %}
-                    <p style="text-align: center; font-size: 30px; opacity: 0.8">Не найдено </p>
-                {% endif %}
-                </div>
-            {% else %}
-               <h1 style="
+                            {% for app in all_apps %}
+                                <tr class="table__row">
+                                  <td class="table__cell"><a href="{{ app.get_absolute_url }}">{{ app.pk }}</a></td>
+                                  <td class="table__cell">{{ app.start_date|date:"d-m-Y" }}</td>
+                                  <td class="table__cell">{{ app.end_date|date:"d-m-Y" }}</td>
+                                  <td class="table__cell">
+                                      {% if app.urgency == 'N' %}
+                                      Не срочно
+                                      {% elif app.urgency == 'U' %}
+                                      Срочно
+                                      {% else %}
+                                      Очень срочно
+                                      {% endif %}
+                                  </td>
+                                  <td class="table__cell">
+                                      {% if app.status == 'O' %}
+                                      Ожидает рассмотрения
+                                      {% elif app.status == 'R' %}
+                                      Рассмотрена
+                                      {% elif app.status == 'V' %}
+                                      Выполнена
+                                      {% else %}
+                                      Просрочена
+                                      {% endif %}
+                                  </td>
+                                  <td class="table__cell">{{ app.type }}</td>
+                                  <td class="table__cell">{{ app.owner.last_name}} {{ app.owner.first_name|slice:'0:1' }}. {{ app.owner.patronymic|slice:"0:1" }}.</td>
+                                  <td class="table__cell">
+                                      <a href="{% url 'choose-car' app.car.registration_number %}">
+                                        {{ app.car.registration_number|slice:'0:1'}}-{{ app.car.registration_number|slice:'1:4'}}-{{ app.car.registration_number|slice:'4:6'}}
+                                      </a>
+                                  </td>
+                                  <td class="table__cell"> {{ app.description |truncatechars:50}}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    {% else %}
+                        <p style="text-align: center; font-size: 30px; opacity: 0.8">Не найдено </p>
+                    {% endif %}
+                    </div>
+        {% else %}
+            <h1 style="
                 text-align: center;
                 margin-top: 20%;
                 font-size: 30px;
                 opacity: 0.7;
                             ">Страница недоступна</h1>
-            {% endif %}
-            </div>
-        </div>
-
+        {% endif %}
+    </div>
+</div>
 {% endblock main %}
 
 {% block forms %}
@@ -157,6 +154,6 @@
 
 {% block js_script %}
     {% if user.is_manager %}
-{#<script src="{% static 'js/new_applications.js' %}"></script>#}
+        {#<script src="{% static 'js/new_applications.js' %}"></script>#}
     {% endif %}
 {% endblock js_script %}

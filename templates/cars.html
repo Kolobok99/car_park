@@ -17,153 +17,145 @@
 {% block main %}
     <div class="main">
             <div class="main__container">
-{% if user.is_manager %}
-                <div class="main__title">
-                    <h1>Автомобили</h1>
-                    <p>{{ cars.count }}</p>
-                </div>
-                <button class="main__btn-add-car" type="submit">добавить авто</button>
-<form method="get" action="{% url 'cars' %}">
-                <ul class="main__filtration filtr-items">
-                    <li class="filtr-items__item placeholder">
-                        <input name="registration_number" type="text" placeholder="номер" value="">
-                    </li>
-                    <li class="filtr-items__item">
-                        <p class="filtr-items__title">Марка</p>
-                        <ul class="filtr-items__sub-menu">
-                          {% for brand in view.get_car_brands %}
-                            <label for="{{ brand.id }}" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="brand" value="{{ brand.id }}" id="{{ brand.id }}">
-                                    <label for="{{ brand.id }}" class="filtr-items__check-label">{{ brand.title }}
-                                </li>
-                            </label>
-                          {% endfor %}
-
-                        </ul>
-                    </li>
-                    <li class="filtr-items__item">
-                        <p class="filtr-items__title">Водитель</p>
-                        <ul class="filtr-items__sub-menu">
-{#                          {% for driver in view.get_drivers %}#}
-                            <label for="driver_yes" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" checked type="checkbox" name="driver_has" value="" id="driver_yes">
+                {% if user.is_manager %}
+                    <div class="main__title">
+                        <h1>Автомобили</h1>
+                        <p>{{ cars.count }}</p>
+                    </div>
+                    <button class="main__btn-add-car" type="submit">добавить авто</button>
+                    <form method="get" action="{% url 'cars' %}">
+                        <ul class="main__filtration filtr-items">
+                            <li class="filtr-items__item placeholder">
+                                <input name="registration_number" type="text" placeholder="номер" value="">
+                            </li>
+                            <li class="filtr-items__item">
+                                <p class="filtr-items__title">Марка</p>
+                                <ul class="filtr-items__sub-menu">
+                                    {% for brand in view.get_car_brands %}
+                                        <label for="{{ brand.id }}" class="filtr-items__check-label">
+                                            <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="brand" value="{{ brand.id }}" id="{{ brand.id }}">
+                                                <label for="{{ brand.id }}" class="filtr-items__check-label">{{ brand.title }}
+                                            </li>
+                                        </label>
+                                  {% endfor %}
+                                </ul>
+                            </li>
+                            <li class="filtr-items__item">
+                                <p class="filtr-items__title">Водитель</p>
+                                <ul class="filtr-items__sub-menu">
                                     <label for="driver_yes" class="filtr-items__check-label">
-                                        Нет водителя
-                                </li>
-                            </label>
-                             <label for="driver_no" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" checked type="checkbox" name="driver_has" value="1" id="driver_no">
-                                    <label for="driver_no" class="filtr-items__check-label">
-                                        Есть водитель
-                                </li>
-                            </label>
-{#                          {% endfor %}#}
-                        </ul>
-                    </li>
-                    <li class="filtr-items__item">
-                        <p class="filtr-items__title">Регион</p>
-                        <ul class="filtr-items__sub-menu">
-                          {% for car in view.get_regions %}
-                            <label for="{{ car.region_code }}" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="region_code" value="{{ car.region_code }}" id="{{ car.region_code }}">
-                                    <label for="{{ car.region_code }}" class="filtr-items__check-label">{{ car.region_code }}
-                                </li>
-                            </label>
-                          {% endfor %}
-                        </ul>
-                    </li>
+                                        <li class="filtr-items__sub-item"><input class="filtr-items__check" checked type="checkbox" name="driver_has" value="" id="driver_yes">
+                                            <label for="driver_yes" class="filtr-items__check-label">Нет водителя</label>
+                                        </li>
+                                    </label>
+                                     <label for="driver_no" class="filtr-items__check-label">
+                                        <li class="filtr-items__sub-item"><input class="filtr-items__check" checked type="checkbox" name="driver_has" value="1" id="driver_no">
+                                            <label for="driver_no" class="filtr-items__check-label">Есть водитель</label>
+                                        </li>
+                                    </label>
+                                </ul>
+                            </li>
+                            <li class="filtr-items__item">
+                                <p class="filtr-items__title">Регион</p>
+                                <ul class="filtr-items__sub-menu">
+                                    {% for car in view.get_regions %}
+                                        <label for="{{ car.region_code }}" class="filtr-items__check-label">
+                                            <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="region_code" value="{{ car.region_code }}" id="{{ car.region_code }}">
+                                                <label for="{{ car.region_code }}" class="filtr-items__check-label">{{ car.region_code }}</label>
+                                            </li>
+                                        </label>
+                                    {% endfor %}
+                                </ul>
+                            </li>
 
-                    <li class="filtr-items__item">
-                        <p class="filtr-items__title">Тип заявки</p>
-                        <ul class="filtr-items__sub-menu">
-                            {% for app in view.get_types_of_app %}
-                            <label for="{{ app.title }}" class="filtr-items__check-label">
-                                <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="applications" value="{{ app.id }}" id="{{ app.title }}">
-                                    <label for="{{ app.title }}" class="filtr-items__check-label">{{ app.title }}
-                                </li>
-                            </label>
-                            {% endfor %}
-                        </ul>
-                    </li>
+                            <li class="filtr-items__item">
+                                <p class="filtr-items__title">Тип заявки</p>
+                                <ul class="filtr-items__sub-menu">
+                                    {% for app in view.get_types_of_app %}
+                                        <label for="{{ app.title }}" class="filtr-items__check-label">
+                                            <li class="filtr-items__sub-item" ><input class="filtr-items__check" type="checkbox" name="applications" value="{{ app.id }}" id="{{ app.title }}">
+                                                <label for="{{ app.title }}" class="filtr-items__check-label">{{ app.title }}</label>
+                                            </li>
+                                        </label>
+                                    {% endfor %}
+                                </ul>
+                            </li>
 
-                    <button type="submit" class="filtr-items__button">
-                        <img src="{% static 'img/filtr/lupa.svg' %}" alt="поиск">
-                    </button>
-                </ul>
-            <a class="btn-reset" href="{% url 'cars' %}">Сбросить</a>
-            </form>
+                            <button type="submit" class="filtr-items__button">
+                                <img src="{% static 'img/filtr/lupa.svg' %}" alt="поиск">
+                            </button>
+                        </ul>
+                        <a class="btn-reset" href="{% url 'cars' %}">Сбросить</a>
+                    </form>
 
                 <div class="main__information">
-                {% if cars.count %}
-                    <table class="main__table table" style="text-align: center">
-                        <tr class="table__titles">
-                          <th class="table__title">Номер</th>
-                          <th class="table__title">Водитель</th>
-                          <th class="table__title">Марка</th>
-                          <th class="table__title">регион</th>
-                          <th class="table__title">Последний <br>осмотр</th>
-                          <th class="table__title">Активные <br>заявки</th>
-                       <form method="post"> {% csrf_token %}
-
-                          <th class="table__title"><button class="table__confiscate" type="submit">Изъять</button></th>
-{#                           <th class="table__title"><button class="table__delete" type="submit">Удалить</button></th>#}
-                        </tr>
-                    <input type="hidden" name="action" value="owner-none">
-                        {% for car in cars %}
-                        <tr class="table__row">
-                          <td class="table__cell">
-                              <a href="{{ car.get_absolute_url }}">
-                                  {{ car.registration_number|slice:'0:1'}}-{{ car.registration_number|slice:'1:4'}}-{{ car.registration_number|slice:'4:6'}}
-                              </a>
-                          </td>
-                          <td class="table__cell"><a href="{{ car.owner.get_absolute_url }}">{{ car.owner.last_name}} {{ car.owner.first_name|first}}.{{ car.owner.patronymic|first}}.</a></td>
-                          <td class="table__cell">{{ car.brand }}</td>
-                          <td class="table__cell">{{ car.region_code }}</td>
-                          <td class="table__cell">{{ car.last_inspection|date:"d-m-Y"}}</td>
-                          <td class="table__cell">
-                              {% for application in car.applications.all %}
-                                <table>
-                                    <tr>
-                                        <td>
-                                            <a href="{% url 'app' application.pk %}">{{ application.type_of }}</a>
+                    {% if cars.count %}
+                        <form method="post"> {% csrf_token %}
+                            <table class="main__table table" style="text-align: center">
+                                <tr class="table__titles">
+                                    <th class="table__title">Номер</th>
+                                    <th class="table__title">Водитель</th>
+                                    <th class="table__title">Марка</th>
+                                    <th class="table__title">регион</th>
+                                    <th class="table__title">Последний <br>осмотр</th>
+                                    <th class="table__title">Активные <br>заявки</th>
+                                    <th class="table__title"><button class="table__confiscate" type="submit">Изъять</button></th>
+                                    <th class="table__title"><button class="table__delete" type="submit">Удалить</button></th>
+                                </tr>
+                            <input type="hidden" name="action" value="owner-none">
+                                {% for car in cars %}
+                                    <tr class="table__row">
+                                        <td class="table__cell">
+                                            <a href="{{ car.get_absolute_url }}">
+                                                {{ car.registration_number|slice:'0:1'}}-{{ car.registration_number|slice:'1:4'}}-{{ car.registration_number|slice:'4:6'}}
+                                            </a>
                                         </td>
-                                        <td>{{ application.type }}</td>
+                                        <td class="table__cell"><a href="{{ car.owner.get_absolute_url }}">{{ car.owner.last_name}} {{ car.owner.first_name|first}}.{{ car.owner.patronymic|first}}.</a></td>
+                                        <td class="table__cell">{{ car.brand }}</td>
+                                        <td class="table__cell">{{ car.region_code }}</td>
+                                        <td class="table__cell">{{ car.last_inspection|date:"d-m-Y"}}</td>
+                                        <td class="table__cell">
+                                        {% for application in car.applications.all %}
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                                        <a href="{% url 'app' application.pk %}">{{ application.type_of }}</a>
+                                                    </td>
+                                                    <td>{{ application.type }}</td>
+                                                </tr>
+                                            </table>
+                                        {% endfor %}
+                                        </td>
+                                        <td class="table__cell">
+                                        {% if car.owner %}
+                                            <label class="table__check-label">
+                                                <input type="checkbox" class="table__check" name="owner_refuse_id" value="{{ car.pk }}">
+                                            </label>
+                                        {% else %}
+                                            изъята
+                                        {% endif %}
+                                        </td>
+                                        <td class="table__cell">
+                                            <label class="table__check-label">
+                                                <input type="checkbox" class="table__check" name="owner_delete_id" value="{{ car.pk }}">
+                                            </label>
+                                        </td>
                                     </tr>
-                                </table>
                                 {% endfor %}
-                          </td>
-                        <td class="table__cell">
-                            {% if car.owner %}
-                            <label class="table__check-label">
-                              <input type="checkbox" class="table__check" name="owner_refuse_id" value="{{ car.pk }}">
-                            </label>
-                             {% else %}
-                              изъята
-                              {% endif %}
-                        </td>
-{#                        <td class="table__cell">#}
-{#                            <label class="table__check-label">#}
-{#                              <input type="checkbox" class="table__check" name="owner_delete_id" value="{{ car.pk }}">#}
-{#                            </label>#}
-{#                        </td>#}
-{##}
-{#                        </tr>#}
-
+                            </table>
                         </form>
-                         {% endfor %}
-                    </table>
-                {% else %}
-                    <p style="text-align: center; font-size: 30px; opacity: 0.8">Не найдено </p>
-                {% endif %}
+                    {% else %}
+                        <p style="text-align: center; font-size: 30px; opacity: 0.8">Не найдено </p>
+                    {% endif %}
                 </div>
-{% else %}
-                <h1 style="
+                {% else %}
+                    <h1 style="
                 text-align: center;
                 margin-top: 20%;
                 font-size: 30px;
                 opacity: 0.7;
                             ">Страница недоступна</h1>
-{% endif %}
+                {% endif %}
             </div>
         </div>
 
@@ -171,77 +163,47 @@
 
 {% block forms %}
     {% if user.is_manager %}
-    <form method="post" action="{% url 'cars' %}">
-        <div class="form-car add">
-          <button type="reset">
-            <div class="bnt-form-car-reset-add">
-              <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <line x1="0" x2="100" y1="0" y2="100" />
-                <line x1="0" x2="100" y1="100" y2="0" />
-              </svg>
-            </div>
-          </button>
-          <h1 class="form-car__title">
-            Добавление авто:
-          </h1>
-            <div class="form-car__timing">
-            {% csrf_token %}
-{#                {{ form.as_p }}#}
-{#                <label for="car_number"><p>Номер:</p></label>#}
-{#                <input type="text" id="car_number">#}
-{##}
-{#                <label for=""><p>Марка:</p></label>#}
-{##}
-{#                <input type="radio" title="car_brand" id="rdo-toyota">#}
-{#                  <label for="rdo-toyota">TOYOTA</label>#}
-{##}
-{##}
-{#                <input type="radio" title="car_brand" id="rdo-kia">#}
-{#                  <label for="rdo-kia">KIA</label>#}
-{##}
-{#                <input type="radio" title="car_brand" id="rdo-bmw">#}
-{#                  <label for="rdo-bmw">BMW</label>#}
-{##}
-{##}
-{#                  <label for="car_region"><p>Регион:</p></label>#}
-{#                  <input type="text" id="car_region">#}
-{##}
-{#                <label for="car_last_inspection"><p>Последний осмотр:</p></label>#}
-{#                <input type="date">#}
-{#                <label for="car_driver"><p>Закрепить за:</p></label>#}
-{#                <input type="text" id="car_driver">#}
-{##}
-{#                <label for="car_image"><p>Прикрепить фото:</p></label>#}
-{#                <input type="file" id="car_image">#}
-{#                    {{ form }}#}
+        <form method="post" action="{% url 'cars' %}">{% csrf_token %}
+            <div class="form-car add">
+                <button type="reset">
+                    <div class="bnt-form-car-reset-add">
+                        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <line x1="0" x2="100" y1="0" y2="100" />
+                            <line x1="0" x2="100" y1="100" y2="0" />
+                        </svg>
+                    </div>
+                </button>
+                <h1 class="form-car__title">Добавление авто:</h1>
+                <div class="form-car__timing">
+                    {{ form.registration_number.errors }}
+                    <label for="{{ form.registration_number.id_for_label }}"><p>{{ form.registration_number.label}}</p></label>
 
-{#                  <p class="errorlist" style="color: red">{{ form.errors.registration_number.as_text }}</p>#}
-                {{ form.registration_number.errors }}
-                <label for="{{ form.registration_number.id_for_label }}"><p>{{ form.registration_number.label}}</p></label>
-{#                    <input type="text"  name="{{ form.registration_number.html_name }}" id="{{ form.registration_number.id_for_label }}">#}
                     {{ form.registration_number }}
-                  <label for=""><p> {{ form.brand.label}} </p></label>
+                    <label for=""><p> {{ form.brand.label}} </p></label>
+
                     {{ form.brand }}
-                 {{ form.region_code.errors }}
-{#                <p class="errorlist" style="color: red">{{ form.errors.region_code.as_text }}</p>#}
-                  <label for="{{ form.region_code.id_for_label }}"><p>{{ form.region_code.label}}</p></label>
+
+                    {{ form.region_code.errors }}
+
+                    <label for="{{ form.region_code.id_for_label }}"><p>{{ form.region_code.label}}</p></label>
                     <input type="text" name="{{ form.region_code.html_name}}"  id="{{ form.region_code.id_for_label }}" value="{{ form.region_code.value|default:'' }}">
-{#                    {{ form.region_code }}#}
-                  <label for="{{ form.last_inspection.id_for_label }}"><p>{{ form.last_inspection.label }}</p></label>
+
+                    <label for="{{ form.last_inspection.id_for_label }}"><p>{{ form.last_inspection.label }}</p></label>
                     <input type="date"  name="{{ form.last_inspection.html_name}}"  id="{{ form.last_inspection.id_for_label }}">
 
-                  <label for="{{ form.owner.id_for_label }}"><p>{{ form.owner.label }}</p></label>
+                    <label for="{{ form.owner.id_for_label }}"><p>{{ form.owner.label }}</p></label>
                     {{ form.owner }}
-                <button type="submit">Отправить</button>
+
+                    <button type="submit">Отправить</button>
+                </div>
             </div>
-        </div>
-      </form>
+        </form>
     {% endif %}
 {% endblock forms %}
 
 {% block js_script %}
     {% if user.is_manager %}
-<script src="{% static 'js/new_cars.js' %}"></script>
+        <script src="{% static 'js/new_cars.js' %}"></script>
     {% endif %}
 {% endblock js_script %}
 
