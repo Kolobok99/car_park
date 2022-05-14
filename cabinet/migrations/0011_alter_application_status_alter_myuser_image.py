@@ -19,6 +19,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='myuser',
             name='image',
-            field=models.ImageField(blank=True, null=True, upload_to=cabinet.models.MyUser.upload_image, verbose_name='Аватарка'),
+            field=models.ImageField(blank=True, null=True, upload_to=cabinet.models.MyUser.path_to_upload_image, verbose_name='Аватарка'),
         ),
     ]

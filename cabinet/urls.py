@@ -5,6 +5,7 @@ from django.urls import path
 
 from cabinet import car_view
 from cabinet.views import *
+from car_park import settings
 
 urlpatterns = [
     path('cars/', car_view.CarsCreateAndFilterView.as_view(), name='cars'),

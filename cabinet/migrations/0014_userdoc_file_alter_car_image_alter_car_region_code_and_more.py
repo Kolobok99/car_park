@@ -15,13 +15,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='userdoc',
             name='file',
-            field=models.FileField(default=1, upload_to=cabinet.models.UserDoc.upload_file, verbose_name='Копия документа'),
+            field=models.FileField(default=1, upload_to=cabinet.models.UserDoc.path_to_upload_file, verbose_name='Копия документа'),
             preserve_default=False,
         ),
         migrations.AlterField(
             model_name='car',
             name='image',
-            field=models.ImageField(blank=True, null=True, upload_to=cabinet.models.Car.upload_image, verbose_name='фотография'),
+            field=models.ImageField(blank=True, null=True, upload_to=cabinet.models.Car.path_to_upload_image, verbose_name='фотография'),
         ),
         migrations.AlterField(
             model_name='car',

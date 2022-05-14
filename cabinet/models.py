@@ -1,5 +1,4 @@
 import datetime
-import os
 import re
 
 from PIL import Image
@@ -10,41 +9,40 @@ from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.core import validators
 
 from datetime import timedelta
-from car_park import settings
 
 
 class Car(models.Model):
-    '''машины водилетей'''
+    """ машины """
 
-    def upload_image(self, *args):
+    def path_to_upload_image(self, *args):
+        """Возвращает путь загрузки фотографии"""
         path = f"cars/{self.registration_number}/avatars/car_avatar"
         return path
 
-    brand = models.ForeignKey('CarBrand', on_delete=models.SET(1),
-                              related_name='cars', verbose_name='Марка')
-    registration_number = models.CharField(verbose_name='Регистрационный номер',
-                                           unique=True, max_length=6, validators=[
-            validators.RegexValidator(
-                regex='[a-zA-Z][0-9]{3}[a-zA-Z]{2}',
-                message='Введите номер правильно!'
-            )], null=True, blank=True)
-    region_code = models.PositiveSmallIntegerField(verbose_name='Код региона',
+    brand = models.ForeignKey('CarBrand', verbose_name='Марка', on_delete=models.SET(1),
+                              related_name='cars')
+    registration_number = models.CharField('Регистрационный номер',
+                                           unique=True, max_length=6,
+                                           validators=[
+                                               validators.RegexValidator(
+                                                   regex='[a-zA-Z]{1}[0-9]{3}[a-zA-Z]{2}',
+                                                   message='Введите номер правильно!'
+                                               )])
+    region_code = models.PositiveSmallIntegerField('Код региона',
                                                    validators=[
-                                                       validators.MaxValueValidator(200, message='Укажите меньше 200!')]
-                                                   )
-    owner = models.ForeignKey('MyUser', on_delete=models.SET(None),
+                                                       validators.MaxValueValidator(
+                                                           200,
+                                                           message='Укажите меньше 200!'
+                                                       )])
+    owner = models.ForeignKey('MyUser', verbose_name='Владелец', on_delete=models.SET(None),
                               related_name='my_cars', null=True, blank=True)
 
-    last_inspection = models.DateField("последний осмотр", null=True, blank=True)
+    last_inspection = models.DateField("Последний осмотр", null=True, blank=True)
 
-    image = models.ImageField('фотография', null=True, blank=True, upload_to=upload_image)
+    image = models.ImageField('Фотография', null=True, blank=True, upload_to=path_to_upload_image)
 
     def save(self, *args, **kwargs):
-        # avatars = os.listdir(f'{settings.MEDIA_ROOT}/cars/{self.registration_number}/avatars/')
-        # for avatar in avatars:
-        #     path_to_delete = f'{settings.MEDIA_ROOT}/cars/{self.registration_number}/avatars/{avatar}'
-        #     if self.image.path != path_to_delete:
-        #         os.remove(path_to_delete)
+        """Сжимает изображение"""
         super(Car, self).save(**kwargs)
         try:
             img = Image.open(self.image.path)
@@ -55,8 +53,6 @@ class Car(models.Model):
                 img.save(self.image.path, 'png')
         except:
             pass
-        # self.registration_number = self.registration_number.upper()
-        # super(Car, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
         return f"/cars/{self.registration_number}"
@@ -70,9 +66,9 @@ class Car(models.Model):
 
 
 class CarBrand(models.Model):
-    '''марки автомобилей'''
+    """марки автомобилей"""
 
-    title = models.CharField(verbose_name='Название бредна', max_length=20)
+    title = models.CharField(verbose_name='Марка', max_length=20)
 
     def __str__(self):
         return self.title
@@ -83,22 +79,22 @@ class CarBrand(models.Model):
 
 
 class FuelCard(models.Model):
-    '''топливаня карта'''
+    """топливные карты"""
 
-    limit = models.PositiveIntegerField(verbose_name='лимит', blank=True)
-    number = models.CharField(verbose_name='номер', unique=True, max_length=16,
+    def __init__(self, *args, **kwargs):
+        """При создании карты устанавливается баланс равный лимиту"""
+        super(FuelCard, self).__init__(*args, **kwargs)
+        if not self.balance:
+            self.balance = self.limit
+
+    limit = models.PositiveIntegerField('Лимит', blank=True)
+    number = models.CharField('Номер', unique=True, max_length=16,
                               validators=[validators.MinLengthValidator(16)], blank=True)
 
     owner = models.OneToOneField('MyUser', verbose_name='Владелец', on_delete=models.SET_NULL,
                                  related_name='my_card', blank=True, null=True)
 
-    balance = models.PositiveIntegerField(verbose_name='остаток', default=None, null=True, blank=True)
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        if self.balance is None:
-            self.balance = self.limit
-        super().save(*args, **kwargs)
+    balance = models.PositiveIntegerField('Остаток', default=None, null=True, blank=True)
 
     def __str__(self):
         return f"{self.number[0:4]}-{self.number[4:8]}-{self.number[8:12]}-{self.number[12:16]}"
@@ -136,7 +132,7 @@ class MyUserManager(BaseUserManager):
 
 
 class MyUser(AbstractBaseUser, PermissionsMixin):
-    '''Модель учетная запись пользователей'''
+    """Модель Пользователя"""
 
     KINDES = (
         ('a', 'admin'),
@@ -145,29 +141,29 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     )
     last_login = None
 
-    def upload_image(self, *args):
+    def path_to_upload_image(self, *args):
+        """Возвращает путь загрузки фотографии"""
         path = f"drivers/{self.email}/avatars/user_avatar{datetime.datetime.today()}.webp"
         return path
 
-    email = models.EmailField(verbose_name='Почта', unique=True, null=True, blank=True,
+    email = models.EmailField('Почта', unique=True,
                               error_messages={
                                   'unique': 'Пользователь с таким email уже существует.',
                                   'invalid': 'Неправильно совсем!'
                               })
-    password = models.CharField("Пароль", max_length=128, )
+    password = models.CharField("Пароль", max_length=128)
 
-    first_name = models.CharField(verbose_name='Имя', max_length=20, null=True, blank=True)
-    last_name = models.CharField(verbose_name='Фамилия', max_length=20, null=True, blank=True)
-    patronymic = models.CharField(verbose_name='Отчество', max_length=20, null=True, blank=True)
-    phone = models.CharField(verbose_name='номер телефона', null=True, blank=True, max_length=11, validators=[
+    first_name = models.CharField('Имя', max_length=20)
+    last_name = models.CharField('Фамилия', max_length=20, )
+    patronymic = models.CharField('Отчество', max_length=20)
+    phone = models.CharField('Номер телефона', max_length=11, validators=[
         validators.RegexValidator("^\d{11}$", "Номер телефона состоит из 11 цифр"),
 
     ])
 
-    image = models.ImageField(verbose_name='Аватарка',
-                              null=True, blank=True, upload_to=upload_image)
+    image = models.ImageField('Аватарка', null=True, blank=True, upload_to=path_to_upload_image)
 
-    role = models.CharField(verbose_name='Роль', max_length=1, choices=KINDES, default='d')
+    role = models.CharField('Роль', max_length=1, choices=KINDES, default='d')
 
     is_active = models.BooleanField(default=True)
 
@@ -180,13 +176,8 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     objects = MyUserManager()
 
     def save(self):
+        """Сжимает фотографии"""
         super().save()
-        # avatars = os.listdir(f'{settings.MEDIA_ROOT}/drivers/{self.email}/avatars')
-        # for avatar in avatars:
-        #     path_to_delete = f'{settings.MEDIA_ROOT}/drivers/{self.email}/avatars/{avatar}'
-        #     if self.image.path != path_to_delete:
-        #         os.remove(path_to_delete)
-        #
         try:
             img = Image.open(self.image.path)
 
@@ -202,8 +193,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         pass
 
     def is_manager(self):
-        if self.role == 'm':
-            return True
+        if self.role == 'm': return True
         return False
 
     def __str__(self):
@@ -220,7 +210,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         last_name = self.last_name
         patronymic = self.patronymic
 
-        def name_validate(name:str, verbose_name, key):
+        def name_validate(name: str, verbose_name, key):
             if name is not None:
                 if not name[0].isupper():
                     errors[key] = ValidationError(f'{verbose_name} должно начинаться с большой буквы!')
@@ -246,22 +236,17 @@ class Document(models.Model):
     '''абстрактная модель документа'''
 
     type = None
-    created_at = models.DateField(verbose_name='Дата добавления',
-                                  auto_now_add=True)
-    start_date = models.DateField(verbose_name='Дата выдачи')
-    end_date = models.DateField(verbose_name='Дата окончания')
+    created_at = models.DateField('Дата добавления', auto_now_add=True)
+    start_date = models.DateField('Дата выдачи')
+    end_date = models.DateField('Дата окончания')
 
     def clean(self):
         errors = {}
         cleaned_data = super().clean()
-        print(f"{self.start_date=}")
-        print(f"{self.end_date=}")
         if self.start_date > self.end_date:
-            print("ERROR DATE!")
-            errors['start_date'] = ValidationError("Дата окончания меньше start_date!")
+            errors['start_date'] = ValidationError("Дата окончания меньше даты выпуска")
 
         if errors:
-            print(errors)
             raise ValidationError(errors)
         return cleaned_data
 
@@ -270,34 +255,21 @@ class Document(models.Model):
 
 
 class UserDoc(Document):
-    '''Документа водителя'''
+    """Документы водителя"""
 
-    def upload_file(self, *args):
+    def path_to_upload_file(self, *args):
+        """Возвращает путь загрузки документа"""
         path = f"drivers/{self.owner.email}/docs/user_doc_{self.type}_{self.end_date}"
         return path
 
-    type = models.ForeignKey('DocType', on_delete=models.SET_NULL,
-                             related_name='people_docs', null=True, blank=True)
-    owner = models.ForeignKey(MyUser, on_delete=models.CASCADE,
+    type = models.ForeignKey('DocType', verbose_name="Тип", on_delete=models.SET(1),
+                             related_name='people_docs')
+    owner = models.ForeignKey(MyUser, verbose_name="Владелец", on_delete=models.CASCADE,
                               related_name='my_docs')
-    file = models.FileField(verbose_name='Копия документа', upload_to=upload_file, null=True, blank=True)
+    file = models.FileField('Копия', upload_to=path_to_upload_file, null=True, blank=True)
 
     def __str__(self):
         return f"{self.type} - {self.owner}"
-
-    # def clean(self):
-    #     errors = {}
-    #     cleaned_data = super().clean()
-    #     print(f"{self.start_date=}")
-    #     print(f"{self.end_date=}")
-    #     if self.start_date > self.end_date:
-    #         print("ERROR DATE!")
-    #         errors['start_date'] = ValidationError("Дата окончания меньше start_date!")
-    #
-    #     if errors:
-    #         print(errors)
-    #         raise ValidationError(errors)
-    #     return cleaned_data
 
     class Meta:
         verbose_name = 'Водительский документ'
@@ -308,14 +280,15 @@ class AutoDoc(Document):
     '''Документа водителя'''
 
     def upload_file(self, *args):
+        """Возвращает путь загрузки документа"""
         path = f"cars/{self.owner.registration_number}/docs/car_doc_{self.type}_{self.end_date}"
         return path
 
-    type = models.ForeignKey('DocType', on_delete=models.SET_NULL,
-                             related_name='auto_docs', null=True, blank=True)
-    owner = models.ForeignKey(Car, on_delete=models.CASCADE,
-                              related_name='my_docs', default=42)
-    file = models.FileField(verbose_name='Копия документа', upload_to=upload_file, null=True, blank=True)
+    type = models.ForeignKey('DocType', verbose_name="Тип", on_delete=models.SET(1),
+                             related_name='auto_docs')
+    owner = models.ForeignKey(Car, verbose_name="Владелец", on_delete=models.CASCADE,
+                              related_name='my_docs')
+    file = models.FileField('Копия', upload_to=upload_file, null=True, blank=True)
 
     def __str__(self):
         return f"{self.type} - {self.owner}"
@@ -333,8 +306,8 @@ class DocType(models.Model):
         ('a', 'Машина'),
     )
 
-    title = models.CharField(verbose_name='Наименования документа', max_length=255)
-    type = models.CharField(max_length=1, choices=KINDS, default='a')
+    title = models.CharField('Наименования', max_length=255)
+    type = models.CharField("Тип", max_length=1, choices=KINDS, default='a')
 
     def __str__(self):
         return f'{self.title} ({self.type})'
@@ -361,31 +334,32 @@ class Application(models.Model):
         ('S', 'Очень срочно'),
     )
 
-    type = models.ForeignKey("TypeOfAppl", on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Тип заявки')
-    owner = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name='my_apps')
-    car = models.ForeignKey(Car, on_delete=models.CASCADE, related_name='applications', null=True, blank=True)
-    start_date = models.DateField(verbose_name='время создания', auto_now_add=True)
-    time_to_execute = models.PositiveIntegerField(verbose_name='время на выполнение',
-                                                  default=7)
-    end_date = models.DateField(verbose_name='дата окончания', null=True, blank=True)
+    type = models.ForeignKey("TypeOfAppl", verbose_name='Тип заявки', on_delete=models.SET(1))
+    owner = models.ForeignKey(MyUser, verbose_name='Владелец', on_delete=models.CASCADE, related_name='my_apps')
+    car = models.ForeignKey(Car, verbose_name="Машина", on_delete=models.CASCADE, related_name='applications')
+    start_date = models.DateField('Время создания', auto_now_add=True)
+    time_to_execute = models.PositiveIntegerField('Время на выполнение',
+                                                  default=0)
+    end_date = models.DateField('Дата окончания', null=True, blank=True)
 
-    is_active = models.BooleanField(verbose_name="Активность заявки", default=True)
-    status = models.CharField(verbose_name='Статус', max_length=1, choices=STATUS_CHOISES, default='O')
-    urgency = models.CharField(verbose_name='Cрочность', max_length=1, choices=URGENCY_CHOISES, default='N')
+    is_active = models.BooleanField("Активность заявки", default=True)
+    status = models.CharField('Статус', max_length=1, choices=STATUS_CHOISES, default='O')
+    urgency = models.CharField('Cрочность', max_length=1, choices=URGENCY_CHOISES, default='N')
 
-    description = models.TextField(verbose_name="Описание")
-    manager_descr = models.TextField(verbose_name="Комментарий менеджера", null=True, blank=True)
+    description = models.TextField("Описание")
+    manager_descr = models.TextField("Комментарий менеджера", null=True, blank=True)
 
     def __str__(self):
         return f"{self.pk}-{self.owner.last_name} + " \
                f"{self.start_date} + {self.type} + {self.car.registration_number}"
 
     def get_absolute_url(self):
-        return f"applications/{self.pk}"
+        return f"/applications/{self.pk}"
 
     def save(self, *args, **kwargs):
+        """Устанавливается время на выполнение в зависимости от выбранной 'срочности' """
         super().save(*args, **kwargs)
-        if self.time_to_execute == 0:
+        if not self.time_to_execute:
             if self.urgency == 'N':
                 self.end_date = self.start_date + timedelta(days=10)
             elif self.urgency == 'U':
@@ -404,8 +378,8 @@ class Application(models.Model):
 class TypeOfAppl(models.Model):
     """Типы заявок"""
 
-    title = models.CharField(verbose_name='Наименование', max_length=50)
-    car_is = models.BooleanField(verbose_name='Машина?', default=True)
+    title = models.CharField('Наименование', max_length=50)
+    car_is = models.BooleanField('Машина?', default=True)
 
     def __str__(self):
         return self.title
@@ -418,7 +392,7 @@ class TypeOfAppl(models.Model):
 class WhiteListEmail(models.Model):
     """Чек лист разрешенных для регистрации email'ов"""
 
-    email = models.EmailField(verbose_name='Email')
+    email = models.EmailField('Email')
 
     def __str__(self):
         return self.email

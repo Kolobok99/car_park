@@ -40,6 +40,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='userdoc',
             name='file',
-            field=models.FileField(blank=True, null=True, upload_to=cabinet.models.UserDoc.upload_file, verbose_name='Копия документа'),
+            field=models.FileField(blank=True, null=True, upload_to=cabinet.models.UserDoc.path_to_upload_file, verbose_name='Копия документа'),
         ),
     ]

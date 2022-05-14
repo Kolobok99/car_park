@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='car',
             name='image',
-            field=models.ImageField(blank=True, null=True, upload_to=cabinet.models.Car.upload_image, verbose_name='фотография'),
+            field=models.ImageField(blank=True, null=True, upload_to=cabinet.models.Car.path_to_upload_image, verbose_name='фотография'),
         ),
     ]

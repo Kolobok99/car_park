@@ -22,15 +22,27 @@ from cabinet.services.services import Context
 
 class CarsCreateAndFilterView(Context, LoginRequiredMixin, CreateView):
     """
-    Выводит список автомобилей
-    Фильтрует автомобили
-    Добавляет новый автомобиль
+    Контроллер: Автомобили (только менеджер)
+    Функционал:
+                Выводит:
+                        список автомобилей
+                        список отфильтрованных автомобилей
+                Добавляет:
+                        новый автомобиль
+                Удаляет и Изымает:
+                        выбранные автомобили
     """
     template_name = "cars.html"
     success_url = '/cars'
     form_class = CarAddForm
 
     def get_context_data(self, **kwargs):
+        """
+        Возвращает контекст:
+                все авто
+                или
+                отфильтрованные авто
+        """
         context = super().get_context_data(**kwargs)
         context['cars'] = Car.objects.all() if not len(self.request.GET) \
             else refact3_filtration_car(self.request.GET)
@@ -39,15 +51,14 @@ class CarsCreateAndFilterView(Context, LoginRequiredMixin, CreateView):
     def post(self, request, *args, **kwargs):
         action = self.request.POST.get('action')
         if action == 'owner-none':
+            # Изъятие автомобилей
             none_owner_pk = self.request.POST.getlist('owner_refuse_id')
-            print(f"{none_owner_pk=}")
             cars_none = Car.objects.filter(pk__in=none_owner_pk)
             for car in cars_none:
                 car.owner = None
                 car.save()
-
+            # Удаление автомобилей
             delete_owner_pk = self.request.POST.getlist('owner_delete_id')
-            print(f"{delete_owner_pk}")
             cars_delete = Car.objects.filter(pk__in=delete_owner_pk)
             for car in cars_delete:
                 car.delete()
@@ -61,6 +72,19 @@ class CarsCreateAndFilterView(Context, LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 class CarView(LoginRequiredMixin, UpdateView):
+    """
+        Контроллер: выбранное авто
+        Менеджер + владелец авто:
+                                Выводит информацию о конкретном авто
+                                Добавление:
+                                            заявки
+                                            документа
+                                Удаление:
+                                        документа
+        Менеджер:
+                Изменение данных авто
+    """
+
     template_name = 'car.html'
     form_class = CarUpdateForm
 
@@ -74,9 +98,17 @@ class CarView(LoginRequiredMixin, UpdateView):
         return Car.objects.get(registration_number=self.kwargs['slug'])
 
     def form_invalid(self, **kwargs):
+        """Формирует ответ с невыалидной формой"""
         return self.render_to_response(self.get_context_data(**kwargs))
 
     def get_context_data(self, **kwargs):
+        """
+        Возвращает контекст:
+            формы:
+                Добавления документа:
+                Добавления заявки:
+                Изменения данных машины:
+        """
         context = super().get_context_data(**kwargs)
         action_type = self.request.POST.get('action')
 
@@ -89,6 +121,12 @@ class CarView(LoginRequiredMixin, UpdateView):
         return context
 
     def post(self, request, *args, **kwargs):
+        """
+        Обновление данных машины
+        Создание заявки
+        Добавление документа
+        Удаление документа
+        """
         self.object = self.get_object()
         action_type = self.request.POST.get('action')
         if action_type == 'car_update':
@@ -117,30 +155,53 @@ class CarView(LoginRequiredMixin, UpdateView):
 
 class DriversFilterView(Context, LoginRequiredMixin, TemplateView):
     """
-    Выводит список водителей
-    Фильтрует список водителей
+        Контроллер: Водители (только менеджер)
+        Функционал:
+                    Выводит список водителей
+                    Выводит список отфильтрованных водителей
     """
     template_name = 'drivers.html'
 
     def get_context_data(self, **kwargs):
+        """
+        Возвращает контекст:
+            все водители
+            отфильтрованные водители
+        """
         context = super(DriversFilterView, self).get_context_data(**kwargs)
         context['drivers'] = MyUser.objects.filter(role='d') if not len(self.request.GET) \
             else refact3_filtration_driver(self.request.GET)
         return context
 
 class DriverView(LoginRequiredMixin, DetailView):
-    """Страница выбранного водителя"""
+    """
+        Контроллер: выбранный водитель (только менеджер)
+        Функционал:
+                    Выводит:
+                            Информацию о водители
+                            Записанные автомобили
+                            Заявки
+                            Документы
+                    Добавляет:
+                            топливную карту водителю
+
+    """
 
     template_name = 'driver.html'
     context_object_name = 'driver'
     model = MyUser
 
     def get_context_data(self, **kwargs):
+        """
+        Возвраащает контекст:
+            карты без владельца
+        """
         context = super(DriverView, self).get_context_data(**kwargs)
         context['free_cards'] = FuelCard.objects.filter(owner__isnull=True)
         return context
 
     def post(self, request, *args, **kwargs):
+        """добавляет карту водителю"""
         self.object = self.get_object()
         action_type = self.request.POST.get('action')
         if action_type == 'add-card':
@@ -151,12 +212,22 @@ class DriverView(LoginRequiredMixin, DetailView):
 
 class DocumentsView(Context, LoginRequiredMixin, TemplateView):
     """
-        Выводит список документов (водители+авто)
-        Фильтрует список документов (водители+авто)
+        Контроллер: Документы (только менеджер)
+        Функционал:
+                    Выводит список документов
+                    Выводит список отфильтрованных документов
     """
     template_name = 'documents.html'
 
     def get_context_data(self, **kwargs):
+        """
+        Возвраащает контекст документов:
+           все авто + водители
+           отфильтрованные:
+                            авто + водители
+                            авто
+                            водители
+        """
         context = super().get_context_data(**kwargs)
         request_GET = self.request.GET
         if len(request_GET) == 0:
@@ -177,30 +248,42 @@ class DocumentsView(Context, LoginRequiredMixin, TemplateView):
 
 class CardFilterAndCreateView(Context, LoginRequiredMixin, CreateView):
     """
-        Выводит список топливных карт
-        Фильтрует топливные карты
-        Добавляет новые топливные карты
+        Контроллер: Топливные карты (только менеджер)
+        Функционал:
+                    Выводит:
+                            список топливных карт
+                            список отфильтрованных топливных карт
+                    Добавляет:
+                            новую карту
+                    Удаляет и Изымает:
+                            выбранные карты
     """
     template_name = 'cards.html'
     success_url = '/cards'
     form_class = FuelCardAddForm
 
     def get_context_data(self, **kwargs):
+        """
+       Возвраащает контекст:
+           все карты
+           отфильтрованные карты
+       """
         context = super().get_context_data(**kwargs)
         context['all_cards'] = FuelCard.objects.all() if not len(self.request.GET) \
             else refact3_filtration_cards(self.request.GET)
         return context
 
     def post(self, request, *args, **kwargs):
+
         action = self.request.POST.get('action')
         if action == 'owner-none':
+            # Изымает карты
             owner_id_to_none = self.request.POST.getlist('owner_id_to_none')
-            print(f"{owner_id_to_none=}")
             cards_to_none = FuelCard.objects.filter(pk__in=owner_id_to_none)
             for card in cards_to_none:
                 card.owner = None
                 card.save()
-
+            # Удаляет карты
             owner_id_to_delete = self.request.POST.getlist('owner_id_to_delete')
             cards_to_delete = FuelCard.objects.filter(pk__in=owner_id_to_delete)
             for card in cards_to_delete:
@@ -215,22 +298,37 @@ class CardFilterAndCreateView(Context, LoginRequiredMixin, CreateView):
 
 class AplicationsView(Context, LoginRequiredMixin, TemplateView):
     """
-        Выводит список активных заявок
-        Фильтрует активные заявок
+        Контроллер: Заявки (только менеджер)
+        Функционал:
+                    Выводит:
+                            список активных заявок
+                            список отфильтрованных активных заявок
     """
     template_name = 'applications.html'
 
     def get_context_data(self, **kwargs):
+        """
+        Возвращает контекст:
+             все активные заявки
+             отфильтрованные активные заявки
+        """
         context = super(AplicationsView, self).get_context_data(**kwargs)
-        context['all_apps'] = Application.objects.all() if not len(self.request.GET) \
+        context['all_apps'] = Application.objects.filter(is_active=True) if not len(self.request.GET) \
             else refact3_filtration_apps(self.request.GET)
         return context
 
 class AppView(LoginRequiredMixin,UpdateView, DeletionMixin):
     '''
-    Просмотр выбраной заявки
-    изменение выбраной заявки
-    удаление выбраной заявки
+        Контроллер: выбранная заявка
+        Функционал:
+            Менеджер + Владелец заявки:
+                просмотр заявки
+            Менеджер:
+                одобрение заявки (отправка механикам)
+                возврат заявки на доработку
+            Владелец заявки:
+                удаление заявки
+                изменение заявки
     '''
 
     model = Application
@@ -245,11 +343,19 @@ class AppView(LoginRequiredMixin,UpdateView, DeletionMixin):
             return ""
 
     def get_context_data(self, **kwargs):
+        """Возвращает контекст:
+                            форму комментирования заявки
+        """
         context = super(AppView, self).get_context_data(**kwargs)
         context['manager_commit_form'] = ManagerCommitAppForm(instance=self.get_object())
         return context
 
     def post(self, request, *args, **kwargs):
+        """
+            Удаляет заявку
+            Возвращает заявку на доработку
+            Подтверждает заявку
+        """
         action = self.request.POST['action']
         if action == 'delete-yes':
             return self.delete(request, *args, **kwargs)
@@ -264,7 +370,19 @@ class AppView(LoginRequiredMixin,UpdateView, DeletionMixin):
         return super(AppView, self).post(request, *args, **kwargs)
 
 class AccountView(LoginRequiredMixin, UpdateView):
-    '''Обработка страницы ЛК'''
+    """
+        Контроллер: личная страница пользователя
+        Функционал:
+                    Вывод:
+                          автомобилей
+                          заявок
+                          документов
+                    Изменение:
+                          личный данных
+                          баланса карты
+                    Добавление:
+                          документов
+    """
 
     template_name = 'account.html'
 
@@ -278,11 +396,16 @@ class AccountView(LoginRequiredMixin, UpdateView):
         return MyUser.objects.get(pk=self.request.user.pk)
 
     def get_context_data(self, **kwargs):
+        """
+        Возвращает контекст:
+            формы:
+                добавления документа:
+                изменение баланса:
+                изменение данных пользователя:
+        """
         context = super().get_context_data(**kwargs)
         action_type = self.request.POST.get('action')
 
-        print(f"{action_type=}")
-        print(self.request.POST)
         context['doc_create_form'] = self.form_add_doc(self.request.POST) \
             if action_type == 'doc_create' else self.form_add_doc()
         context['form_change_balance'] = self.form_change_balance(self.request.POST) \
@@ -293,9 +416,16 @@ class AccountView(LoginRequiredMixin, UpdateView):
         return context
 
     def form_invalid(self, **kwargs):
+        """Формирует ответ с невалидной формой"""
         return self.render_to_response(self.get_context_data(**kwargs))
 
     def post(self, request, *args, **kwargs):
+        """
+        Изменение личных данных
+        Изменение баланса карты
+        Добавление документа
+        Удаление документа
+        """
         self.object = self.get_object()
         action_type = self.request.POST.get('action')
 
@@ -313,6 +443,7 @@ class AccountView(LoginRequiredMixin, UpdateView):
             return HttpResponseRedirect("")
 
         if form.is_valid():
+            """Формирует контекст сообщений"""
             if action_type == 'change_balance':
                 messages.success(self.request, "Баланс изменен!")
             elif action_type == 'doc_create':
@@ -326,7 +457,9 @@ class AccountView(LoginRequiredMixin, UpdateView):
 
 
 class RegistrationView(CreateView):
-    '''Регистрация пользователя'''
+    """
+        Контроллер: Регистрация пользователя
+    """
 
     template_name = 'registration.html'
     form_class = UserCreateForm
