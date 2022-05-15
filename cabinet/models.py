@@ -12,7 +12,9 @@ from datetime import timedelta
 
 
 class Car(models.Model):
-    """ машины """
+    """
+        Модель: машины
+    """
 
     def path_to_upload_image(self, *args):
         """Возвращает путь загрузки фотографии"""
@@ -66,7 +68,9 @@ class Car(models.Model):
 
 
 class CarBrand(models.Model):
-    """марки автомобилей"""
+    """
+        Модель: марки автомобилей
+    """
 
     title = models.CharField(verbose_name='Марка', max_length=20)
 
@@ -105,10 +109,12 @@ class FuelCard(models.Model):
 
 
 class MyUserManager(BaseUserManager):
-    """Менеджер для модели MyUser"""
+    """
+        Менеджер: модели MyUser
+    """
 
     def create_user(self, email, password, **extra_fields):
-        """Создание и сохранение записи в таблице MyUser"""
+        """ Создание user'а """
         if not email:
             raise ValueError("Укажите Email!")
         email = self.normalize_email(email)
@@ -118,7 +124,7 @@ class MyUserManager(BaseUserManager):
         return MyUser
 
     def create_superuser(self, email, password, **extra_fields):
-        """Создание и сохранение root'а """
+        """Создание root'а """
 
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
@@ -132,7 +138,9 @@ class MyUserManager(BaseUserManager):
 
 
 class MyUser(AbstractBaseUser, PermissionsMixin):
-    """Модель Пользователя"""
+    """
+        Модель: Пользователя
+    """
 
     KINDES = (
         ('a', 'admin'),
@@ -233,7 +241,9 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
 
 
 class Document(models.Model):
-    '''абстрактная модель документа'''
+    """
+        Модель: Абстрактная модель документа
+    """
 
     type = None
     created_at = models.DateField('Дата добавления', auto_now_add=True)
@@ -255,7 +265,9 @@ class Document(models.Model):
 
 
 class UserDoc(Document):
-    """Документы водителя"""
+    """
+        Модель: Документы водителя
+    """
 
     def path_to_upload_file(self, *args):
         """Возвращает путь загрузки документа"""
@@ -277,7 +289,9 @@ class UserDoc(Document):
 
 
 class AutoDoc(Document):
-    '''Документа водителя'''
+    """
+        Модель: Документа водителя
+    """
 
     def upload_file(self, *args):
         """Возвращает путь загрузки документа"""
@@ -299,7 +313,9 @@ class AutoDoc(Document):
 
 
 class DocType(models.Model):
-    '''Тип документа машины'''
+    """
+        Модель: Тип документа машины
+    """
 
     KINDS = (
         ('m', 'Человек'),
@@ -318,7 +334,9 @@ class DocType(models.Model):
 
 
 class Application(models.Model):
-    """Заявки на ремонт"""
+    """
+        Модель: Заявки на ремонт
+    """
 
     STATUS_CHOISES = (
         ('O', 'Ожидает рассмотрения'),
@@ -376,7 +394,9 @@ class Application(models.Model):
 
 
 class TypeOfAppl(models.Model):
-    """Типы заявок"""
+    """
+        Модель: Типы заявок
+    """
 
     title = models.CharField('Наименование', max_length=50)
     car_is = models.BooleanField('Машина?', default=True)
@@ -390,7 +410,9 @@ class TypeOfAppl(models.Model):
 
 
 class WhiteListEmail(models.Model):
-    """Чек лист разрешенных для регистрации email'ов"""
+    """
+        Модель: Чек лист разрешенных для регистрации email'ов
+    """
 
     email = models.EmailField('Email')
 
