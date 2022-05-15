@@ -4,6 +4,9 @@ from cabinet.models import *
 
 
 def refact3_filtration_car(get_params):
+    """
+        Возвращает отфильтрованные по get_params (авто)
+    """
     # 1.1)Получить все get-параметры:
     registration_number = get_params.get('registration_number')
 
@@ -47,6 +50,9 @@ def refact3_filtration_car(get_params):
     ).distinct()
 
 def refact3_filtration_driver(get_params):
+    """
+        Возвращает отфильтрованные по get_params (водители)
+    """
     last_name = get_params.get('last_name')
     phone = get_params.get('phone')
     card_balance = get_params.get('card_balance')
@@ -81,6 +87,9 @@ def refact3_filtration_driver(get_params):
     ).distinct()
 
 def refact3_filtration_cards(get_params):
+    """
+        Возвращает отфильтрованные по get_params (топливные карты)
+    """
     print("YES")
     number = get_params.get('number')
     owner = get_params.getlist('owner')
@@ -117,6 +126,9 @@ def refact3_filtration_cards(get_params):
     ).distinct()
 
 def refact3_filtration_apps(get_params):
+    """
+        Возвращает отфильтрованные по get_params (активные заявки)
+    """
     start_date = get_params.get('start_date')
     end_date = get_params.get('end_date')
 
@@ -147,6 +159,9 @@ def refact3_filtration_apps(get_params):
     ).distinct()
 
 def refact3_filtration_documents(model, get_params):
+    """
+        Возвращает отфильтрованные по get_params (документы)
+    """
 
     start_date = get_params.get('start_date')
     end_date = get_params.get('end_date')

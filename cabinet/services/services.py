@@ -5,28 +5,36 @@ from cabinet.models import CarBrand, MyUser, Car, TypeOfAppl, DocType, AutoDoc, 
 
 
 class Context():
-    '''Получение контекста'''
+    """
+       Примесь: Формирование контекста
+    """
 
     def get_car_brands(self):
+        """Возвращает все марки машин"""
         return CarBrand.objects.all()
 
     def get_drivers(self):
+        """Возвращает всех водителей"""
         return MyUser.objects.filter(role='d')
 
     def get_regions(self):
+        """Возвращает все коды регионов авто"""
         return Car.objects.all().values('region_code').distinct()
 
     def get_types_of_app(self):
+        """Возвращает все типы заявок"""
         return TypeOfAppl.objects.all()
 
     def get_car_types_of_docs(self):
-
+        """Возвращает все типы документов (авто) """
         return DocType.objects.filter(type='a')
 
     def get_man_types_of_docs(self):
+        """Возвращает все типы документов (водители) """
         return DocType.objects.filter(type='m')
 
     def get_all_docs(self):
+        """Возвращает документы (авто+водители)"""
         auto_doc = AutoDoc.objects.all()
         driver_doc = UserDoc.objects.all()
         query_set = list(chain(auto_doc, driver_doc))
@@ -35,12 +43,15 @@ class Context():
         return sorting_list_of_querysets
 
     def get_all_cards(self):
+        """Возвращает все топливные карты"""
         return FuelCard.objects.all()
 
     def get_all_urgecny_types(self):
+        """Возвращает все типы срочности заявок"""
         return Application.URGENCY_CHOISES
 
     def get_all_status_types(self):
+        """Возвращает все типы статусов заявок"""
         return Application.STATUS_CHOISES
 
 

@@ -11,21 +11,19 @@ from cabinet.models import MyUser, Car
 
 @receiver(post_save, sender=MyUser)
 def post_save_myuser(created, **kwargs):
+    """Создает директорию для нового user'a"""
     instance = kwargs['instance']
     if created:
-        print(f"{instance.email} создан!")
-
         #создание папки для пользователя
         os.mkdir(f'{settings.MEDIA_ROOT}/drivers/{instance.email}')
-
         #создание папки для хранения аватарок
         os.mkdir(f'{settings.MEDIA_ROOT}/drivers/{instance.email}/avatars')
-
         #создание папки для хранения документов
         os.mkdir(f'{settings.MEDIA_ROOT}/drivers/{instance.email}/docs')
 
 @receiver(pre_save, sender=MyUser)
 def pre_save_myuser(instance, **kwargs):
+    """При изменении email'а, переименовывает личную директорию user'а """
     if not (instance._state.adding):
         user = MyUser.objects.get(pk=instance.pk)
         old_email = user.email
@@ -52,28 +50,27 @@ def pre_save_myuser(instance, **kwargs):
 
 @receiver(pre_delete, sender=MyUser)
 def pre_delete_car(instance, **kwargs):
+    """Удаляет директорию удаляемого водителя"""
     user_dir = f"{settings.MEDIA_ROOT}/drivers/{instance.email}"
     shutil.rmtree(user_dir)
 
 
 @receiver(post_save, sender=Car)
 def post_save_cars(created, **kwargs):
+    """Создает директорию для нового авто"""
     instance = kwargs['instance']
     if created:
         print(f"{instance.registration_number} создана!")
-
         # создание папки для машины
         os.mkdir(f'{settings.MEDIA_ROOT}/cars/{instance.registration_number}')
-
         # создание папки для хранения аватарок
         os.mkdir(f'{settings.MEDIA_ROOT}/cars/{instance.registration_number}/avatars')
-
         # создание папки для хранения документов
         os.mkdir(f'{settings.MEDIA_ROOT}/cars/{instance.registration_number}/docs')
 
 @receiver(pre_save, sender=Car)
 def pre_save_car(instance, **kwargs):
-    print(f"asdsada {instance._state.adding=}")
+    """При изменении регистрационного номера, переименовывает личную директорию авто"""
     instance.registration_number = instance.registration_number.upper()
     if not instance._state.adding:
         car = Car.objects.get(pk=instance.pk)
@@ -110,5 +107,6 @@ def pre_save_car(instance, **kwargs):
 
 @receiver(pre_delete, sender=Car)
 def pre_delete_car(instance, **kwargs):
+    """Удаляет директорию удаляемого авто"""
     car_dir = f"{settings.MEDIA_ROOT}/cars/{instance.registration_number}"
     shutil.rmtree(car_dir)

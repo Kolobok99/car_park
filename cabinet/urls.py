@@ -24,12 +24,8 @@ urlpatterns = [
     path('registration/', car_view.RegistrationView.as_view(), name='registration'),
     path('', LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', LogoutView.as_view(template_name='login.html', next_page='login'), name='logout'),
-    path('account/', car_view.AccountView.as_view(), name='account'),
 
-    path('example/', example, name='example')
+    path('account/', car_view.AccountView.as_view(), name='account'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-# urlpatterns += patterns('',
-#     (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
-# )
