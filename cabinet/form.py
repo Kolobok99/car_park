@@ -32,6 +32,7 @@ class MyUserChangeForm(UserChangeForm):
 # -----------------------  CAR -----------------------
 
 class CarForm(forms.ModelForm):
+    """Базовая форма машины"""
 
     class Meta:
         model = Car
@@ -45,9 +46,15 @@ class CarForm(forms.ModelForm):
         }
 
 class CarAddForm(CarForm):
+    """
+        Форма: добавление новой машины
+    """
     ...
 
 class CarUpdateForm(CarForm):
+    """
+        Форма: обновление данных машины
+    """
     action = forms.CharField(widget=forms.HiddenInput(), initial="car_update")
 
     def __init__(self, *args, **kwargs):
@@ -69,7 +76,9 @@ class CarUpdateForm(CarForm):
 # -----------------------  DRIVER -----------------------
 
 class UserCreateForm(forms.ModelForm):
-    '''Форма регистрации пользователя'''
+    """
+        Форма: регистрация пользователя
+    """
     password_repeat = forms.CharField(label='Повторите пароль',
                                       widget=forms.widgets.PasswordInput()
                                       )
@@ -119,13 +128,18 @@ class UserCreateForm(forms.ModelForm):
 
 
 class UserUpdateForm(forms.ModelForm):
+    """
+        Форма: обновление данных пользователя
+    """
+
+    action = forms.CharField(widget=forms.HiddenInput(), initial="user_update")
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         super(UserUpdateForm, self).__init__(*args, **kwargs)
 
-
     def save(self, **kwargs):
+        """Заполняет пустые поля формы"""
         list_of_fields = ['first_name', 'last_name', 'patronymic',
                           'phone', 'email']
         for field in list_of_fields:
@@ -140,6 +154,9 @@ class UserUpdateForm(forms.ModelForm):
 # -----------------------  CARD -----------------------
 
 class FuelCardAddForm(forms.ModelForm):
+    """
+        Форма: добавление данных
+    """
 
     owner = forms.ModelChoiceField(queryset=MyUser.objects.filter(my_card__isnull=True), required=False)
 
@@ -162,6 +179,12 @@ class FuelCardAddForm(forms.ModelForm):
 
 class FuelCardChangeBalance(forms.ModelForm):
 
+    """
+        Форма: изменение баланса карты
+    """
+
+    action = forms.CharField(widget=forms.HiddenInput(), initial="change_balance")
+
     class Meta:
         model = FuelCard
         fields = ('balance', )
@@ -170,6 +193,10 @@ class FuelCardChangeBalance(forms.ModelForm):
 
 
 class AppForm(forms.ModelForm):
+
+    """
+        Базовая форма заявки
+    """
 
     class Meta:
         model = Application
@@ -182,6 +209,10 @@ class AppForm(forms.ModelForm):
         }
 
 class AppCreateForm(AppForm):
+    """
+        Форма: создание заявки
+    """
+
     action = forms.CharField(widget=forms.HiddenInput(), initial="app_create")
 
     def __init__(self, *args, **kwargs):
@@ -196,9 +227,18 @@ class AppCreateForm(AppForm):
         return super(AppForm, self).save()
 
 class AppUpdateForm(AppForm):
+    """
+        Форма: обновление заявки
+    """
+
     action = forms.CharField(widget=forms.HiddenInput(), initial="app_update")
 
 class ManagerCommitAppForm(forms.ModelForm):
+    """
+        Форма: подтверждение заявки (менеджером)
+    """
+
+    action = forms.CharField(widget=forms.HiddenInput(), initial="app_confirm")
 
     def save(self, **kwargs):
         self.instance.status = 'R'
@@ -211,6 +251,10 @@ class ManagerCommitAppForm(forms.ModelForm):
 # -----------------------  DOC -----------------------
 
 class AutoDocForm(forms.ModelForm):
+
+    """
+        Форма: добавление документа (авто)
+    """
 
     def __init__(self, *args, **kwargs):
         self.car = kwargs.pop('car', None)
@@ -243,7 +287,11 @@ class AutoDocForm(forms.ModelForm):
         }
 
 class DriverDocForm(forms.ModelForm):
-    action = forms.CharField(widget=forms.widgets.HiddenInput())
+    """
+        Форма: добавление документа (водитель)
+    """
+
+    action = forms.CharField(widget=forms.widgets.HiddenInput(), initial='doc_create')
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
@@ -256,10 +304,8 @@ class DriverDocForm(forms.ModelForm):
 
     class Meta:
         model = UserDoc
-        # fields = '__all__'
         exclude = ('owner',)
         widgets = {
-            # 'owner': forms.widgets.HiddenInput(),
             'start_date': forms.widgets.DateInput(attrs={
                 "type": 'date',
 

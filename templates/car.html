@@ -20,7 +20,6 @@
                                 <img src="{{ car.image.url }}" alt="" />
                             {% endif %}
                             <input type="file" name="image" accept="image/*" id="id_image">
-                            {{ form.action }}
                             {{ form.errors }}
                         </div>
                         <div class="car-area__info">
@@ -285,7 +284,8 @@
                 {{ doc_create_form.errors }}
                 {{ doc_create_form.file.label }}
                 {{ doc_create_form.file }}
-                <input type="hidden" name="action" value="doc_create">
+
+                {{ doc_create_form.action }}
                 <button type="submit">Отправить</button>
             </div>
         </div>

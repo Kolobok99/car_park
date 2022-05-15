@@ -21,7 +21,7 @@
                     <input type="file" name="image" accept="image/*" id="id_image">
                 </div>
                 <div class="account-area__info">
-                    <input type="hidden" name="action" value="user_update">
+                    {{ form.action }}
                     <div class="account-area__item">
                         <label for="first_name">Имя:</label>{{ form.first_name }}
                     </div>
@@ -170,7 +170,7 @@
                         <td class="table__cell">{{  user.my_card.number|slice:"0:4" }}-{{ user.my_card.number|slice:"4:8" }}-{{  user.my_card.number|slice:"8:12" }}-{{ user.my_card.number|slice:"12:16" }}</td>
                         <td class="table__cell">{{ user.my_card.limit }} л.</td>
                         <td class="table__cell">
-                            <input type="hidden" name="action" value="change_balance">
+                            {{ form_change_balance.action }}
                             <input class="table__card-balance" type="text" name="balance" value="{{ user.my_card.balance }}" placeholder="{{ user.my_card.balance }}">л
                         </td>
                         <td class="table__cell"><button class="table__btn-save-balance">изменить баланс</button></td>
@@ -247,7 +247,8 @@
             {{ doc_create_form.end_date }}
             {{ doc_create_form.file.label }}
             {{ doc_create_form.file }}
-            <input type="hidden" name="action" value="doc_create">
+
+            {{ doc_create_form.action }}
             <button type="submit">Отправить</button>
         </div>
     </div>
