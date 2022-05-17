@@ -1,0 +1,282 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block static_href %}
+    {% static 'css/logs.css' %}
+{% endblock static_href %}
+
+{% block title %} История {% endblock title%}
+
+{% block history_active %} active-page   {% endblock history_active %}
+
+
+{% block main %}
+<div class="main">
+    <div class="main__container">
+        {% if user.is_manager %}
+            <div class="main__title">
+                <h1>Событий</h1>
+                <p>{{ history|length  }}</p>
+            </div>
+            <form  method="get">
+                {# тип время статус            #}
+                <ul class="main__filtration filtr-items">
+                    <li class="filtr-items__item">
+                        <p class="filtr-items__title">Тип</p>
+                        <ul class="filtr-items__sub-menu">
+                             <label for="car"  class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="log_type" id="car" value="Car">
+                                    <label for="car" class="filtr-items__check-label">авто</label>
+                                </li>
+                            </label>
+
+                            <label for="app"  class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="log_type" id="app" value="Application">
+                                    <label for="app" class="filtr-items__check-label">заявки</label>
+                                </li>
+                            </label>
+
+                            <label for="user"  class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="log_type" id="user" value="MyUser">
+                                    <label for="user" class="filtr-items__check-label">user</label>
+                                </li>
+                            </label>
+
+
+                            <label for="card"  class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="log_type" id="card" value="FuelCard">
+                                    <label for="card" class="filtr-items__check-label">карта</label>
+                                </li>
+                            </label>
+
+                            <label for="user_doc"  class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="log_type" id="user_doc" value="UserDoc">
+                                    <label for="user_doc" class="filtr-items__check-label">вод. док.</label>
+                                </li>
+                            </label>
+
+                            <label for="auto_doc"  class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="log_type" id="auto_doc" value="AutoDoc">
+                                    <label for="auto_doc" class="filtr-items__check-label">автом. док.</label>
+                                </li>
+                            </label>
+
+                        </ul>
+                    </li>
+                    <li class="filtr-items__item">
+                        <p class="filtr-items__title">Время</p>
+                        <ul class="filtr-items__sub-menu">
+                            <label for="1"  class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="radio" name="log_time" id="1" value="1">
+                                    <label for="1" class="filtr-items__check-label">Сегодня</label>
+                                </li>
+                            </label>
+
+                             <label for="3"  class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="radio" name="log_time" id="3" value="3">
+                                    <label for="3" class="filtr-items__check-label">3 дня</label>
+                                </li>
+                            </label>
+
+                             <label for="7"  class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="radio" name="log_time" id="7" value="7">
+                                    <label for="7" class="filtr-items__check-label">Неделя</label>
+                                </li>
+                            </label>
+
+                             <label for="30"  class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="radio" name="log_time" id="30" value="30">
+                                    <label for="30" class="filtr-items__check-label">Месяц</label>
+                                </li>
+                            </label>
+                        </ul>
+                    </li>
+
+                    <li class="filtr-items__item">
+                        <p class="filtr-items__title">Статус</p>
+                        <ul class="filtr-items__sub-menu">
+                            <label for="creat" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="log_status" id="creat" value="+">
+                                    <label for="creat" class="filtr-items__check-label">создан</label>
+                                </li>
+                            </label>
+
+                            <label for="update" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="log_status" id="update" value="~">
+                                    <label for="update" class="filtr-items__check-label">изменен</label>
+                                </li>
+                            </label>
+
+                            <label for="delete" class="filtr-items__check-label">
+                                <li class="filtr-items__sub-item"><input class="filtr-items__check" type="checkbox" name="log_status" id="delete" value="-">
+                                    <label for="delete" class="filtr-items__check-label">удален</label>
+                                </li>
+                            </label>
+
+                        </ul>
+                    </li>
+
+                    <button  class="filtr-items__button" type="submit">
+                        <img src="{% static 'img/filtr/lupa.svg' %}" alt="поиск">
+                    </button>
+                </ul>
+                <a class="btn-reset" href="{% url 'history' %}">Сбросить</a>
+            </form>
+
+            <div class="main__information">
+                {% if history|length %}
+                    <table class="main__table table" style="text-align: center">
+                        <tr class="table__titles">
+                            <th class="table__title">ID</th>
+                            <th class="table__title">ТИП</th>
+                            <th class="table__title">ОБЪЕКТ</th>
+                            <th class="table__title">ДАТА и ВРЕМЯ</th>
+                            <th class="table__title">СТАТУС</th>
+                            <th class="table__title">ИЗМЕНЕНИЯ</th>
+{#                            <th class="table__title">Остаток <br>на карте</th>#}
+{#                            <th class="table__title">Прикрепленные <br>документы</th>#}
+                        </tr>
+                        {% for log in history %}
+                            {% if log.1.changes or log.0.history_type != '~' %}
+                                 {% if log.0.history_type == '+' %}
+                                    <tr style="background: #64be64" class="table__row">
+                                 {% elif log.0.history_type == '-' %}
+                                    <tr style="background: #e07171" class="table__row">
+                                 {% elif log.0.history_type == '~' %}
+                                    <tr style="background: #d5d56d" class="table__row">
+                                 {% endif %}
+                                    <td class="table__cell">
+                                        {% if log.0.registration_number %}
+                                            C.{{ log.0.pk }}
+                                        {% elif log.0.limit %}
+                                            F.{{ log.0.pk }}
+                                        {% elif log.0.email %}
+                                            U.{{ log.0.pk }}
+                                        {% elif log.0.created_at %}
+                                            D.{{ log.0.pk }}
+                                        {% elif log.0.urgency %}
+                                            A.{{ log.0.pk }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="table__cell">
+                                        {% if log.0.registration_number %}
+                                            АВТО
+                                        {% elif log.0.limit %}
+                                            КАРТА
+                                        {% elif log.0.email %}
+                                            USER
+                                        {% elif log.0.created_at %}
+                                            ДОКУМЕНТ
+                                        {% elif log.0.urgency %}
+                                            ЗАЯВКА
+                                        {% endif %}
+                                    </td>
+                                    <td class="table__cell">
+                                        {% if log.0.registration_number %}
+                                            {{  log.0.registration_number|slice:'0:1'}}-{{  log.0.registration_number|slice:'1:4'}}-{{  log.0.registration_number|slice:'4:6'}}
+                                        {% elif log.0.limit %}
+                                            {{ log.0.number|slice:"0:4"}} - {{ log.0.number|slice:"4:8"}} - {{ log.0.number|slice:"8:12"}} - {{ log.0.number|slice:"12:16"}}
+                                        {% elif log.0.email %}
+                                            {{ log.0.last_name}} {{ log.0.first_name|first}}.{{ log.0.patronymic|first}}.
+                                        {% elif log.0.created_at %}
+                                            {{ log.0.type }}
+                                        {% elif log.0.urgency %}
+                                            № {{ log.0.pk }}
+                                        {% endif %}
+                                    </td>
+
+                                    <td class="table__cell">{{ log.0.history_date }}</td>
+                                    <td class="table__cell">
+                                        {% if log.0.history_type == '+' %}
+                                            Добавлен
+                                        {% elif log.0.history_type == '-' %}
+                                            Удален
+                                        {% elif log.0.history_type == '~' %}
+                                        Изменен
+                                        {% endif %}
+                                    </td>
+                                    <td class="table__cell">
+                                        {% if log.0.history_type == '~' %}
+                                            {% for c in log.1.changes %}
+                                                {% if c.field == 'Cрочность' %}
+                                                    {{ c.field }}:
+                                                    {% if c.old == 'N' %}
+                                                        Не срочно
+                                                    {% elif c.old == 'U' %}
+                                                        Срочно
+                                                    {% else %}
+                                                        Очень срочно
+                                                    {% endif %}
+                                                     ->
+                                                    {% if c.new == 'N' %}
+                                                        Не срочно
+                                                    {% elif c.new == 'U' %}
+                                                        Срочно
+                                                    {% else %}
+                                                        Очень срочно
+                                                    {% endif %}
+
+                                                {% elif c.field == 'Статус' %}
+                                                    {{ c.field }}
+                                                    {% if c.old == 'O' %}
+                                                        Ожидает рассмотрения
+                                                    {% elif c.old == 'R' %}
+                                                        Рассмотрена
+                                                    {% elif c.old == 'V' %}
+                                                        Выполнена
+                                                    {% elif c.old == 'P' %}
+                                                        Просрочена
+                                                    {% elif c.old == 'T' %}
+                                                        Отклонена
+                                                    {% endif %}
+                                                    ->
+                                                    {% if c.new == 'O' %}
+                                                        Ожидает рассмотрения
+                                                    {% elif c.new == 'R' %}
+                                                        Рассмотрена
+                                                    {% elif c.new == 'V' %}
+                                                        Выполнена
+                                                    {% elif c.new == 'P' %}
+                                                        Просрочена
+                                                    {% elif c.new == 'T' %}
+                                                        Отклонена
+                                                    {% endif %}
+
+                                                {% else %}
+                                                {{ c.field }}: {{ c.old }} -> {{ c.new }}
+                                                {% endif %}
+                                                <br>
+{#                                                {% endif %}#}
+                                            {% endfor %}
+                                        {% endif %}
+
+                                    </td>
+{#                                <td class="table__cell">#}
+{#                                    {% if driver.my_card %}#}
+{#                                        {{ driver.my_card.balance }} Л<br>#}
+{#                                    {% else %}#}
+{#                                        . . .#}
+{#                                    {% endif %}#}
+{#                                </td>#}
+{#                                <td class="table__cell">#}
+{#                                    паспорт <br>#}
+{#                                    снилс#}
+{#                                </td>#}
+                            </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <p style="text-align: center; font-size: 30px; opacity: 0.8">Не найдено </p>
+                {% endif %}
+            </div>
+        {% else %}
+            <h1 style="
+                text-align: center;
+                margin-top: 20%;
+                font-size: 30px;
+                opacity: 0.7;
+                            ">Страница недоступна</h1>
+        {% endif %}
+    </div>
+</div>
+{% endblock main %}

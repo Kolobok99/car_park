@@ -96,7 +96,7 @@ class UserCreateForm(forms.ModelForm):
         pass2 = cleaned_data.get('password_repeat')
 
         if pass1 != pass2:
-            errors['password_repeat'] =  ValidationError('Пароли не совпадают!')
+            errors['password_repeat'] = ValidationError('Пароли не совпадают!')
 
         if email not in white_emails:
             errors['email'] = ValidationError('Ваша почта не указана в списке допустимых. '

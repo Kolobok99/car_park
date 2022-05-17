@@ -10,6 +10,8 @@ from django.core import validators
 
 from datetime import timedelta
 
+from simple_history.models import HistoricalRecords
+
 
 class Car(models.Model):
     """
@@ -42,6 +44,8 @@ class Car(models.Model):
     last_inspection = models.DateField("Последний осмотр", null=True, blank=True)
 
     image = models.ImageField('Фотография', null=True, blank=True, upload_to=path_to_upload_image)
+
+    history = HistoricalRecords()
 
     def save(self, *args, **kwargs):
         """Сжимает изображение"""
@@ -99,6 +103,8 @@ class FuelCard(models.Model):
                                  related_name='my_card', blank=True, null=True)
 
     balance = models.PositiveIntegerField('Остаток', default=None, null=True, blank=True)
+
+    history = HistoricalRecords()
 
     def __str__(self):
         return f"{self.number[0:4]}-{self.number[4:8]}-{self.number[8:12]}-{self.number[12:16]}"
@@ -178,6 +184,8 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
 
+    history = HistoricalRecords()
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
@@ -249,6 +257,8 @@ class Document(models.Model):
     created_at = models.DateField('Дата добавления', auto_now_add=True)
     start_date = models.DateField('Дата выдачи')
     end_date = models.DateField('Дата окончания')
+
+    history = HistoricalRecords(inherit=True)
 
     def clean(self):
         errors = {}
@@ -367,6 +377,8 @@ class Application(models.Model):
     description = models.TextField("Описание")
     manager_descr = models.TextField("Комментарий менеджера", null=True, blank=True)
 
+    history = HistoricalRecords()
+
     def __str__(self):
         return f"{self.pk}-{self.owner.last_name} + " \
                f"{self.start_date} + {self.type} + {self.car.registration_number}"
@@ -422,3 +434,34 @@ class WhiteListEmail(models.Model):
     class Meta:
         verbose_name = 'White List of Emil'
         verbose_name_plural = 'White List of Emil'
+
+
+# class ActionLogging(models.Model):
+#     """
+#         абстрактаная модель: Логирование действий пользователей
+#     """
+#
+#     LOG_TYPE_CHOICES = (
+#         ('CAR', 'Автомобиль'),
+#         ('DRV', 'Водитель'),
+#         ('DOC', 'Документ'),
+#         ('CRD', 'Топ. карта'),
+#         ('APP', 'Заявка'),
+#     )
+#     LOG_STATUS_CHOICES = (
+#         ('CRT', 'Создана'),
+#         ('UPD', 'Изменена'),
+#         ('DEL', 'Удалена'),
+#     )
+#
+#     type = models.CharField("Тип", max_length=3, choices=LOG_TYPE_CHOICES)
+#     time = models.DateTimeField("Дата и время", auto_now_add=True)
+#     status = models.CharField("Статус", max_length=3, choices=LOG_STATUS_CHOICES)
+#
+#     class Meta:
+#         abstract = True
+#
+#
+#
+# class CarLogging(ActionLogging):
+#     owner = models.ForeignKey(Car, verbose_name='Лог', on_delete=)

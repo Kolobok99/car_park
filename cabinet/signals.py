@@ -9,6 +9,12 @@ from django.conf import settings
 from cabinet.models import MyUser, Car
 
 
+from simple_history.signals import (
+    pre_create_historical_record,
+    post_create_historical_record,
+)
+
+
 @receiver(post_save, sender=MyUser)
 def post_save_myuser(created, **kwargs):
     """Создает директорию для нового user'a"""
@@ -51,9 +57,11 @@ def pre_save_myuser(instance, **kwargs):
 @receiver(pre_delete, sender=MyUser)
 def pre_delete_car(instance, **kwargs):
     """Удаляет директорию удаляемого водителя"""
-    user_dir = f"{settings.MEDIA_ROOT}/drivers/{instance.email}"
-    shutil.rmtree(user_dir)
-
+    try:
+        user_dir = f"{settings.MEDIA_ROOT}/drivers/{instance.email}"
+        shutil.rmtree(user_dir)
+    except:
+        pass
 
 @receiver(post_save, sender=Car)
 def post_save_cars(created, **kwargs):
@@ -80,21 +88,22 @@ def pre_save_car(instance, **kwargs):
                 f'{settings.MEDIA_ROOT}/cars/{old_registration_number}',
                 f'{settings.MEDIA_ROOT}/cars/{instance.registration_number}'
             )
-            # Переносим аватарку:
-            avatar_path = f'{settings.MEDIA_ROOT}/cars/{instance.registration_number}/avatars/{os.path.basename(car.image.name)}'
-            image = open(avatar_path, 'rb')
-            django_image = File(image)
-            instance.image = django_image
-            os.remove(avatar_path)
-
-            # Переносим документы
-            pathes = [f'{settings.MEDIA_ROOT}/cars/{instance.registration_number}/docs/{os.path.basename(doc.file.name)}' for doc in car.my_docs.all()]
-            files = [open(path, 'rb') for path in pathes]
-            django_files = [File(file) for file in files]
-            for id, obj in enumerate(instance.my_docs.all()):
-                obj.file = django_files[id]
-                obj.save()
-                os.remove(pathes[id])
+            if car.image:
+                # Переносим аватарку:
+                avatar_path = f'{settings.MEDIA_ROOT}/cars/{instance.registration_number}/avatars/{os.path.basename(car.image.name)}'
+                image = open(avatar_path, 'rb')
+                django_image = File(image)
+                instance.image = django_image
+                os.remove(avatar_path)
+            if car.my_docs.all():
+                # Переносим документы
+                pathes = [f'{settings.MEDIA_ROOT}/cars/{instance.registration_number}/docs/{os.path.basename(doc.file.name)}' for doc in car.my_docs.all()]
+                files = [open(path, 'rb') for path in pathes]
+                django_files = [File(file) for file in files]
+                for id, obj in enumerate(instance.my_docs.all()):
+                    obj.file = django_files[id]
+                    obj.save()
+                    os.remove(pathes[id])
 
             # pathes = [f'{settings.MEDIA_ROOT}/drivers/{instance.email}/docs/{os.path.basename(doc.file.name)}' for doc
             #           in user.my_docs.all()]

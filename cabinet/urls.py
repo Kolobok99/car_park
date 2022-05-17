@@ -26,6 +26,7 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(template_name='login.html', next_page='login'), name='logout'),
 
     path('account/', car_view.AccountView.as_view(), name='account'),
+    path('history/', car_view.HistoryView.as_view(), name='history'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

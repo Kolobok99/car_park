@@ -1,3 +1,6 @@
+import datetime
+
+import pytz
 from django.db.models import Q
 
 from cabinet.models import *
@@ -181,3 +184,59 @@ def refact3_filtration_documents(model, get_params):
     return model.objects.filter(
         *list_of_Q
     ).distinct()
+
+
+def filtration_logs(list_with_logs, get_params):
+    """
+        Возвращает отфильтрованный список по get_params (все логи)
+    """
+
+    log_status = get_params.getlist('log_status')
+    log_type = get_params.getlist('log_type')
+    log_time = get_params.get('log_time')
+
+    return_status = []
+    return_type = []
+    return_time = []
+
+    if log_status:
+        for l in list_with_logs:
+            for s in log_status:
+                if l[0].history_type == s:
+                    return_status.append(l)
+    if log_type:
+        for l in list_with_logs:
+            for t in log_type:
+                if str(l[0].__class__)[33:-2] == t:
+                    return_type.append(l)
+    if log_time:
+        for l in list_with_logs:
+            today = datetime.datetime.now()
+            today = pytz.utc.localize(today)
+            filter_date = today - timedelta(days=int(log_time))
+            if l[0].history_date > filter_date:
+                return_time.append(l)
+
+
+    if log_type and log_status and log_type:
+        ret = [l for l in return_status if l in return_type and l in return_time]
+        return ret
+
+    elif log_type and log_status:
+        ret = [l for l in return_status if l in return_type]
+        return ret
+    elif log_type and log_time:
+        ret = [l for l in return_time if l in return_type]
+        return ret
+    elif log_time and log_status:
+        ret = [l for l in return_status if l in return_time]
+        return ret
+
+    elif log_status:
+        return return_status
+    elif log_type:
+        return return_type
+    elif log_time:
+        return return_time
+
+

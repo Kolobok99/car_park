@@ -1,13 +1,14 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import *
+from simple_history.admin import SimpleHistoryAdmin
 from .early_forms import *
 # Register your models here.
 list_of_moderls = [Car, CarBrand, FuelCard,
                    UserDoc, AutoDoc, DocType,
                    Application, TypeOfAppl, WhiteListEmail]
 for m in list_of_moderls:
-    admin.site.register(m)
+    admin.site.register(m, SimpleHistoryAdmin)
 
 class MyUserAdmin(UserAdmin):
     add_form = MyUserCreationForm

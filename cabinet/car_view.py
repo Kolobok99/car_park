@@ -465,3 +465,17 @@ class RegistrationView(CreateView):
     form_class = UserCreateForm
     success_url = reverse_lazy('login')
 
+class HistoryView(Context, TemplateView):
+    """
+        Контроллер: выводит историю действия user'ов
+    """
+
+    template_name = 'history.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(HistoryView, self).get_context_data(**kwargs)
+        if len(self.request.GET):
+            context['history'] = filtration_logs(self.get_all_history(), self.request.GET)
+        else:
+            context['history'] = self.get_all_history()
+        return context

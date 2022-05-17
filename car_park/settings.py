@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django_filters',
     'django_cleanup',
     'easy_thumbnails',
-    
+    'simple_history',
+
     'cabinet',
 ]
 
@@ -54,6 +55,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 ROOT_URLCONF = 'car_park.urls'
