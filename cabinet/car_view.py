@@ -4,11 +4,13 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
+from django.core.mail import send_mail
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
-from django.views.generic.edit import FormMixin, DeletionMixin, UpdateView
+from django.views.generic.edit import FormMixin, DeletionMixin, UpdateView, FormView
 
+from car_bot.models import Notifications
 from . import form
 from .form import *
 from .models import *
@@ -17,7 +19,8 @@ from django.views.generic import ListView, TemplateView, CreateView, DetailView
 
 from cabinet.services.filtration import *
 
-from cabinet.services.services import Context
+from cabinet.services.services import Context, generator_activation_code
+from .tasks import send_activation_code
 
 
 class CarsCreateAndFilterView(Context, LoginRequiredMixin, CreateView):
@@ -145,6 +148,16 @@ class CarView(LoginRequiredMixin, UpdateView):
             if action_type == 'car_update':
                 messages.success(self.request, "Данные машины изменены!")
             elif action_type == 'app_create':
+                form.save(commit=False)
+                print(f"{form.instance.pk}")
+                new_note = Notifications()
+                new_note.creator = self.request.user
+                new_note.recipient = MyUser.objects.get(role='m')
+                new_note.content = f'Уведомление о заявки № {form.instance.pk}'
+                new_note.content_object = form.instance
+
+                new_note.save()
+
                 messages.success(self.request, "Заявка добавлена!")
             elif action_type == 'doc_create':
                 messages.success(self.request, "Документ добавлен!")
@@ -463,7 +476,38 @@ class RegistrationView(CreateView):
 
     template_name = 'registration.html'
     form_class = UserCreateForm
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('driver-activation')
+
+    def form_valid(self, form):
+
+        activation_code = generator_activation_code()
+        form.activation_code = activation_code
+        send_activation_code.delay(driver_email=form.instance.email, activation_code=activation_code)
+        # send_mail(
+        #     'Подтверждение регистрации',
+        #     f'ВАШ КОД: {activation_code}',
+        #     'izolotavin99@gmail.com',
+        #     [form.instance.email],
+        #     fail_silently=False
+        # )
+
+        return super(RegistrationView, self).form_valid(form)
+
+class EmailConfirmView(FormView):
+
+    template_name = 'user_activation.html'
+    form_class = DriverActivationForm
+
+    def form_valid(self, form):
+        print(f"form.activation_code = {form.cleaned_data['activation_code']}")
+        try:
+            new_driver = MyUser.objects.get(is_active=False, activation_code=form.cleaned_data['activation_code'])
+            new_driver.is_active = True
+            new_driver.activation_code = ''
+            new_driver.save()
+            return HttpResponseRedirect('')
+        except:
+            return HttpResponseRedirect('/registration')
 
 class HistoryView(Context, TemplateView):
     """

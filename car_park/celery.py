@@ -19,6 +19,10 @@ from celery.schedules import crontab
 app.conf.beat_schedule = {
 	'check-last-inspection-every-1-minute': {
 		'task': "cabinet.tasks.check_last_inspection",
+		'schedule': crontab(minute='*/1500'),
+	},
+	'delete-empty-card': {
+		'task': "cabinet.tasks.delete_empty_card",
 		'schedule': crontab(minute='*/1'),
-	}
+	},
 }

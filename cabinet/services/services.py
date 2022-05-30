@@ -1,9 +1,11 @@
 import random
 from itertools import chain
-
+import random
+import string
 from django.utils.html import format_html
 
 from cabinet.models import CarBrand, MyUser, Car, TypeOfAppl, DocType, AutoDoc, UserDoc, FuelCard, Application
+from car_bot.models import Notifications
 
 
 class Context():
@@ -167,3 +169,21 @@ def sort_by_date_start(list_to_sort):
             else:
                 e_nums.append(elem)
         return sort_by_date_start(s_nums) + e_nums + sort_by_date_start(m_nums)
+
+
+def generator_activation_code():
+    """Возвращает рандомную строку из 6 символов"""
+    letters = string.ascii_lowercase
+    length = 6
+    rand_string = ''.join(random.choice(letters) for i in range(length))
+    # print("Random string of length", length, "is:", rand_string)
+    return rand_string
+
+
+# def notifications_creator(creator, recipient, content, content_object):
+#     """Создает уведомления"""
+#
+#     note = Notifications()
+#     note.creator = creator
+#     note.recipient = recipient
+#     note.content_object =

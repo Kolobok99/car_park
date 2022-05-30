@@ -92,7 +92,7 @@ class FuelCard(models.Model):
     def __init__(self, *args, **kwargs):
         """При создании карты устанавливается баланс равный лимиту"""
         super(FuelCard, self).__init__(*args, **kwargs)
-        if not self.balance:
+        if self.balance is None:
             self.balance = self.limit
 
     limit = models.PositiveIntegerField('Лимит', blank=True)
@@ -179,7 +179,8 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
 
     role = models.CharField('Роль', max_length=1, choices=KINDES, default='d')
 
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
+    activation_code = models.CharField(max_length=6, default='111111', null=True, blank=True)
 
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
@@ -380,9 +381,11 @@ class Application(models.Model):
     history = HistoricalRecords()
 
     def __str__(self):
-        return f"{self.pk}-{self.owner.last_name} + " \
-               f"{self.start_date} + {self.type} + {self.car.registration_number}"
-
+        if self.owner:
+            return f"{self.pk}-{self.owner.last_name} + " \
+                   f"{self.start_date} + {self.type} + {self.car.registration_number}"
+        else:
+            return f"{self.pk}"
     def get_absolute_url(self):
         return f"/applications/{self.pk}"
 

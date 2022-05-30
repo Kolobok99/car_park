@@ -120,6 +120,30 @@ input[type='date'] {
   font-family: serif;
 }
 
+input[type='email'] {
+  font-weight: 400;
+  font-size: 17px;
+  font-family: serif;
+}
+
+select {
+  font-weight: 400;
+  font-size: 17px;
+  font-family: serif;
+}
+
+input[type='number'] {
+  font-weight: 400;
+  font-size: 17px;
+  font-family: serif;
+}
+
+textarea {
+  font-weight: 400;
+  font-size: 17px;
+  font-family: serif;
+}
+
 body {
   line-height: 1;
   font-family: "CoFo Sans";
@@ -342,6 +366,12 @@ body {
 .table__title, .table__cell {
   border: 1px solid #ddd;
   padding: 8px;
+}
+
+.table__title input[type='text'], .table__cell input[type='text'] {
+  font-weight: 300;
+  font-size: 16px;
+  font-family: serif;
 }
 
 .table__card-balance {

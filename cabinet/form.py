@@ -79,11 +79,17 @@ class UserCreateForm(forms.ModelForm):
     """
         Форма: регистрация пользователя
     """
+
+    def __init__(self, *args, **kwargs):
+        self.activation_code = kwargs.pop('activation_code', None)
+        super().__init__(*args, **kwargs)
+
     password_repeat = forms.CharField(label='Повторите пароль',
                                       widget=forms.widgets.PasswordInput()
                                       )
     def save(self, **kwargs):
         self.instance.set_password(self.cleaned_data['password'])
+        self.instance.activation_code = self.activation_code
         return super().save(**kwargs)
 
     def clean(self):
@@ -150,6 +156,14 @@ class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = MyUser
         exclude = ('role', 'is_active', 'is_staff', 'is_superuser', 'password')
+
+
+class DriverActivationForm(forms.Form):
+    """
+        Форма: подтверждение регистрации
+    """
+
+    activation_code = forms.CharField(label="Код подтверждение")
 
 # -----------------------  CARD -----------------------
 

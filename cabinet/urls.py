@@ -22,6 +22,7 @@ urlpatterns = [
     path('applications/<int:pk>', car_view.AppView.as_view(), name='app'),
 
     path('registration/', car_view.RegistrationView.as_view(), name='registration'),
+    path('reg-activation/', car_view.EmailConfirmView.as_view(), name='driver-activation'),
     path('', LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', LogoutView.as_view(template_name='login.html', next_page='login'), name='logout'),
 
