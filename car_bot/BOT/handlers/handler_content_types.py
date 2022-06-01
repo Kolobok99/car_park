@@ -1,6 +1,8 @@
 # добавляем настройки
-import os,django
-os.environ.setdefault ("DJANGO_SETTINGS_MODULE", "car_park.settings") # project_name название проекта
+import django
+import os
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "car_park.settings")
 django.setup()
 
 from cabinet.models import MyUser
@@ -16,18 +18,23 @@ class HandlerContentTypes(Handler):
     def __init__(self, bot):
         super().__init__(bot)
 
-    def entered_number(self, message):
+    def received_phone(self, message):
         """
         обрабатывает входящие /start команды
         """
 
         users = MyUser.objects.all()
-        number = message.text
+
+
+        number = message.contact.phone_number
         flag = False
         for user in users:
-            if user.phone == number:
+            if user.phone[1:] == number[2:]:
+                user.chat_id = message.chat.id
+                user.save()
                 self.bot.send_message(message.chat.id,
                                       f'{user.first_name}, авторизация прошла успешно',
+                                      reply_markup=self.keybords.set_notifications()
                                       )
                 flag = True
                 break
@@ -40,6 +47,6 @@ class HandlerContentTypes(Handler):
     def handle(self):
         # обработчик(декоратор) сообщений,
         # который обрабатывает входящие /start команды.
-        @self.bot.message_handler(content_types=["text"])
-        def handle_text(message):
-            self.entered_number(message)
+        @self.bot.message_handler(content_types=['contact'])
+        def handle(message):
+            self.received_phone(message)

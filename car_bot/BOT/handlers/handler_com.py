@@ -20,7 +20,14 @@ class HandlerCommands(Handler):
         # что пользователь сейчас отправит боту свой номер телефона
 
         self.bot.send_message(message.chat.id, 'Номер телефона',
-                         reply_markup=self.keybords.set_send_number)
+                         reply_markup=self.keybords.set_send_number())
+
+
+    def pressed_btn_number(self, message):
+        """
+        Обрабатывает входящие /number команды
+        """
+        self.bot.send_message(message.chat.id, f"Ваш номер: ")
 
 
 
@@ -31,3 +38,7 @@ class HandlerCommands(Handler):
         def handle(message):
             if message.text == '/start':
                 self.pressed_btn_start(message)
+
+        @self.bot.message_handler(commands=['number'])
+        def handle(message):
+            self.pressed_btn_number(message)

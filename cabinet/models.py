@@ -187,6 +187,8 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
 
     history = HistoricalRecords()
 
+    chat_id = models.PositiveIntegerField(default=0)
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 

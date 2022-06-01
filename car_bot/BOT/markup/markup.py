@@ -142,3 +142,24 @@ class Keyboards:
 
         # Добавляем эту кнопку
         self.markup.add(phone_btn)
+
+        return self.markup
+
+    def set_notifications(self):
+        """Создает кнопку уведомления"""
+
+        self.markup = ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
+        nots_btn = KeyboardButton(text="уведомления")
+
+        self.markup.add(nots_btn)
+
+        return self.markup
+
+    def set_deactivate_not(self, not_id):
+        """Создает кнопку подтверждения уведомления"""
+
+        self.markup = InlineKeyboardMarkup(row_width=1)
+        deactivate_btn = InlineKeyboardButton("Подтвердить", callback_data=not_id)
+        self.markup.add(deactivate_btn)
+
+        return self.markup
