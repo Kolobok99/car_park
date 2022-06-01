@@ -2,7 +2,8 @@ import datetime
 
 from django.core.mail import send_mail
 
-from cabinet.models import Car, Application, FuelCard
+from cabinet.models import Car, Application, FuelCard, MyUser, AutoDoc, UserDoc
+from car_bot.models import Notifications
 from car_park.celery import app
 
 
@@ -35,6 +36,36 @@ def check_last_inspection():
             print("Нет подходящий машин!")
 
 @app.task
+def check_car_docs_date():
+    car_docs = AutoDoc.objects.all()
+    today = datetime.date.today()
+
+    for car_doc in car_docs:
+        time_delta = today - car_doc.end_date
+        if time_delta < 10:
+            Notifications.objects.create(
+                recipient=car_doc.owner.owner,
+                content=f"Срок действия документа на машину {car_doc.owner.registration_number}"
+                        f" истекает через {time_delta}",
+                content_object=car_doc
+            )
+
+@app.task
+def check_user_docs_date():
+    user_docs = UserDoc.objects.all()
+    today = datetime.date.today()
+
+    for user_doc in user_docs:
+        time_delta = today - user_doc.end_date
+        if time_delta < 10:
+            Notifications.objects.create(
+                recipient=user_doc.owner,
+                content=f"Срок действия {user_doc.type} документа истекает через {time_delta}",
+                content_object=user_doc
+            )
+
+
+@app.task
 def send_activation_code(driver_email, activation_code):
     """Отправляет код активации аккаунта"""
     send_mail(
@@ -56,3 +87,14 @@ def delete_empty_card():
         card_pk = card.pk
         card.delete()
         print(f"{card_pk} удалена!")
+
+@app.task
+def create_note_about_ending_cards():
+    cards = FuelCard.objects.filter(owner__isnull=True)
+    if len(cards) < 2:
+        Notifications.objects.create(
+            recipient=MyUser.objects.get(role='m'),
+            content=f"Заканчиваются карты, осталось {len(cards)} штуки",
+            content_object=MyUser.objects.get(role='m')
+        )
+

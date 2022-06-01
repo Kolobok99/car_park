@@ -3,17 +3,42 @@ import shutil
 
 from django.core.files import File
 from django.dispatch import receiver
-from django.db.models.signals import post_save, pre_save, pre_delete
+from django.db.models.signals import post_save, pre_save, pre_delete, post_delete
 from django.conf import settings
-
-from cabinet.models import MyUser, Car
-
+from django.dispatch import Signal
+from cabinet.models import MyUser, Car, FuelCard, Application
 
 from simple_history.signals import (
     pre_create_historical_record,
     post_create_historical_record,
 )
 
+from car_bot.models import Notifications
+
+
+@receiver(signal=post_save, sender=Application)
+def post_save_apps(instance, **kwargs):
+    if instance.status == 'O':
+        if instance.owner != MyUser.objects.get(role='m'):
+            Notifications.objects.create(
+                recipient=MyUser.objects.get(role='m'),
+                content=f"Заявка №{instance.pk}  ожидает рассмотрения",
+                content_object=instance
+            )
+    elif instance.status == 'R':
+        Notifications.objects.create(
+            recipient=instance.owner,
+            content=f"Ваша заявка №{instance.pk} рассмотрена\n"
+                    f"Комментарий менеджера: {instance.manager_descr}",
+            content_object=instance
+        )
+
+    elif instance.status == 'T':
+        Notifications.objects.create(
+            recipient=instance.owner,
+            content=f"Ваша заявка №{instance.pk} ОТКЛОНЕНА!",
+            content_object=instance
+        )
 
 @receiver(post_save, sender=MyUser)
 def post_save_myuser(created, **kwargs):
@@ -63,6 +88,8 @@ def pre_delete_car(instance, **kwargs):
     except:
         pass
 
+
+
 @receiver(post_save, sender=Car)
 def post_save_cars(created, **kwargs):
     """Создает директорию для нового авто"""
@@ -75,6 +102,14 @@ def post_save_cars(created, **kwargs):
         os.mkdir(f'{settings.MEDIA_ROOT}/cars/{instance.registration_number}/avatars')
         # создание папки для хранения документов
         os.mkdir(f'{settings.MEDIA_ROOT}/cars/{instance.registration_number}/docs')
+
+        # Если машина впервые добавляется
+        if instance.owner:
+            Notifications.objects.create(
+                recipient=instance.owner,
+                content=f"Вам присвоена новое авто ({instance.registration_number})",
+                content_object=instance
+            )
 
 @receiver(pre_save, sender=Car)
 def pre_save_car(instance, **kwargs):
@@ -104,6 +139,49 @@ def pre_save_car(instance, **kwargs):
                     obj.file = django_files[id]
                     obj.save()
                     os.remove(pathes[id])
+        # При изменении водителя создает уведомление
+        manager = MyUser.objects.get(role='m')
+        old_owner = car.owner
+        new_owner = instance.owner
+        # 1) old_owner = None, new_owner = some_owner (добавление водителя)
+        # 2) old_owner = some_owner, new_owner = some_owner_2 (изменение водителя)
+        # 3) old_owner = some_owner, new_owner = None (удаление водителя)
+        # 4) old_owner = None, new_owner = None (водитель не добавялется)
+        # 5) old_owner = some_owner, new_owner = some_owner (водитель не изменяется)
+
+        # 1) old_owner = None, new_owner = some_owner (добавление водителя)
+        if old_owner is None and new_owner is not None:
+            Notifications.objects.create(
+                recipient=new_owner,
+                content=f"Вам присвоена новое авто ({instance.registration_number})",
+                content_object=instance
+            )
+
+        # 3) old_owner = some_owner, new_owner = None (удаление водителя)
+        elif old_owner is not None and new_owner is None:
+            Notifications.objects.create(
+                recipient=old_owner,
+                content=f"Ваша машина ({instance.registration_number}) изъята :-(",
+                content_object=instance
+            )
+
+
+        # 2) old_owner = some_owner, new_owner = some_owner_2 (изменение водителя)
+        elif old_owner != new_owner:
+            Notifications.objects.create(
+                recipient=old_owner,
+                content=f"Ваша машина ({instance.registration_number}) изъята :-(",
+                content_object=instance
+            )
+
+            Notifications.objects.create(
+                recipient=new_owner,
+                content=f"Вам присвоена новое авто ({instance.registration_number})",
+                content_object=instance
+            )
+
+
+
 
             # pathes = [f'{settings.MEDIA_ROOT}/drivers/{instance.email}/docs/{os.path.basename(doc.file.name)}' for doc
             #           in user.my_docs.all()]
@@ -119,3 +197,55 @@ def pre_delete_car(instance, **kwargs):
     """Удаляет директорию удаляемого авто"""
     car_dir = f"{settings.MEDIA_ROOT}/cars/{instance.registration_number}"
     shutil.rmtree(car_dir)
+
+    if instance.owner:
+        Notifications.objects.create(
+            recipient=instance.owner,
+            content=f"Ваша машина ({instance.registration_number}) УДАЛЕНА :-(",
+            content_object=instance
+        )
+
+@receiver(post_save, sender=FuelCard)
+def post_save(created, **kwargs):
+    instance = kwargs['instance']
+    if created:
+        if instance.owner:
+            Notifications.objects.create(
+                recipient=instance.owner,
+                content=f"Вам добавлена новая карта!",
+                content_object=instance
+            )
+
+
+@receiver(pre_save, sender=FuelCard)
+def pre_save_card(instance, **kwargs):
+    """Создает уведомление об изъятии и присваивании карт"""
+    if not instance._state.adding:
+        old_owner = FuelCard.objects.get(pk=instance.pk).owner
+        new_owner = instance.owner
+
+
+        # 1) old_owner = None, new_owner = some_owner (присваивание карты)
+        if old_owner is None and new_owner is not None:
+            Notifications.objects.create(
+                recipient=new_owner,
+                content=f"Вам добавлена новая карта!",
+                content_object=instance
+            )
+        # 2) old_owner = some_owner, new_owner = None (изъятие карты)
+        elif old_owner and new_owner is None:
+            Notifications.objects.create(
+                recipient=old_owner,
+                content=f"У вас изъята карта",
+                content_object=instance
+            )
+
+@receiver(pre_delete, sender=FuelCard)
+def pre_delete_card(instance, **kwargs):
+    """Создает уведомление об удалении карты"""
+    if instance.owner:
+        Notifications.objects.create(
+            recipient=instance.owner,
+            content=f"Ваша карту УДАЛЕНА!",
+            content_object=instance
+        )

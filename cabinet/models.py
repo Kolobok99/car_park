@@ -401,7 +401,7 @@ class Application(models.Model):
                 self.end_date = self.start_date + timedelta(days=3)
         else:
             self.end_date = self.start_date + timedelta(days=self.time_to_execute)
-        super().save(*args, **kwargs)
+        # super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Заявка'

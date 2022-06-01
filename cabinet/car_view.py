@@ -58,12 +58,27 @@ class CarsCreateAndFilterView(Context, LoginRequiredMixin, CreateView):
             none_owner_pk = self.request.POST.getlist('owner_refuse_id')
             cars_none = Car.objects.filter(pk__in=none_owner_pk)
             for car in cars_none:
+                # # Уведомление об изъятии авто
+                # Notifications.objects.create(
+                #     creator=self.request.user,
+                #     recipient=MyUser.objects.get(pk=car.owner.pk),
+                #     content=f"Ваша машина с номером {car.registration_number} изъята",
+                #     content_object=car
+                # )
                 car.owner = None
                 car.save()
+
             # Удаление автомобилей
             delete_owner_pk = self.request.POST.getlist('owner_delete_id')
             cars_delete = Car.objects.filter(pk__in=delete_owner_pk)
             for car in cars_delete:
+                # Уведомление об удалении авто
+                # Notifications.objects.create(
+                #     creator=self.request.user,
+                #     recipient=MyUser.objects.get(pk=car.owner.pk),
+                #     content=f"Ваша машина с номером {car.registration_number} удалена",
+                #     content_object=car
+                # )
                 car.delete()
 
         else:
@@ -148,16 +163,6 @@ class CarView(LoginRequiredMixin, UpdateView):
             if action_type == 'car_update':
                 messages.success(self.request, "Данные машины изменены!")
             elif action_type == 'app_create':
-                form.save(commit=False)
-                print(f"{form.instance.pk}")
-                new_note = Notifications()
-                new_note.creator = self.request.user
-                new_note.recipient = MyUser.objects.get(role='m')
-                new_note.content = f'Уведомление о заявки № {form.instance.pk}'
-                new_note.content_object = form.instance
-
-                new_note.save()
-
                 messages.success(self.request, "Заявка добавлена!")
             elif action_type == 'doc_create':
                 messages.success(self.request, "Документ добавлен!")
@@ -221,6 +226,9 @@ class DriverView(LoginRequiredMixin, DetailView):
             card = FuelCard.objects.get(pk=request.POST.get('card'))
             card.owner = self.get_object()
             card.save()
+
+            # Уведомление о новой карте
+            # if card.owner
         return HttpResponseRedirect("")
 
 class DocumentsView(Context, LoginRequiredMixin, TemplateView):
@@ -375,6 +383,7 @@ class AppView(LoginRequiredMixin,UpdateView, DeletionMixin):
         if action == 'refuse-yes':
             object = self.get_object()
             object.status = 'T'
+            object.manager_descr = None
             object.save()
         if action == 'app_confirm':
             form = ManagerCommitAppForm(self.request.POST, instance=Application.objects.get(pk=self.kwargs['pk']))
