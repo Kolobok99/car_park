@@ -1,6 +1,8 @@
 import django
 import os
 
+from car_bot.models import Notifications
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "car_park.settings")
 django.setup()
 
@@ -36,6 +38,23 @@ class HandlerInlineQuery(Handler):
                 self.BD.select_single_product_quantity(code)),
             show_alert=True)
 
+    def pressed_btn_deactivate_note(self, call, code):
+        """
+           Обрабатывает входящие запросы на нажатие inline-кнопки подтвердить заявку
+        """
+
+        not_to_deactivate = Notifications.objects.get(pk=code)
+        not_to_deactivate.active = False
+        not_to_deactivate.save()
+
+        self.bot.answer_callback_query(
+            call.id,
+            MESSAGES['notifications'].format(
+                not_to_deactivate.id,
+                not_to_deactivate.created_at,
+                not_to_deactivate.content,
+            ))
+
     def handle(self):
         # обработчик(декоратор) запросов от нажатия на кнопки товара.
         @self.bot.callback_query_handler(func=lambda call: True)
@@ -43,5 +62,4 @@ class HandlerInlineQuery(Handler):
             code = call.data
             if code.isdigit():
                 code = int(code)
-
-            self.pressed_btn_product(call, code)
+                self.pressed_btn_deactivate_note(call, code)

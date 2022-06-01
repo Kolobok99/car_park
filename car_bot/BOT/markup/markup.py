@@ -159,6 +159,7 @@ class Keyboards:
         """Создает кнопку подтверждения уведомления"""
 
         self.markup = InlineKeyboardMarkup(row_width=1)
+        # {'what': 'deactivate_note', 'note_id':not_id}
         deactivate_btn = InlineKeyboardButton("Подтвердить", callback_data=not_id)
         self.markup.add(deactivate_btn)
 
