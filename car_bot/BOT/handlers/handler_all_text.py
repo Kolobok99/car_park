@@ -253,6 +253,10 @@ class HandlerAllText(Handler):
             ),
             reply_markup=self.keybords.set_deactivate_not(not_id=not1.id)
         )
+        self.bot.send_message(
+            message.chat.id,
+            reply_markup=self.keybords.set_notifications_btns()
+        )
 
     def handle(self):
         # обработчик(декоратор) сообщений,

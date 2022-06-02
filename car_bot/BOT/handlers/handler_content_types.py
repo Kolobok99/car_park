@@ -34,7 +34,7 @@ class HandlerContentTypes(Handler):
                 user.save()
                 self.bot.send_message(message.chat.id,
                                       f'{user.first_name}, авторизация прошла успешно',
-                                      reply_markup=self.keybords.set_notifications()
+                                      reply_markup=self.keybords.set_start_btns()
                                       )
                 flag = True
                 break

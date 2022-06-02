@@ -145,13 +145,14 @@ class Keyboards:
 
         return self.markup
 
-    def set_notifications(self):
+    def set_start_btns(self):
         """Создает кнопку уведомления"""
 
-        self.markup = ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
+        self.markup = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
         nots_btn = KeyboardButton(text="уведомления")
+        about_btn = KeyboardButton(text="О программе")
 
-        self.markup.add(nots_btn)
+        self.markup.add(nots_btn, about_btn)
 
         return self.markup
 
@@ -159,8 +160,23 @@ class Keyboards:
         """Создает кнопку подтверждения уведомления"""
 
         self.markup = InlineKeyboardMarkup(row_width=1)
-        # {'what': 'deactivate_note', 'note_id':not_id}
         deactivate_btn = InlineKeyboardButton("Подтвердить", callback_data=not_id)
         self.markup.add(deactivate_btn)
 
         return self.markup
+
+    def set_notifications_btns(self, count_nots, not_step):
+        """Создает разметку кнопок для работы с уведомлениями"""
+
+        self.markup = ReplyKeyboardMarkup(True, True)
+        next_not_btn = KeyboardButton(text=">>")
+        last_not_btn = KeyboardButton(text="<<")
+        counter_nots_btn = KeyboardButton(text=f"{not_step} из {count_nots}")
+        main_menu_btn = KeyboardButton(text="Меню")
+        old_notes = KeyboardButton(text='Просмотренные уведомления')
+
+        self.markup.add(last_not_btn, counter_nots_btn, next_not_btn)
+        self.markup.add(old_notes, main_menu_btn)
+
+        return self.markup
+
