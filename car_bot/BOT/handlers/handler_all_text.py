@@ -250,7 +250,7 @@ class HandlerAllText(Handler):
         self.user = MyUser.objects.get(chat_id=message.chat.id)
         self.nots = Notifications.objects.filter(recipient=self.user, active=True)
         not1 = self.nots[0]
-        self.step = not1.owner_pk
+        self.step = 1
         self.bot.send_message(
             message.chat.id,
             f'Уведомление № {not1.id}',
@@ -318,6 +318,51 @@ class HandlerAllText(Handler):
 
         self.bot.send_message(
             message.chat.id,
+            MESSAGES['notifications'].format(
+                not1.id,
+                not1.created_at,
+                not1.content
+            ),
+            reply_markup=self.keybords.set_deactivate_not(not_id=not1.id)
+        )
+
+    def pressed_btn_deactivate_note(self, call, code):
+        """
+           Обрабатывает входящие запросы на нажатие inline-кнопки подтвердить заявку
+        """
+
+        # 1) выбранное уведомление active=False
+        not_to_deactivate = Notifications.objects.get(pk=code)
+        not_to_deactivate.active = False
+        not_to_deactivate.save()
+
+        self.bot.answer_callback_query(
+            call.id,
+            MESSAGES['notifications'].format(
+                not_to_deactivate.id,
+                not_to_deactivate.created_at,
+                not_to_deactivate.content,
+            ))
+
+        # 2) self.step = 1
+        self.step = 1
+
+        # 3) self.nots = Notifications.objects.filter(recipient=self.user, active=True)
+        self.nots = Notifications.objects.filter(recipient=self.user, active=True)
+        not1 = self.nots[0]
+
+        # 4) Отправка смс "первое уведомление"
+        self.bot.send_message(
+            call.message.chat.id,
+            f'Уведомление № {not1.id}',
+            reply_markup=self.keybords.set_notifications_btns(len(self.nots), self.step)
+        )
+        # 5) Создание размекти кнопок
+
+
+
+        self.bot.send_message(
+            call.message.chat.id,
             MESSAGES['notifications'].format(
                 not1.id,
                 not1.created_at,
@@ -402,3 +447,10 @@ class HandlerAllText(Handler):
             #     # иные нажатия и ввод данных пользователем
             # else:
             #     self.bot.send_message(message.chat.id, message.text)
+
+        @self.bot.callback_query_handler(func=lambda call: True)
+        def callback_inline(call):
+            code = call.data
+            if code.isdigit():
+                code = int(code)
+                self.pressed_btn_deactivate_note(call, code)
