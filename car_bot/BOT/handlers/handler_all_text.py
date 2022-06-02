@@ -19,8 +19,14 @@ class HandlerAllText(Handler):
 
     def __init__(self, bot):
         super().__init__(bot)
-        # шаг в заказе
+
+        #текущий юсер
+        self.user = MyUser.objects.first()
+        # текущие заметки
+        self.nots = Notifications.objects.all()
+        # шаг в заметках
         self.step = 0
+
 
     def pressed_btn_category(self, message):
         """
@@ -241,13 +247,73 @@ class HandlerAllText(Handler):
     def pressed_btn_nots(self, message):
         """Обрабатывает нажатие кнопки Уведомения"""
 
-        user = MyUser.objects.get(chat_id=message.chat.id)
-        nots = Notifications.objects.filter(recipient=user, active=True)
-        not1 = nots[0]
+        self.user = MyUser.objects.get(chat_id=message.chat.id)
+        self.nots = Notifications.objects.filter(recipient=self.user, active=True)
+        not1 = self.nots[0]
+        self.step = not1.owner_pk
         self.bot.send_message(
             message.chat.id,
             f'Уведомление № {not1.id}',
-        reply_markup = self.keybords.set_notifications_btns(len(nots), not1.owner_pk)
+        reply_markup = self.keybords.set_notifications_btns(len(self.nots), self.step)
+        )
+
+        self.bot.send_message(
+            message.chat.id,
+            MESSAGES['notifications'].format(
+                not1.id,
+                not1.created_at,
+                not1.content
+            ),
+            reply_markup=self.keybords.set_deactivate_not(not_id=not1.id)
+        )
+
+    def pressed_btn_menu(self, message):
+        """Обрабатывает нажатие клавиши меню"""
+
+        self.bot.send_message(
+            message.chat.id,
+            "Меню",
+            reply_markup=self.keybords.set_start_btns()
+        )
+
+    def pressed_btn_next_not(self, message):
+        """Обработывает нажатие клавиши следующее уведомление"""
+        # print(f"{self.step}")
+        # print(f"{self.nots.count}")
+
+        if self.step != len(self.nots):
+            self.step = self.step + 1
+
+        not1 = list(self.nots)[self.step-1]
+        self.bot.send_message(
+            message.chat.id,
+            f'Уведомление № {not1.id}',
+            reply_markup=self.keybords.set_notifications_btns(len(self.nots), self.step)
+        )
+
+        self.bot.send_message(
+            message.chat.id,
+            MESSAGES['notifications'].format(
+                not1.id,
+                not1.created_at,
+                not1.content
+            ),
+            reply_markup=self.keybords.set_deactivate_not(not_id=not1.id)
+        )
+
+    def pressed_btn_last_not(self, message):
+        """Обработывает нажатие клавиши предыдущее уведомление уведомление"""
+        # print(f"{self.step}")
+        # print(f"{self.nots.count}")
+
+        if self.step != 1:
+            self.step = self.step - 1
+
+        not1 = list(self.nots)[self.step-1]
+        self.bot.send_message(
+            message.chat.id,
+            f'Уведомление № {not1.id}',
+            reply_markup=self.keybords.set_notifications_btns(len(self.nots), self.step)
         )
 
         self.bot.send_message(
@@ -270,6 +336,15 @@ class HandlerAllText(Handler):
 
             if message.text == 'уведомления':
                 self.pressed_btn_nots(message)
+
+            if message.text == 'Меню':
+                self.pressed_btn_menu(message)
+
+            if message.text == '>>':
+                self.pressed_btn_next_not(message)
+
+            if message.text == '<<':
+                self.pressed_btn_last_not(message)
 
             # if message.text == config.KEYBOARD['CHOOSE_GOODS']:
             #     self.pressed_btn_category(message)

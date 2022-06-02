@@ -54,6 +54,10 @@ class HandlerInlineQuery(Handler):
                 not_to_deactivate.created_at,
                 not_to_deactivate.content,
             ))
+        # self.bot.send_message(
+        #     call.id,
+        #
+        # )
 
     def handle(self):
         # обработчик(декоратор) запросов от нажатия на кнопки товара.

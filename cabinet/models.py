@@ -391,18 +391,18 @@ class Application(models.Model):
     def get_absolute_url(self):
         return f"/applications/{self.pk}"
 
-    def save(self, *args, **kwargs):
-        """Устанавливается время на выполнение в зависимости от выбранной 'срочности' """
-        super().save(*args, **kwargs)
-        if not self.time_to_execute:
-            if self.urgency == 'N':
-                self.end_date = self.start_date + timedelta(days=10)
-            elif self.urgency == 'U':
-                self.end_date = self.start_date + timedelta(days=7)
-            elif self.urgency == 'V':
-                self.end_date = self.start_date + timedelta(days=3)
-        else:
-            self.end_date = self.start_date + timedelta(days=self.time_to_execute)
+    # def save(self, *args, **kwargs):
+    #     """Устанавливается время на выполнение в зависимости от выбранной 'срочности' """
+    #     super().save(*args, **kwargs)
+        # if not self.time_to_execute:
+        #     if self.urgency == 'N':
+        #         self.end_date = self.start_date + timedelta(days=10)
+        #     elif self.urgency == 'U':
+        #         self.end_date = self.start_date + timedelta(days=7)
+        #     elif self.urgency == 'V':
+        #         self.end_date = self.start_date + timedelta(days=3)
+        # else:
+        #     self.end_date = self.start_date + timedelta(days=self.time_to_execute)
         # super().save(*args, **kwargs)
 
     class Meta:

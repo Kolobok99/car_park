@@ -1,5 +1,6 @@
 import os
 import shutil
+from datetime import timedelta
 
 from django.core.files import File
 from django.dispatch import receiver
@@ -19,15 +20,21 @@ from car_bot.models import Notifications
 @receiver(post_save, sender=Notifications)
 def post_save_nots(created, **kwargs):
     instance = kwargs['instance']
-    print("YES!")
     if created:
-        print("YES2!")
         count = Notifications.objects.filter(recipient=instance.recipient).count()
-        print(f"{count=}")
         instance.owner_pk = Notifications.objects.filter(recipient=instance.recipient).count()
         instance.save()
 @receiver(signal=post_save, sender=Application)
-def post_save_apps(instance, **kwargs):
+def post_save_apps(created, instance, **kwargs):
+    if created:
+        if instance.urgency == 'N':
+            instance.end_date = instance.start_date + timedelta(days=10)
+        elif instance.urgency == 'U':
+            instance.end_date = instance.start_date + timedelta(days=7)
+        elif instance.urgency == 'V':
+            instance.end_date = instance.start_date + timedelta(days=3)
+        instance.save()
+
     if instance.status == 'O':
         if instance.owner != MyUser.objects.get(role='m'):
             Notifications.objects.create(
