@@ -16,6 +16,16 @@ from simple_history.signals import (
 from car_bot.models import Notifications
 
 
+@receiver(post_save, sender=Notifications)
+def post_save_nots(created, **kwargs):
+    instance = kwargs['instance']
+    print("YES!")
+    if created:
+        print("YES2!")
+        count = Notifications.objects.filter(recipient=instance.recipient).count()
+        print(f"{count=}")
+        instance.owner_pk = Notifications.objects.filter(recipient=instance.recipient).count()
+        instance.save()
 @receiver(signal=post_save, sender=Application)
 def post_save_apps(instance, **kwargs):
     if instance.status == 'O':

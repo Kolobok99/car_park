@@ -242,8 +242,14 @@ class HandlerAllText(Handler):
         """Обрабатывает нажатие кнопки Уведомения"""
 
         user = MyUser.objects.get(chat_id=message.chat.id)
-        nots = Notifications.objects.filter(recipient=user)
+        nots = Notifications.objects.filter(recipient=user, active=True)
         not1 = nots[0]
+        self.bot.send_message(
+            message.chat.id,
+            f'Уведомление № {not1.id}',
+        reply_markup = self.keybords.set_notifications_btns(len(nots), not1.owner_pk)
+        )
+
         self.bot.send_message(
             message.chat.id,
             MESSAGES['notifications'].format(
@@ -253,10 +259,7 @@ class HandlerAllText(Handler):
             ),
             reply_markup=self.keybords.set_deactivate_not(not_id=not1.id)
         )
-        self.bot.send_message(
-            message.chat.id,
-            reply_markup=self.keybords.set_notifications_btns()
-        )
+
 
     def handle(self):
         # обработчик(декоратор) сообщений,

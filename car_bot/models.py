@@ -30,12 +30,12 @@ class Notifications(models.Model):
 
     owner_pk = models.PositiveIntegerField(default=0)
 
-    def save(self):
-        """Генерирует номер уведомления пользователя"""
-        super().save()
-        if not self.owner_pk:
-            self.owner_pk = Notifications.objects.filter(recipient=self.recipient).count()
-        super().save()
+    # def save(self):
+    #     """Генерирует номер уведомления пользователя"""
+    #     super().save()
+    #     if not self.owner_pk:
+    #         self.owner_pk = Notifications.objects.filter(recipient=self.recipient).count()
+    #     super().save()
 
     class Meta:
         verbose_name = 'Уведомление'
