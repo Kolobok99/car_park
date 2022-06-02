@@ -5,6 +5,12 @@ from telebot.types import KeyboardButton, ReplyKeyboardMarkup, \
 from car_bot.BOT.settings import config
 # импортируем класс-менеджер для работы с библиотекой
 # from data_base.dbalchemy import DBManager
+import django
+import os
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "car_park.settings")
+django.setup()
+
+from cabinet.models import MyUser
 
 
 class Keyboards:
@@ -145,14 +151,18 @@ class Keyboards:
 
         return self.markup
 
-    def set_start_btns(self):
+    def set_start_btns(self, message):
         """Создает кнопку уведомления"""
-
+        user = MyUser.objects.get(chat_id=message.chat.id)
         self.markup = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
         nots_btn = KeyboardButton(text="уведомления")
         about_btn = KeyboardButton(text="О программе")
 
         self.markup.add(nots_btn, about_btn)
+
+        if user.role == 'm':
+            apps_btn = KeyboardButton(text='Заявки')
+            self.markup.add(apps_btn)
 
         return self.markup
 
@@ -179,6 +189,4 @@ class Keyboards:
         self.markup.add(old_notes, main_menu_btn)
 
         return self.markup
-
-
 

@@ -152,6 +152,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         ('a', 'admin'),
         ('m', 'manager'),
         ('d', 'driver'),
+        ('e', 'engineer'),
     )
     last_login = None
 
@@ -366,7 +367,8 @@ class Application(models.Model):
     )
 
     type = models.ForeignKey("TypeOfAppl", verbose_name='Тип заявки', on_delete=models.SET(1))
-    owner = models.ForeignKey(MyUser, verbose_name='Владелец', on_delete=models.CASCADE, related_name='my_apps', null=True)
+    owner = models.ForeignKey(MyUser, verbose_name='Владелец', on_delete=models.SET_NULL, related_name='my_apps', null=True)
+    engineer = models.ForeignKey(MyUser, verbose_name='Механик', on_delete=models.SET_NULL,related_name='my_repair_apps', null=True)
     car = models.ForeignKey(Car, verbose_name="Машина", on_delete=models.CASCADE, related_name='applications')
     start_date = models.DateField('Время создания', auto_now_add=True)
     time_to_execute = models.PositiveIntegerField('Время на выполнение',

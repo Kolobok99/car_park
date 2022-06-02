@@ -1,6 +1,10 @@
 # импортируем класс родитель
 from telebot import types
-
+import django
+import os
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "car_park.settings")
+django.setup()
+from cabinet.models import MyUser
 from car_bot.BOT.handlers.handler import Handler
 
 
@@ -10,6 +14,7 @@ class HandlerCommands(Handler):
     """
     def __init__(self, bot):
         super().__init__(bot)
+        self.user = MyUser.objects.first()
 
     def pressed_btn_start(self, message):
         """
@@ -19,7 +24,7 @@ class HandlerCommands(Handler):
         # Дублируем сообщением о том,
         # что пользователь сейчас отправит боту свой номер телефона
 
-        self.bot.send_message(message.chat.id, 'Номер телефона',
+        self.bot.send_message(message.chat.id, 'Пожалуйста, предоставьте боту доступ к вашему номеру телефона',
                          reply_markup=self.keybords.set_send_number())
 
 

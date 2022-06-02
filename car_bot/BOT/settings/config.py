@@ -13,7 +13,7 @@ NAME_DB = 'products.sqlite'
 # версия приложения
 VERSION = '0.0.1'
 # автор приложния
-AUTHOR = 'User'
+AUTHOR = 'Иван Золотавин'
 
 # родительская директория
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))

@@ -113,6 +113,25 @@ notifications = """
 сообщение: {}
 """
 
+settings = """
+<i>Общая информация:</i>
+Данный чат бот разработан 
+как дополнение к программе CarPark
+
+<i>Функционал:</i>
+
+- Получение уведомлений
+- Получение заявок на ремонт (МЕХАНИКИ)
+ 
+-<b>версия программы: - </b><i>({})</i>
+-<b>разработчик: - </b><i>({})</i>
+
+
+""".format(
+    VERSION,
+    AUTHOR,
+)
+
 # словарь ответов пользователю
 MESSAGES = {
     'trading_store': trading_store,
@@ -121,7 +140,7 @@ MESSAGES = {
     'order_number': order_number,
     'no_orders': no_orders,
     'applay': applay,
-    # 'settings': settings,
+    'settings': settings,
 
     'notifications': notifications
 }

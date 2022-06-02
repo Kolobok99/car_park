@@ -80,6 +80,11 @@ class UserCreateForm(forms.ModelForm):
         Форма: регистрация пользователя
     """
 
+    ROLE_CHOICES = (
+        ('d', 'driver'),
+        ('e', 'engineer'),
+    )
+
     def __init__(self, *args, **kwargs):
         self.activation_code = kwargs.pop('activation_code', None)
         super().__init__(*args, **kwargs)
@@ -87,6 +92,7 @@ class UserCreateForm(forms.ModelForm):
     password_repeat = forms.CharField(label='Повторите пароль',
                                       widget=forms.widgets.PasswordInput()
                                       )
+    role = forms.ChoiceField(label="Должность", choices=ROLE_CHOICES)
     def save(self, **kwargs):
         self.instance.set_password(self.cleaned_data['password'])
         self.instance.activation_code = self.activation_code
@@ -122,6 +128,7 @@ class UserCreateForm(forms.ModelForm):
             'first_name',
             'last_name',
             'patronymic',
+            'role',
         )
 
         widgets = {
@@ -254,13 +261,17 @@ class ManagerCommitAppForm(forms.ModelForm):
 
     action = forms.CharField(widget=forms.HiddenInput(), initial="app_confirm")
 
+    engineer = forms.ModelChoiceField(queryset=MyUser.objects.filter(role='e'), required=True, label='Выберите инженера')
+
     def save(self, **kwargs):
         self.instance.status = 'R'
         return super(ManagerCommitAppForm, self).save(**kwargs)
 
+
+
     class Meta:
         model = Application
-        fields = ('manager_descr',)
+        fields = ('manager_descr', 'engineer')
 
 # -----------------------  DOC -----------------------
 

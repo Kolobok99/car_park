@@ -6,7 +6,7 @@ django.setup()
 from car_bot.models import Notifications
 # импортируем ответ пользователю
 from car_bot.BOT.settings.message import MESSAGES
-from cabinet.models import MyUser
+from cabinet.models import MyUser, Application
 from car_bot.BOT.settings import config
 # импортируем класс-родитель
 from car_bot.BOT.handlers.handler import Handler
@@ -253,8 +253,8 @@ class HandlerAllText(Handler):
         self.step = 1
         self.bot.send_message(
             message.chat.id,
-            f'Уведомление № {not1.id}',
-        reply_markup = self.keybords.set_notifications_btns(len(self.nots), self.step)
+            'активные уведомления',
+            reply_markup=self.keybords.set_notifications_btns(len(self.nots), self.step)
         )
 
         self.bot.send_message(
@@ -283,6 +283,8 @@ class HandlerAllText(Handler):
 
         if self.step != len(self.nots):
             self.step = self.step + 1
+        else:
+            self.step = 1
 
         not1 = list(self.nots)[self.step-1]
         self.bot.send_message(
@@ -308,6 +310,8 @@ class HandlerAllText(Handler):
 
         if self.step != 1:
             self.step = self.step - 1
+        else:
+            self.step = len(self.nots)
 
         not1 = list(self.nots)[self.step-1]
         self.bot.send_message(
@@ -322,6 +326,7 @@ class HandlerAllText(Handler):
                 not1.id,
                 not1.created_at,
                 not1.content
+
             ),
             reply_markup=self.keybords.set_deactivate_not(not_id=not1.id)
         )
@@ -371,6 +376,64 @@ class HandlerAllText(Handler):
             reply_markup=self.keybords.set_deactivate_not(not_id=not1.id)
         )
 
+    def pressed_btn_old_nots(self, message):
+        """Обрабатывает нажатие кнопки Просмотренные уведомления"""
+
+        old_nots = Notifications.objects.filter(recipient=self.user, active=False)
+
+        self.bot.send_message(
+            message.chat.id,
+            'Просмотренные уведомления ',
+            reply_markup=self.keybords.set_start_btns()
+        )
+
+        for not1 in old_nots:
+            self.bot.send_message(
+                message.chat.id,
+                MESSAGES['notifications'].format(
+                    not1.id,
+                    not1.created_at,
+                    not1.content
+                ),
+            )
+
+    def pressed_btn_about(self, message):
+        """Обрабытывает нажатие кнопки О программе"""
+
+        self.bot.send_message(message.chat.id, MESSAGES['settings'],
+                              parse_mode="HTML",
+                              reply_markup=self.keybords.set_start_btns())
+
+    def pressed_btn_apps(self, message):
+        """Обрабатывает нажатие кнопки заявки"""
+
+        self.user = MyUser.objects.get(chat_id=message.chat.id)
+
+        self.apps = Application.objects.filter(owner=self.user, active=True)
+        not1 = self.nots[0]
+        self.step = 1
+        self.bot.send_message(
+            message.chat.id,
+            'активные уведомления',
+            reply_markup=self.keybords.set_notifications_btns(len(self.nots), self.step)
+        )
+
+        self.bot.send_message(
+            message.chat.id,
+            MESSAGES['notifications'].format(
+                not1.id,
+                not1.created_at,
+                not1.content
+            ),
+            reply_markup=self.keybords.set_deactivate_not(not_id=not1.id)
+        )
+
+        self.bot.send_message(
+            message.chat.id,
+            f"Активные заявки:"
+        )
+
+
 
     def handle(self):
         # обработчик(декоратор) сообщений,
@@ -390,6 +453,18 @@ class HandlerAllText(Handler):
 
             if message.text == '<<':
                 self.pressed_btn_last_not(message)
+
+            if message.text == 'Просмотренные уведомления':
+                self.pressed_btn_old_nots(message)
+
+            if message.text == 'О программе':
+                self.pressed_btn_about(message)
+
+
+            # ******* механик ****** #
+
+            if message.text == 'Заявки':
+                self.pressed_btn_apps(message)
 
             # if message.text == config.KEYBOARD['CHOOSE_GOODS']:
             #     self.pressed_btn_category(message)

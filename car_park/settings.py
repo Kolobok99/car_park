@@ -168,9 +168,11 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
 
-#smtp settings:
+
+
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_PORT = 2525
+EMAIL_HOST_USER = "zolotavin011@mail.ru"
+EMAIL_HOST_PASSWORD = "Fus746DZjb2CucvVgT8u"
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'izolotavin99@gmail.com'
-EMAIL_HOST_PASSWORD = 'ytG2vih4S4iLQkh'
-EMAIL_HOST_PORT = 587
+EMAIL_USE_SSL = False

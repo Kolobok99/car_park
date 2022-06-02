@@ -71,7 +71,7 @@ def send_activation_code(driver_email, activation_code):
     send_mail(
         'Подтверждение регистрации',
         f'ВАШ КОД: {activation_code}',
-        'izolotavin99@gmail.com',
+        'zolotavin011@mail.ru',
         [driver_email],
         fail_silently=False
     )
