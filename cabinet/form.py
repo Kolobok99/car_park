@@ -1,11 +1,8 @@
 import re
 from django import forms
-from django.core import validators
-from django.core.exceptions import ValidationError
-from django.forms import modelformset_factory
 
 from .models import *
-
+# from django.core.exceptions import ValidationError as ValEr, FieldError
 
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import MyUser
@@ -111,10 +108,10 @@ class UserCreateForm(forms.ModelForm):
             errors['password_repeat'] = ValidationError('Пароли не совпадают!')
 
         if email not in white_emails:
-            errors['email'] = ValidationError('Ваша почта не указана в списке допустимых. '
+            errors['email'] = ('Ваша почта не указана в списке допустимых. '
                                               'Обратитесь к администратору')
         if errors:
-            raise errors
+            raise ValidationError(errors)
         else:
             return cleaned_data
 
