@@ -17,6 +17,17 @@ from simple_history.signals import (
 from car_bot.models import Notifications
 
 
+# @receiver(pre_save, sender=Application)
+# def pre_save_app(instance, **kwargs):
+#     if instance._state.adding:
+#         if instance.urgency == 'N':
+#             instance.end_date = instance.start_date + timedelta(days=10)
+#         elif instance.urgency == 'U':
+#             instance.end_date = instance.start_date + timedelta(days=7)
+#         elif instance.urgency == 'V':
+#             instance.end_date = instance.start_date + timedelta(days=3)
+#         # instance.save()
+
 @receiver(post_save, sender=Notifications)
 def post_save_nots(created, **kwargs):
     instance = kwargs['instance']
@@ -26,6 +37,7 @@ def post_save_nots(created, **kwargs):
         instance.save()
 @receiver(signal=post_save, sender=Application)
 def post_save_apps(created, instance, **kwargs):
+    manager = MyUser.objects.get(role='m')
     if created:
         if instance.urgency == 'N':
             instance.end_date = instance.start_date + timedelta(days=10)
@@ -34,19 +46,64 @@ def post_save_apps(created, instance, **kwargs):
         elif instance.urgency == 'V':
             instance.end_date = instance.start_date + timedelta(days=3)
         instance.save()
+    #
+    #     # Создана новая заявка
+    #     if instance.status == 'O':
+    #         if instance.owner != manager:
+    #             Notifications.objects.create(
+    #                 recipient=manager,
+    #                 content=f"Заявка №{instance.pk}  ожидает рассмотрения",
+    #                 content_object=instance
+    #             )
+    #     # Заявка направлена механику
+    #     elif instance.status == 'OE':
+    #         if instance.owner != manager:
+    #             # Уведомление владельцу заявки
+    #             Notifications.objects.create(
+    #                 recipient=instance.owner,
+    #                 content=f"Ваша заявка №{instance.pk} рассмотрена\n"
+    #                         f"Комментарий менеджера: {instance.manager_descr}",
+    #                 content_object=instance
+    #             )
+    #         # Уведомление механику
+    #         Notifications.objects.create(
+    #             recipient=instance.engineer,
+    #             content=f"У вас новая заявка на ремонт {instance.pk}\n"
+    #                     f"Комментарий менеджера: {instance.manager_descr}",
+    #             content_object=instance
+    #         )
 
-    if instance.status == 'O':
-        if instance.owner != MyUser.objects.get(role='m'):
+    # Заявка направлена механику
+    elif instance.status == 'OE':
+        # Уведомление владельцу заявки
+        if instance.owner != manager:
             Notifications.objects.create(
-                recipient=MyUser.objects.get(role='m'),
-                content=f"Заявка №{instance.pk}  ожидает рассмотрения",
+                recipient=instance.owner,
+                content=f"Ваша заявка №{instance.pk} рассмотрена\n"
+                        f"Комментарий менеджера: {instance.manager_descr}",
                 content_object=instance
             )
-    elif instance.status == 'R':
+        # Уведомление механику
         Notifications.objects.create(
-            recipient=instance.owner,
-            content=f"Ваша заявка №{instance.pk} рассмотрена\n"
+            recipient=instance.engineer,
+            content=f"У вас новая заявка на ремонт {instance.pk}\n"
                     f"Комментарий менеджера: {instance.manager_descr}",
+            content_object=instance
+        )
+    # Механик приступил к работе
+    elif instance.status == 'REP':
+        # Уведомление менеджеру
+        Notifications.objects.create(
+            recipient=manager,
+            content=f"Механик приступил к выполнению заявки № {instance.pk}",
+            content_object=instance
+        )
+    # Механик выполнил заявку
+    elif instance.status == 'V':
+        # Уведомление менеджеру
+        Notifications.objects.create(
+            recipient=manager,
+            content=f"Механик выполнил заявку № {instance.pk}",
             content_object=instance
         )
 
@@ -56,6 +113,7 @@ def post_save_apps(created, instance, **kwargs):
             content=f"Ваша заявка №{instance.pk} ОТКЛОНЕНА!",
             content_object=instance
         )
+
 
 @receiver(post_save, sender=MyUser)
 def post_save_myuser(created, **kwargs):

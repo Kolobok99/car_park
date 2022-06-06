@@ -37,6 +37,9 @@ class Notifications(models.Model):
     #         self.owner_pk = Notifications.objects.filter(recipient=self.recipient).count()
     #     super().save()
 
+    def __str__(self):
+        return self.content
+
     class Meta:
         verbose_name = 'Уведомление'
         verbose_name_plural = 'Уведомления'

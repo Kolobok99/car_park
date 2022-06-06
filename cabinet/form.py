@@ -243,6 +243,12 @@ class AppCreateForm(AppForm):
     def save(self, **kwargs):
         self.instance.owner = self.user
         self.instance.car = self.car
+        # if self.instance.urgency == 'N':
+        #     self.instance.end_date = self.cleaned_data['start_date'] + timedelta(days=10)
+        # elif self.instance.urgency == 'U':
+        #     self.instance.end_date = self.cleaned_data['start_date'] + timedelta(days=7)
+        # elif self.instance.urgency == 'V':
+        #     self.instance.end_date = self.cleaned_data['start_date'] + timedelta(days=3)
         if self.user.is_manager():
             self.instance.status = 'OE'
             self.instance.engineer = self.cleaned_data['engineer']

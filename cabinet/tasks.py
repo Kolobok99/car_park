@@ -98,3 +98,25 @@ def create_note_about_ending_cards():
             content_object=MyUser.objects.get(role='m')
         )
 
+@app.task
+def checking_timing_app():
+    """Проверка просроченности заявки"""
+
+    # Получить все заявки находящиеся в ремонте
+    active_apps = Application.objects.filter(is_active=True)
+    today = datetime.date.today()
+    for app in active_apps:
+        # Если заявка просрочена
+        if app.end_date > today:
+            # Уведомление механику
+            Notifications.objects.create(
+                recipient=app.engineer,
+                content=f"Вы просрочили выполнение заявки {app.pk}",
+                content_object=app
+            )
+            # Уведомление менеджеру
+            Notifications.objects.create(
+                recipient=MyUser.objects.get(role='m'),
+                content=f"Механик ({app.engineer}) просрочил выполнение заявки {app.pk}",
+                content_object=app
+            )

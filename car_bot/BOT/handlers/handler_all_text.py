@@ -57,17 +57,17 @@ class HandlerAllText(Handler):
             self.step = 1
             self.bot.send_message(
                 message.chat.id,
+                'активные уведомления',
+                reply_markup=self.keybords.set_active_nots_btns(len(self.nots), self.step)
+            )
+            self.bot.send_message(
+                message.chat.id,
                 MESSAGES['notifications'].format(
                     not1.id,
                     not1.created_at,
                     not1.content
                 ),
                 reply_markup=self.keybords.set_deactivate_not(not_id=not1.id)
-            )
-            self.bot.send_message(
-                message.chat.id,
-                'активные уведомления',
-                reply_markup=self.keybords.set_active_nots_btns(len(self.nots), self.step)
             )
         else:
             self.bot.send_message(
@@ -374,6 +374,7 @@ class HandlerAllText(Handler):
         # 1) выбраная заявка status = "V"
         app_to_repair = Application.objects.get(pk=code)
         app_to_repair.status = 'V'
+        app_to_repair.is_active = False
         app_to_repair.save()
 
         self.bot.answer_callback_query(
@@ -430,6 +431,7 @@ class HandlerAllText(Handler):
         # 1) выбраная заявка status = "REP"
         app_to_repair = Application.objects.get(pk=code)
         app_to_repair.status = 'REP'
+        app_to_repair.is_active = True
         app_to_repair.save()
 
         self.bot.answer_callback_query(
@@ -469,29 +471,38 @@ class HandlerAllText(Handler):
 
         # 3) self.nots = Notifications.objects.filter(recipient=self.user, active=True)
         self.nots = Notifications.objects.filter(recipient=self.user, active=True)
-        not1 = self.nots[0]
 
-        # 4) Отправка смс "первое уведомление"
-        self.bot.send_message(
-            call.message.chat.id,
-            f'Уведомление № {not1.id}',
-            reply_markup=self.keybords.set_active_nots_btns(len(self.nots), self.step)
-        )
-        # 5) Создание размекти кнопок
+        if self.nots:
+            not1 = self.nots[0]
 
-        self.bot.send_message(
-            call.message.chat.id,
-            MESSAGES['notifications'].format(
-                not1.id,
-                not1.created_at,
-                not1.content
-            ),
-            reply_markup=self.keybords.set_deactivate_not(not_id=not1.id)
-        )
+            # 4) Отправка смс "первое уведомление"
+            self.bot.send_message(
+                call.message.chat.id,
+                f'Уведомление № {not1.id}',
+                reply_markup=self.keybords.set_active_nots_btns(len(self.nots), self.step)
+            )
+            # 5) Создание размекти кнопок
+            self.bot.send_message(
+                call.message.chat.id,
+                MESSAGES['notifications'].format(
+                    not1.id,
+                    not1.created_at,
+                    not1.content
+                ),
+                reply_markup=self.keybords.set_deactivate_not(not_id=not1.id)
+            )
+        else:
+            self.bot.send_message(
+                call.message.chat.id,
+                "У вас нет новых уведомлений",
+                reply_markup=self.keybords.set_active_nots_btns(len(self.nots), self.step)
+
+            )
 
     def pressed_btn_next_not(self, message):
         """Обработывает нажатие клавиши следующее уведомление"""
         # print(f"{self.step}")
+        print("YES! NEXT NOT")
         # print(f"{self.nots.count}")
 
         if self.step != len(self.nots):
@@ -575,6 +586,7 @@ class HandlerAllText(Handler):
         @self.bot.message_handler(func=lambda message: True)
         def handle(message):
             # ********** основные кнопки ********** #
+            print(f"{message.text=}")
 
             if message.text == 'уведомления':
                 self.pressed_btn_nots(message)
@@ -583,7 +595,8 @@ class HandlerAllText(Handler):
                 self.pressed_btn_menu(message)
 
             if message.text == '>>':
-                if self.menu_type == 'notes':
+                print(f"{self.menu_type=}")
+                if self.menu_type == 'nots':
                     self.pressed_btn_next_not(message)
                 elif self.menu_type == 'apps':
                     self.pressed_btn_next_app(message)
