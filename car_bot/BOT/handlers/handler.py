@@ -2,8 +2,7 @@
 import abc
 # импортируем разметку клавиатуры и клавиш
 from car_bot.BOT.markup.markup import Keyboards
-# импортируем класс-менеджер для работы с библиотекой
-# from data_base.dbalchemy import DBManager
+
 
 
 class Handler(metaclass=abc.ABCMeta):

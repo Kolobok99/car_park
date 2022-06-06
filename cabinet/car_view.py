@@ -384,6 +384,7 @@ class AppView(LoginRequiredMixin,UpdateView, DeletionMixin):
             object = self.get_object()
             object.status = 'T'
             object.manager_descr = None
+            object.engineer = None
             object.save()
         if action == 'app_confirm':
             form = ManagerCommitAppForm(self.request.POST, instance=Application.objects.get(pk=self.kwargs['pk']))

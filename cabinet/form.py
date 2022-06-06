@@ -232,16 +232,20 @@ class AppCreateForm(AppForm):
     """
 
     action = forms.CharField(widget=forms.HiddenInput(), initial="app_create")
+    engineer = forms.ModelChoiceField(queryset=MyUser.objects.filter(role='e'), required=False)
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         self.car = kwargs.pop('car', None)
         super().__init__(*args, **kwargs)
 
+
     def save(self, **kwargs):
         self.instance.owner = self.user
         self.instance.car = self.car
-        if self.user.is_manager(): self.instance.status = 'R'
+        if self.user.is_manager():
+            self.instance.status = 'OE'
+            self.instance.engineer = self.cleaned_data['engineer']
         return super(AppForm, self).save()
 
 class AppUpdateForm(AppForm):
@@ -250,7 +254,19 @@ class AppUpdateForm(AppForm):
     """
 
     action = forms.CharField(widget=forms.HiddenInput(), initial="app_update")
+    engineer = forms.ModelChoiceField(queryset=MyUser.objects.filter(role='e'), required=False, label="Механик")
 
+    def save(self, **kwargs):
+        if self.instance.owner.is_manager():
+            self.instance.engineer = self.cleaned_data['engineer']
+        return super(AppForm, self).save()
+
+    class Meta(AppForm.Meta):
+        fields = ('type',
+                  'urgency',
+                  'description',
+                  'engineer'
+                  )
 class ManagerCommitAppForm(forms.ModelForm):
     """
         Форма: подтверждение заявки (менеджером)
@@ -261,7 +277,7 @@ class ManagerCommitAppForm(forms.ModelForm):
     engineer = forms.ModelChoiceField(queryset=MyUser.objects.filter(role='e'), required=True, label='Выберите инженера')
 
     def save(self, **kwargs):
-        self.instance.status = 'R'
+        self.instance.status = 'OE'
         return super(ManagerCommitAppForm, self).save(**kwargs)
 
 

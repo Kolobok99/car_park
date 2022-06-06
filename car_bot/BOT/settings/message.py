@@ -132,6 +132,15 @@ settings = """
     AUTHOR,
 )
 
+applications = """
+ЗАЯВКА НОМЕР:           {}
+МАШИНА                  {}
+ТИП:                    {}
+ОПИСАНИЕ:               {}
+КОММЕНТАРИЙ МЕНЕДЖЕРА:  {}
+ВЫПОЛНИТЬ ДО:           {}
+"""
+
 # словарь ответов пользователю
 MESSAGES = {
     'trading_store': trading_store,
@@ -142,5 +151,6 @@ MESSAGES = {
     'applay': applay,
     'settings': settings,
 
-    'notifications': notifications
+    'notifications': notifications,
+    'applications': applications
 }

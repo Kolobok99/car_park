@@ -115,8 +115,8 @@
                                         <td class="table__cell">
                                             {% if app.status == 'O' %}
                                                 <p style="color: #ffac50">Ожидает рассмотрения</p>
-                                            {% elif app.status == 'R' %}
-                                                <p style="color: #389b4c">Рассмотрена</p>
+                                            {% elif app.status == 'OE' %}
+                                                <p style="color: #389b4c">Ожидвает механика</p>
                                             {% elif app.status == 'V' %}
                                                 <p style="color: green">Выполнена</p>
                                             {% elif app.status == 'P' %}
@@ -217,6 +217,11 @@
                     {{ radio.tag }}
                     <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
                 {% endfor %}
+
+                {% if user.is_manager %}
+                    <p>{{ app_create_form.engineer.label }}:</p>
+                    {{ app_create_form.engineer }}
+                {% endif %}
 
                 <label for="new_descr">Опишите суть заявки:</label>
                 {{ app_create_form.description }}

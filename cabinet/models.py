@@ -217,6 +217,8 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         return False
 
     def __str__(self):
+        if self.first_name and self.last_name:
+            return f"{self.first_name} {self.last_name}"
         return self.email
 
     def get_absolute_url(self):
@@ -353,8 +355,9 @@ class Application(models.Model):
     """
 
     STATUS_CHOISES = (
-        ('O', 'Ожидает рассмотрения'),
-        ('R', 'Рассмотрена'),
+        ('O', 'Ожидает рассмотрения менеджера'),
+        ('OE', "Ожидает подтверждение механика"),
+        ("REP", "Ремонтируется"),
         ('V', 'Выполнена'),
         ('P', 'Просрочена'),
         ('T', 'Отклонено')
@@ -376,12 +379,11 @@ class Application(models.Model):
     end_date = models.DateField('Дата окончания', null=True, blank=True)
 
     is_active = models.BooleanField("Активность заявки", default=True)
-    status = models.CharField('Статус', max_length=1, choices=STATUS_CHOISES, default='O')
+    status = models.CharField('Статус', max_length=3, choices=STATUS_CHOISES, default='O')
     urgency = models.CharField('Cрочность', max_length=1, choices=URGENCY_CHOISES, default='N')
 
     description = models.TextField("Описание")
     manager_descr = models.TextField("Комментарий менеджера", null=True, blank=True)
-
     history = HistoricalRecords()
 
     def __str__(self):

@@ -33,8 +33,8 @@
                             <p class="info-app__title">Статус выполнения</p>
                             {% if app.status == 'O' %}
                                 <p style="color: #ffac50">Ожидает рассмотрения</p>
-                            {% elif app.status == 'R' %}
-                                <p style="color: #389b4c">Рассмотрена</p>
+                            {% elif app.status == 'OE' %}
+                                <p style="color: #389b4c">Ожидает подтверждение механика</p>
                             {% elif app.status == 'V' %}
                                 <p style="color: green">Выполнена</p>
                             {% elif app.status == 'P' %}
@@ -63,6 +63,17 @@
                             <p class="info-app__title">Создатель</p>
                             <p> {{ app.owner.last_name}} {{ app.owner.first_name|slice:'0:1' }}. {{ app.owner.patronymic|slice:"0:1" }} </p>
                         </div>
+
+
+                        <div class="info-app__item">
+                            <p class="info-app__title">Механик</p>
+                            {% if app.engineer %}
+                                <p> {{ app.engineer.last_name}} {{ app.engineer.first_name|slice:'0:1' }}. {{ app.engineer.patronymic|slice:"0:1" }} </p>
+                            {% else %}
+                                <p>Не выбран</p>
+                            {% endif %}
+                        </div>
+
 
                         <div class="info-app__item">
                             <p class="info-app__title">Авто</p>
@@ -94,8 +105,8 @@
                             <div class="info-app__buttons">
                                 {% if app.status == 'O' or app.status == 'T' %}
                                     <button class="info-app__btn-confirm">Подтвердить
-{#                                    <button style="background: #ff7a47" class="info-app__btn-refuse">Вернуть на доработку#}
-                                {% elif app.status == 'R' %}
+                                    <button style="background: #ff7a47" class="info-app__btn-refuse">Вернуть на доработку
+                                {% elif app.status == 'OE' %}
                                     <button class="info-app__btn-confirm">Изменить<br>Поддтверджение
                                     <button style="background: #ff7a47" class="info-app__btn-refuse">Вернуть на доработку
                                 {% else %}
@@ -144,6 +155,10 @@
                     {{ radio.tag }}
                     <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
                 {% endfor %}
+                 {% if user.is_manager %}
+                    <p>{{ form.engineer.label }}:</p>
+                    {{ form.engineer }}
+                {% endif %}
                 <label for="new_descr">Опишите суть заявки:</label>
                 {{ form.description }}
                 {{ form.action }}

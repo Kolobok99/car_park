@@ -1,3 +1,6 @@
+from datetime import time
+from time import sleep
+
 import django
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "car_park.settings")
@@ -22,250 +25,14 @@ class HandlerAllText(Handler):
 
         #текущий юсер
         self.user = MyUser.objects.first()
+        # текущее меню
+        self.menu_type = 'nots'
         # текущие заметки
         self.nots = Notifications.objects.all()
-        # шаг в заметках
+        # текущие заявки
+        self.apps = Application.objects.first()
+        # шаг в заметках/заявки
         self.step = 0
-
-
-    def pressed_btn_category(self, message):
-        """
-        Обработка события нажатия на кнопку 'Выбрать товар'. А точне
-        это выбор категории товаров
-        """
-        self.bot.send_message(message.chat.id, "Каталог категорий товара",
-                              reply_markup=self.keybords.remove_menu())
-        self.bot.send_message(message.chat.id, "Сделайте свой выбор",
-                              reply_markup=self.keybords.category_menu())
-
-    def pressed_btn_info(self, message):
-        """
-        Обработка события нажатия на кнопку 'О магазине'
-        """
-        self.bot.send_message(message.chat.id, MESSAGES['trading_store'],
-                              parse_mode="HTML",
-                              reply_markup=self.keybords.info_menu())
-
-    def pressed_btn_settings(self, message):
-        """
-        Обработка события нажатия на кнопку 'Настройки'
-        """
-        self.bot.send_message(message.chat.id, MESSAGES['settings'],
-                              parse_mode="HTML",
-                              reply_markup=self.keybords.settings_menu())
-
-    def pressed_btn_back(self, message):
-        """
-        Обработка события нажатия на кнопку 'Назад'
-        """
-        self.bot.send_message(message.chat.id, "Вы вернулись назад",
-                              reply_markup=self.keybords.start_menu())
-
-    def pressed_btn_product(self, message, product):
-        """
-        Обработка события нажатия на кнопку 'Выбрать товар'. А точнее
-        это выбор товара из категории
-        """
-        self.bot.send_message(message.chat.id, 'Категория ' +
-                              config.KEYBOARD[product],
-                              reply_markup=
-                              self.keybords.set_select_category(
-                                  config.CATEGORY[product]))
-        self.bot.send_message(message.chat.id, "Ок",
-                              reply_markup=self.keybords.category_menu())
-
-    def pressed_btn_order(self, message):
-        """
-        Обрабатывает входящие текстовые сообщения от нажатия на кнопку 'Заказ'.
-        """
-        # обнуляем данные шага
-        self.step = 0
-        # получаем список всех товаров в заказе
-        count = self.BD.select_all_product_id()
-        # получаем количество по каждой позиции товара в заказе
-        quantity = self.BD.select_order_quantity(count[self.step])
-
-        # отправляем ответ пользователю
-        self.send_message_order(count[self.step], quantity, message)
-
-    def send_message_order(self, product_id, quantity, message):
-        """
-        Отправляет ответ пользователю при выполнении различных действий
-        """
-        self.bot.send_message(message.chat.id, MESSAGES['order_number'].format(
-            self.step + 1), parse_mode="HTML")
-        self.bot.send_message(message.chat.id,
-                              MESSAGES['order'].
-                              format(self.BD.select_single_product_name(
-                                  product_id),
-                                  self.BD.select_single_product_title(
-                                      product_id),
-                                  self.BD.select_single_product_price(
-                                      product_id),
-                                  self.BD.select_order_quantity(
-                                      product_id)),
-                              parse_mode="HTML",
-                              reply_markup=self.keybords.orders_menu(
-                                  self.step, quantity))
-
-    def pressed_btn_up(self, message):
-        """
-        Обработка нажатия кнопки увеличения
-        количества определенного товара в заказе
-        """
-        # получаем список всех товаров в заказе
-        count = self.BD.select_all_product_id()
-        # получаем количество конкретной позиции в заказе
-        quantity_order = self.BD.select_order_quantity(count[self.step])
-        # получаем количество конкретной позиции в пролуктов
-        quantity_product = self.BD.select_single_product_quantity(
-            count[self.step])
-        # если товар есть
-        if quantity_product > 0:
-            quantity_order += 1
-            quantity_product -= 1
-            # вносим изменения в БД orders
-            self.BD.update_order_value(count[self.step],
-                                       'quantity', quantity_order)
-            # вносим изменения в БД product
-            self.BD.update_product_value(count[self.step],
-                                         'quantity', quantity_product)
-        # отправляем ответ пользователю
-        self.send_message_order(count[self.step], quantity_order, message)
-
-    def pressed_btn_douwn(self, message):
-        """
-        Обработка нажатия кнопки уменьшения
-        количества определенного товара в заказе
-        """
-        # получаем список всех товаров в заказе
-        count = self.BD.select_all_product_id()
-        # получаем количество конкретной позиции в заказе
-        quantity_order = self.BD.select_order_quantity(count[self.step])
-        # получаем количество конкретной позиции в пролуктов
-        quantity_product = self.BD.select_single_product_quantity(
-            count[self.step])
-        # если товар в заказе есть
-        if quantity_order > 0:
-            quantity_order -= 1
-            quantity_product += 1
-            # вносим изменения в БД orders
-            self.BD.update_order_value(count[self.step],
-                                       'quantity', quantity_order)
-            # вносим изменения в БД product
-            self.BD.update_product_value(count[self.step],
-                                         'quantity', quantity_product)
-        # отправляем ответ пользователю
-        self.send_message_order(count[self.step], quantity_order, message)
-
-    def pressed_btn_x(self, message):
-        """
-        Обработка нажатия кнопки удаления
-        товарной позиции заказа
-        """
-        # получаем список всех product_id заказа
-        count = self.BD.select_all_product_id()
-        # если список не пуст
-        if count.__len__() > 0:
-            # получаем количество конкретной позиции в заказе
-            quantity_order = self.BD.select_order_quantity(count[self.step])
-            # получаем количество товара к конкретной
-            # позиции заказа для возврата в product
-            quantity_product = self.BD.select_single_product_quantity(
-                count[self.step])
-            quantity_product += quantity_order
-            # вносим изменения в БД orders
-            self.BD.delete_order(count[self.step])
-            # вносим изменения в БД product
-            self.BD.update_product_value(count[self.step],
-                                         'quantity', quantity_product)
-            # уменьшаем шаг
-            self.step -= 1
-
-        count = self.BD.select_all_product_id()
-        # если список не пуст
-        if count.__len__() > 0:
-
-            quantity_order = self.BD.select_order_quantity(count[self.step])
-            # отправляем пользователю сообщение
-            self.send_message_order(count[self.step], quantity_order, message)
-
-        else:
-            # если товара нет в заказе отправляем сообщение
-            self.bot.send_message(message.chat.id, MESSAGES['no_orders'],
-                                  parse_mode="HTML",
-                                  reply_markup=self.keybords.category_menu())
-
-    def pressed_btn_back_step(self, message):
-        """
-        Обработка нажатия кнопки перемещения
-        к более ранним товарным позициям заказа
-        """
-        # уменьшаем шаг пока шаг не будет равет "0"
-        if self.step > 0:
-            self.step -= 1
-        # получаем список всех товаров в заказе
-        count = self.BD.select_all_product_id()
-        quantity = self.BD.select_order_quantity(count[self.step])
-
-        # отправляем ответ пользователю
-        self.send_message_order(count[self.step],quantity,message)
-
-    def pressed_btn_next_step(self, message):
-        """
-        Обработка нажатия кнопки перемещения
-        к более поздним товарным позициям заказа
-        """
-        # увеличиваем шаг пока шаг не будет равет количеству строк
-        # полей заказа с расчетом цены деления начиная с "0"
-        if self.step < self.BD.count_rows_order()-1:
-            self.step += 1
-        # получаем список всех товаров в заказе
-        count = self.BD.select_all_product_id()
-        # получаем еоличество конкретного товара в соответствие с шагом выборки
-        quantity = self.BD.select_order_quantity(count[self.step])
-
-        # отправляем ответ пользователю
-        self.send_message_order(count[self.step], quantity, message)
-
-    def pressed_btn_apllay(self, message):
-        """
-        обрабатывает входящие текстовые сообщения
-        от нажатия на кнопку 'Оформить заказ'.
-        """
-        # отправляем ответ пользователю
-        self.bot.send_message(message.chat.id,
-                              MESSAGES['applay'].format(
-                                  utility.get_total_coas(self.BD),
-
-                                  utility.get_total_quantity(self.BD)),
-                              parse_mode="HTML",
-                              reply_markup=self.keybords.category_menu())
-        # отчищаем данные с заказа
-        self.BD.delete_all_order()
-
-    def pressed_btn_nots(self, message):
-        """Обрабатывает нажатие кнопки Уведомения"""
-
-        self.user = MyUser.objects.get(chat_id=message.chat.id)
-        self.nots = Notifications.objects.filter(recipient=self.user, active=True)
-        not1 = self.nots[0]
-        self.step = 1
-        self.bot.send_message(
-            message.chat.id,
-            'активные уведомления',
-            reply_markup=self.keybords.set_notifications_btns(len(self.nots), self.step)
-        )
-
-        self.bot.send_message(
-            message.chat.id,
-            MESSAGES['notifications'].format(
-                not1.id,
-                not1.created_at,
-                not1.content
-            ),
-            reply_markup=self.keybords.set_deactivate_not(not_id=not1.id)
-        )
 
     def pressed_btn_menu(self, message):
         """Обрабатывает нажатие клавиши меню"""
@@ -273,7 +40,453 @@ class HandlerAllText(Handler):
         self.bot.send_message(
             message.chat.id,
             "Меню",
-            reply_markup=self.keybords.set_start_btns()
+            reply_markup=self.keybords.set_start_menu(message)
+        )
+
+    # ******* ОСНОВНОЕ МЕНЮ ******* #
+    def pressed_btn_nots(self, message):
+        """Обрабатывает нажатие кнопки Уведомения"""
+
+        self.menu_type = 'nots'
+
+        self.user = MyUser.objects.get(chat_id=message.chat.id)
+        self.nots = Notifications.objects.filter(recipient=self.user, active=True)
+
+        if self.nots:
+            not1 = self.nots[0]
+            self.step = 1
+            self.bot.send_message(
+                message.chat.id,
+                MESSAGES['notifications'].format(
+                    not1.id,
+                    not1.created_at,
+                    not1.content
+                ),
+                reply_markup=self.keybords.set_deactivate_not(not_id=not1.id)
+            )
+            self.bot.send_message(
+                message.chat.id,
+                'активные уведомления',
+                reply_markup=self.keybords.set_active_nots_btns(len(self.nots), self.step)
+            )
+        else:
+            self.bot.send_message(
+                message.chat.id,
+                'НЕТ НОВЫХ УВЕДОЛМЕНИЙ',
+                reply_markup=self.keybords.set_active_nots_btns(len(self.nots), self.step)
+            )
+
+    def pressed_btn_about(self, message):
+        """Обрабытывает нажатие кнопки О программе"""
+
+        self.bot.send_message(message.chat.id, MESSAGES['settings'],
+                              parse_mode="HTML",
+                              reply_markup=self.keybords.set_start_menu(message))
+
+    def pressed_btn_apps(self, message):
+        """Обрабатывает нажатие кнопки заявки"""
+
+        self.menu_type = 'apps'
+        self.bot.send_message(
+            message.chat.id,
+            'МЕНЮ: заявки',
+            reply_markup=self.keybords.set_apps_menu()
+        )
+
+        # self.bot.send_message(
+        #     message.chat.id,
+        #     MESSAGES['notifications'].format(
+        #         not1.id,
+        #         not1.created_at,
+        #         not1.content
+        #     ),
+        #     reply_markup=self.keybords.set_deactivate_not(not_id=not1.id)
+        # )
+
+    # ******* ЗАЯВКИ ******* #
+    def pressed_btn_new_apps(self, message):
+        """Обрабатывает нажатие кнопки новые заявки"""
+
+        self.user = MyUser.objects.get(chat_id=message.chat.id)
+
+        self.apps = Application.objects.filter(engineer=self.user, is_active=True, status='OE')
+        if self.apps:
+            app1 = self.apps[0]
+            self.step = 1
+
+            self.bot.send_message(
+                message.chat.id,
+                "МЕНЮ: новые заявки",
+                reply_markup=self.keybords.set_apps_control_btns(
+                    app_step=self.step,
+                    count_apps=len(self.apps)
+                )
+            )
+            message_to_del = self.bot.send_message(
+                message.chat.id,
+                MESSAGES['applications'].format(
+                    app1.id,
+                    app1.car.registration_number,
+                    app1.type,
+                    app1.description,
+                    app1.manager_descr,
+                    app1.end_date,
+                ),
+                reply_markup=self.keybords.set_accept_new_app(app_id=app1.id)
+            )
+            self.message_id = message_to_del
+
+        else:
+            self.bot.send_message(
+                message.chat.id,
+                "У вас нет активных заявок!",
+                reply_markup=self.keybords.set_start_menu()
+            )
+
+    def pressed_btn_active_apps(self, message):
+        """Обрабатывает нажатие кнопки Активные заявки"""
+
+        self.user = MyUser.objects.get(chat_id=message.chat.id)
+
+        self.apps = Application.objects.filter(engineer=self.user, status='REP')
+        if self.apps:
+
+            applications = """
+            ЗАЯВКА НОМЕР:           {}
+            МАШИНА                  {}
+            ТИП:                    {}
+            ОПИСАНИЕ:               {}
+            КОММЕНТАРИЙ МЕНЕДЖЕРА:  {}
+            ВЫПОЛНИТЬ ДО:           {}
+            """
+            self.bot.send_message(
+                message.chat.id,
+                "АКТИВНЫЕ ЗАЯВКИ"
+            )
+            for app1 in self.apps:
+                self.bot.send_message(
+                    message.chat.id,
+                    MESSAGES['applications'].format(
+                        app1.id,
+                        app1.car.registration_number,
+                        app1.type,
+                        app1.description,
+                        app1.manager_descr,
+                        app1.end_date,
+                    ),
+                    reply_markup=self.keybords.set_inline_complete_btn(app_id=app1.id)
+                )
+
+
+        else:
+             self.bot.send_message(
+                 message.chat.id,
+                 "У вас нет активных заявок!",
+                 reply_markup =self.keybords.set_start_menu(message)
+             )
+
+    def pressed_btn_old_apps(self, message):
+        """Обрабатывает нажатие кнопки Выполненные заявки"""
+
+        self.user = MyUser.objects.get(chat_id=message.chat.id)
+
+        self.apps = Application.objects.filter(engineer=self.user, status='V')
+        if self.apps:
+
+            applications = """
+                    ЗАЯВКА НОМЕР:           {}
+                    МАШИНА                  {}
+                    ТИП:                    {}
+                    ОПИСАНИЕ:               {}
+                    КОММЕНТАРИЙ МЕНЕДЖЕРА:  {}
+                    ВЫПОЛНИТЬ ДО:           {}
+                    """
+
+            for app1 in self.apps:
+                self.bot.send_message(
+                    message.chat.id,
+                    MESSAGES['applications'].format(
+                        app1.id,
+                        app1.car.registration_number,
+                        app1.type,
+                        app1.description,
+                        app1.manager_descr,
+                        app1.end_date,
+                    ),
+                    reply_markup=self.keybords.set_deactivate_app3(app_id=app1.id)
+                )
+
+    # ******* НОВЫЕ ЗАЯВКИ ******* #
+    def pressed_btn_next_app(self, message):
+        """Обработывает нажатие клавиши следующая НОВАЯ заявка"""
+        print("ВЫЗВАН btn_next_app")
+
+        self.bot.delete_message(message.chat.id, message.message_id)
+        self.bot.delete_message(message.chat.id, message.message_id - 1)
+
+        # if self.step != 1:
+        self.bot.delete_message(message.chat.id, message.message_id - 2)
+
+        if self.step != len(self.apps):
+            self.step = self.step + 1
+        else:
+            self.step = 1
+
+        if self.apps:
+            app1 = self.apps[self.step-1]
+            self.bot.send_message(
+                message.chat.id,
+                "СЛЕДУЮЩАЯ новая заявка",
+                reply_markup=self.keybords.set_apps_control_btns(
+                    app_step=self.step,
+                    count_apps=len(self.apps)
+                )
+            )
+
+            self.bot.send_message(
+                message.chat.id,
+                MESSAGES['applications'].format(
+                    app1.id,
+                    app1.car.registration_number,
+                    app1.type,
+                    app1.description,
+                    app1.manager_descr,
+                    app1.end_date,
+                ),
+                reply_markup=self.keybords.set_accept_new_app(app_id=app1.id)
+            )
+
+        else:
+            self.bot.send_message(
+                message.chat.id,
+                "У вас нет активных заявок!",
+                reply_markup=self.keybords.set_start_menu()
+            )
+
+    def pressed_btn_last_app(self, message):
+        """Обработывает нажатие клавиши предыдущая НОВАЯ заявка"""
+
+        self.bot.delete_message(message.chat.id, message.message_id)
+        self.bot.delete_message(message.chat.id, message.message_id - 1)
+
+        # if self.step != 1:
+        self.bot.delete_message(message.chat.id, message.message_id - 2)
+
+        if self.step != 1:
+            self.step = self.step - 1
+        else:
+            self.step = len(self.apps)
+
+        if self.apps:
+            app1 = self.apps[self.step-1]
+
+            self.bot.send_message(
+                message.chat.id,
+                "ПРЕДЫДУЩАЯ заявка",
+                reply_markup=self.keybords.set_apps_control_btns(
+                    app_step=self.step,
+                    count_apps=len(self.apps)
+                )
+            )
+
+            self.bot.send_message(
+                message.chat.id,
+                MESSAGES['applications'].format(
+                    app1.id,
+                    app1.car.registration_number,
+                    app1.type,
+                    app1.description,
+                    app1.manager_descr,
+                    app1.end_date,
+                ),
+                reply_markup=self.keybords.set_accept_new_app(app_id=app1.id)
+            )
+
+        else:
+            self.bot.send_message(
+                message.chat.id,
+                "У вас нет активных заявок!",
+                reply_markup=self.keybords.set_start_menu()
+            )
+
+    def pressed_inline_btn_start_repair(self, call, code):
+        """
+        Обрабатывает нажатие inline-кнопки Приступить к ремонту
+        """
+
+        # 1) выбраная заявка status = "REP"
+        app_to_repair = Application.objects.get(pk=code)
+        app_to_repair.status = 'REP'
+        app_to_repair.save()
+
+        self.bot.answer_callback_query(
+            call.id,
+            "Заявка принята в работу!"
+        )
+
+        # 2) self.step = 1
+        self.step = 1
+        # sleep(5)
+        # 3) self.apps = Application.objects.filter(en=self.user, active=True)
+        self.apps = Application.objects.filter(engineer=self.user, status="OE")
+        self.bot.delete_message(call.message.chat.id, call.message.message_id)
+
+        if self.apps:
+            app1 = self.apps[0]
+            self.step = 1
+
+            self.bot.send_message(
+                call.message.chat.id,
+                "Оставшиеся новые заявки",
+                reply_markup=self.keybords.set_apps_control_btns(
+                    app_step=self.step,
+                    count_apps=len(self.apps)
+                )
+            )
+
+            self.bot.send_message(
+                call.message.chat.id,
+                MESSAGES['applications'].format(
+                    app1.id,
+                    app1.car.registration_number,
+                    app1.type,
+                    app1.description,
+                    app1.manager_descr,
+                    app1.end_date,
+                ),
+                reply_markup=self.keybords.set_accept_new_app(app_id=app1.id)
+            )
+
+        else:
+            self.bot.send_message(
+                call.message.chat.id,
+                "У вас нет активных заявок!",
+                reply_markup=self.keybords.set_start_menu(call.message)
+            )
+
+    # ******* АКТИВНЫЕ ЗАЯВКИ ******* #
+    def pressed_inline_btn_complete_app(self, call, code):
+        """
+           Обрабатывает входящие запросы на нажатие inline-кнопки Выполнить заявку
+        """
+        print("YES!DEACTIVATE_BTN2")
+
+        # 1) выбраная заявка status = "V"
+        app_to_repair = Application.objects.get(pk=code)
+        app_to_repair.status = 'V'
+        app_to_repair.save()
+
+        self.bot.answer_callback_query(
+            call.id,
+            "Заявка выполнена!"
+        )
+
+        # 2) self.step = 1
+        self.step = 1
+        # sleep(5)
+        # 3) self.apps = Application.objects.filter(engineer=self.user, status="RED")
+        self.apps = Application.objects.filter(engineer=self.user, status="RED")
+        self.bot.delete_message(call.message.chat.id, call.message.message_id)
+
+        # if self.apps:
+        #     app1 = self.apps[0]
+        #     self.step = 1
+        #
+        #     self.bot.send_message(
+        #         call.message.chat.id,
+        #         "Оставшиеся новые заявки",
+        #         reply_markup=self.keybords.set_apps_control_btns(
+        #             app_step=self.step,
+        #             count_apps=len(self.apps)
+        #         )
+        #     )
+        #
+        #     self.bot.send_message(
+        #         call.message.chat.id,
+        #         MESSAGES['applications'].format(
+        #             app1.id,
+        #             app1.car.registration_number,
+        #             app1.type,
+        #             app1.description,
+        #             app1.manager_descr,
+        #             app1.end_date,
+        #         ),
+        #         reply_markup=self.keybords.set_accept_new_app(app_id=app1.id)
+        #     )
+        #
+        # else:
+        #     self.bot.send_message(
+        #         call.message.chat.id,
+        #         "У вас нет активных заявок!",
+        #         reply_markup=self.keybords.set_start_btns(call.message)
+        #     )
+
+    def pressed_inline_btn_finalize_app(self, call, code):
+        """
+           Обрабатывает входящие запросы на нажатие inline-кнопки Доработать заявку
+        """
+        print("YES!DEACTIVATE_BTN2")
+
+        # 1) выбраная заявка status = "REP"
+        app_to_repair = Application.objects.get(pk=code)
+        app_to_repair.status = 'REP'
+        app_to_repair.save()
+
+        self.bot.answer_callback_query(
+            call.id,
+            "Заявка возвращена на доработку!"
+        )
+
+        # 2) self.step = 1
+        self.step = 1
+        # sleep(5)
+        # 3) self.apps = Application.objects.filter(engineer=self.user, status="RED")
+        # self.apps = Application.objects.filter(engineer=self.user, status="RED")
+        self.bot.delete_message(call.message.chat.id, call.message.message_id)
+
+    # ******* УВЕДОМЛЕНИЯ ******* #
+
+    def pressed_inline_btn_access_note(self, call, code):
+        """
+           Обрабатывает входящие запросы на нажатие inline-кнопки подтвердить уведомление
+        """
+
+        # 1) выбранное уведомление anotective=False
+        not_to_deactivate = Notifications.objects.get(pk=code)
+        not_to_deactivate.active = False
+        not_to_deactivate.save()
+
+        self.bot.answer_callback_query(
+            call.id,
+            MESSAGES['notifications'].format(
+                not_to_deactivate.id,
+                not_to_deactivate.created_at,
+                not_to_deactivate.content,
+            ))
+
+        # 2) self.step = 1
+        self.step = 1
+
+        # 3) self.nots = Notifications.objects.filter(recipient=self.user, active=True)
+        self.nots = Notifications.objects.filter(recipient=self.user, active=True)
+        not1 = self.nots[0]
+
+        # 4) Отправка смс "первое уведомление"
+        self.bot.send_message(
+            call.message.chat.id,
+            f'Уведомление № {not1.id}',
+            reply_markup=self.keybords.set_active_nots_btns(len(self.nots), self.step)
+        )
+        # 5) Создание размекти кнопок
+
+        self.bot.send_message(
+            call.message.chat.id,
+            MESSAGES['notifications'].format(
+                not1.id,
+                not1.created_at,
+                not1.content
+            ),
+            reply_markup=self.keybords.set_deactivate_not(not_id=not1.id)
         )
 
     def pressed_btn_next_not(self, message):
@@ -290,7 +503,7 @@ class HandlerAllText(Handler):
         self.bot.send_message(
             message.chat.id,
             f'Уведомление № {not1.id}',
-            reply_markup=self.keybords.set_notifications_btns(len(self.nots), self.step)
+            reply_markup=self.keybords.set_active_nots_btns(len(self.nots), self.step)
         )
 
         self.bot.send_message(
@@ -317,7 +530,7 @@ class HandlerAllText(Handler):
         self.bot.send_message(
             message.chat.id,
             f'Уведомление № {not1.id}',
-            reply_markup=self.keybords.set_notifications_btns(len(self.nots), self.step)
+            reply_markup=self.keybords.set_active_nots_btns(len(self.nots), self.step)
         )
 
         self.bot.send_message(
@@ -331,50 +544,7 @@ class HandlerAllText(Handler):
             reply_markup=self.keybords.set_deactivate_not(not_id=not1.id)
         )
 
-    def pressed_btn_deactivate_note(self, call, code):
-        """
-           Обрабатывает входящие запросы на нажатие inline-кнопки подтвердить заявку
-        """
-
-        # 1) выбранное уведомление active=False
-        not_to_deactivate = Notifications.objects.get(pk=code)
-        not_to_deactivate.active = False
-        not_to_deactivate.save()
-
-        self.bot.answer_callback_query(
-            call.id,
-            MESSAGES['notifications'].format(
-                not_to_deactivate.id,
-                not_to_deactivate.created_at,
-                not_to_deactivate.content,
-            ))
-
-        # 2) self.step = 1
-        self.step = 1
-
-        # 3) self.nots = Notifications.objects.filter(recipient=self.user, active=True)
-        self.nots = Notifications.objects.filter(recipient=self.user, active=True)
-        not1 = self.nots[0]
-
-        # 4) Отправка смс "первое уведомление"
-        self.bot.send_message(
-            call.message.chat.id,
-            f'Уведомление № {not1.id}',
-            reply_markup=self.keybords.set_notifications_btns(len(self.nots), self.step)
-        )
-        # 5) Создание размекти кнопок
-
-
-
-        self.bot.send_message(
-            call.message.chat.id,
-            MESSAGES['notifications'].format(
-                not1.id,
-                not1.created_at,
-                not1.content
-            ),
-            reply_markup=self.keybords.set_deactivate_not(not_id=not1.id)
-        )
+    # ******* ПРОСМОТРЕННЫЕ УВЕДОМЛЕНИЯ ******* #
 
     def pressed_btn_old_nots(self, message):
         """Обрабатывает нажатие кнопки Просмотренные уведомления"""
@@ -384,7 +554,7 @@ class HandlerAllText(Handler):
         self.bot.send_message(
             message.chat.id,
             'Просмотренные уведомления ',
-            reply_markup=self.keybords.set_start_btns()
+            reply_markup=self.keybords.set_start_menu(message)
         )
 
         for not1 in old_nots:
@@ -397,42 +567,6 @@ class HandlerAllText(Handler):
                 ),
             )
 
-    def pressed_btn_about(self, message):
-        """Обрабытывает нажатие кнопки О программе"""
-
-        self.bot.send_message(message.chat.id, MESSAGES['settings'],
-                              parse_mode="HTML",
-                              reply_markup=self.keybords.set_start_btns())
-
-    def pressed_btn_apps(self, message):
-        """Обрабатывает нажатие кнопки заявки"""
-
-        self.user = MyUser.objects.get(chat_id=message.chat.id)
-
-        self.apps = Application.objects.filter(owner=self.user, active=True)
-        not1 = self.nots[0]
-        self.step = 1
-        self.bot.send_message(
-            message.chat.id,
-            'активные уведомления',
-            reply_markup=self.keybords.set_notifications_btns(len(self.nots), self.step)
-        )
-
-        self.bot.send_message(
-            message.chat.id,
-            MESSAGES['notifications'].format(
-                not1.id,
-                not1.created_at,
-                not1.content
-            ),
-            reply_markup=self.keybords.set_deactivate_not(not_id=not1.id)
-        )
-
-        self.bot.send_message(
-            message.chat.id,
-            f"Активные заявки:"
-        )
-
 
 
     def handle(self):
@@ -440,7 +574,7 @@ class HandlerAllText(Handler):
         # который обрабатывает входящие текстовые сообщения от нажатия кнопок.
         @self.bot.message_handler(func=lambda message: True)
         def handle(message):
-            # ********** меню ********** #
+            # ********** основные кнопки ********** #
 
             if message.text == 'уведомления':
                 self.pressed_btn_nots(message)
@@ -449,10 +583,15 @@ class HandlerAllText(Handler):
                 self.pressed_btn_menu(message)
 
             if message.text == '>>':
-                self.pressed_btn_next_not(message)
-
+                if self.menu_type == 'notes':
+                    self.pressed_btn_next_not(message)
+                elif self.menu_type == 'apps':
+                    self.pressed_btn_next_app(message)
             if message.text == '<<':
-                self.pressed_btn_last_not(message)
+                if self.menu_type == 'nots':
+                    self.pressed_btn_last_not(message)
+                elif self.menu_type == 'apps':
+                    self.pressed_btn_last_app(message)
 
             if message.text == 'Просмотренные уведомления':
                 self.pressed_btn_old_nots(message)
@@ -466,66 +605,35 @@ class HandlerAllText(Handler):
             if message.text == 'Заявки':
                 self.pressed_btn_apps(message)
 
-            # if message.text == config.KEYBOARD['CHOOSE_GOODS']:
-            #     self.pressed_btn_category(message)
-            #
-            # if message.text == config.KEYBOARD['INFO']:
-            #     self.pressed_btn_info(message)
-            #
-            # if message.text == config.KEYBOARD['SETTINGS']:
-            #     self.pressed_btn_settings(message)
-            #
-            # if message.text == config.KEYBOARD['<<']:
-            #     self.pressed_btn_back(message)
-            #
-            # if message.text == config.KEYBOARD['ORDER']:
-            #     # если есть заказ
-            #     if self.BD.count_rows_order() > 0:
-            #         self.pressed_btn_order(message)
-            #     else:
-            #         self.bot.send_message(message.chat.id,
-            #                               MESSAGES['no_orders'],
-            #                               parse_mode="HTML",
-            #                               reply_markup=self.keybords.
-            #                               category_menu())
-            #
-            #
-            # # ********** меню (категории товара, ПФ, Бакалея, Мороженое)******
-            # if message.text == config.KEYBOARD['SEMIPRODUCT']:
-            #     self.pressed_btn_product(message, 'SEMIPRODUCT')
-            #
-            # if message.text == config.KEYBOARD['GROCERY']:
-            #     self.pressed_btn_product(message, 'GROCERY')
-            #
-            # if message.text == config.KEYBOARD['ICE_CREAM']:
-            #     self.pressed_btn_product(message, 'ICE_CREAM')
-            #
-            #     # ********** меню (Заказа)**********
-            #
-            # if message.text == config.KEYBOARD['UP']:
-            #     self.pressed_btn_up(message)
-            #
-            # if message.text == config.KEYBOARD['DOUWN']:
-            #     self.pressed_btn_douwn(message)
-            #
-            # if message.text == config.KEYBOARD['X']:
-            #     self.pressed_btn_x(message)
-            #
-            # if message.text == config.KEYBOARD['BACK_STEP']:
-            #     self.pressed_btn_back_step(message)
-            #
-            # if message.text == config.KEYBOARD['NEXT_STEP']:
-            #     self.pressed_btn_next_step(message)
-            #
-            # if message.text == config.KEYBOARD['APPLAY']:
-            #     self.pressed_btn_apllay(message)
-            #     # иные нажатия и ввод данных пользователем
-            # else:
-            #     self.bot.send_message(message.chat.id, message.text)
+            if message.text == 'Новые заявки':
+                self.pressed_btn_new_apps(message)
 
+            if message.text == 'Активные заявки':
+                self.pressed_btn_active_apps(message)
+
+            if message.text == 'Выполненные заявки':
+                self.pressed_btn_old_apps(message)
+        #Обработчик нажатия инлайновых клавиш
         @self.bot.callback_query_handler(func=lambda call: True)
         def callback_inline(call):
             code = call.data
+            inline_text = call.message.json['reply_markup']['inline_keyboard'][0][0]['text']
+            # for key, value in call.message.json.items():
+            #     print(key, ":", value)
+            # print(call.message.json['reply_markup']['inline_keyboard'][0][0]['text'])
+            # 'reply_markup': {'inline_keyboard': [[{'text': 'Приступить к ремонту',
             if code.isdigit():
                 code = int(code)
-                self.pressed_btn_deactivate_note(call, code)
+
+            # ********  УВЕДМОЛЕНИЯ ******** #
+            if inline_text == 'Подтвердить':
+                self.pressed_inline_btn_access_note(call, code)
+
+            # ********  ЗАЯВКИ ******** #
+
+            if inline_text == 'Приступить к ремонту':
+                self.pressed_inline_btn_start_repair(call, code)
+            if inline_text == 'Выполнить заявку':
+                self.pressed_inline_btn_complete_app(call, code)
+            if inline_text == 'Доработать заявку':
+                self.pressed_inline_btn_finalize_app(call, code)

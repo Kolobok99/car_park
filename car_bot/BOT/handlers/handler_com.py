@@ -25,7 +25,7 @@ class HandlerCommands(Handler):
         # что пользователь сейчас отправит боту свой номер телефона
 
         self.bot.send_message(message.chat.id, 'Пожалуйста, предоставьте боту доступ к вашему номеру телефона',
-                         reply_markup=self.keybords.set_send_number())
+                              reply_markup=self.keybords.set_send_number_btn())
 
 
     def pressed_btn_number(self, message):
