@@ -35,17 +35,26 @@ class HandlerAllText(Handler):
         self.step = 0
 
     def pressed_btn_menu(self, message):
-        """Обрабатывает нажатие клавиши меню"""
+        """
+        Обрабатывает нажатие клавиши меню
+        Создает смс "Главное меню"
+        Генерирует разаметку Стартового меню
+        """
 
         self.bot.send_message(
             message.chat.id,
-            "Меню",
+            "Главное меню",
             reply_markup=self.keybords.set_start_menu(message)
         )
 
     # ******* ОСНОВНОЕ МЕНЮ ******* #
     def pressed_btn_nots(self, message):
-        """Обрабатывает нажатие кнопки Уведомения"""
+        """
+        Обрабатывает нажатие кнопки Уведомения
+        type_menu = уведомления
+        юсер = юсер_по_чат_id
+
+        """
 
         self.menu_type = 'nots'
 
@@ -92,16 +101,6 @@ class HandlerAllText(Handler):
             'МЕНЮ: заявки',
             reply_markup=self.keybords.set_apps_menu()
         )
-
-        # self.bot.send_message(
-        #     message.chat.id,
-        #     MESSAGES['notifications'].format(
-        #         not1.id,
-        #         not1.created_at,
-        #         not1.content
-        #     ),
-        #     reply_markup=self.keybords.set_deactivate_not(not_id=not1.id)
-        # )
 
     # ******* ЗАЯВКИ ******* #
     def pressed_btn_new_apps(self, message):
