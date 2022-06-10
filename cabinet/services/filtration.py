@@ -23,7 +23,7 @@ def refact3_filtration_car(get_params):
     # if driver_has == "driver_no":driver_has = False
     list_of_Q = []
 
-    if registration_number != "":
+    if registration_number and registration_number != "":
         reg_number_parameter = 'registration_number__icontains'
         Q_reg_number = Q(**{reg_number_parameter: registration_number})
         list_of_Q.append(Q_reg_number)
@@ -33,7 +33,7 @@ def refact3_filtration_car(get_params):
        Q_brand = Q(**{brand_parameter: brand})
        list_of_Q.append(Q_brand)
 
-    if len(driver_has) != 2:
+    if driver_has and len(driver_has) != 2:
         driver_has_parameter = "owner__isnull"
         Q_driver_has = Q(**{driver_has_parameter: not bool(driver_has[0])})
         list_of_Q.append(Q_driver_has)
@@ -69,19 +69,19 @@ def refact3_filtration_driver(get_params):
 
     drivers = MyUser.objects.filter(role='d')
 
-    if last_name != '':
+    if last_name and last_name != '':
         list_of_Q.append(Q(**{"last_name__icontains": last_name}))
-    if phone != '':
+    if phone and phone != '':
         list_of_Q.append(Q(**{"phone__icontains":phone}))
 
-    if card_balance == 200:
+    if card_balance and card_balance == 200:
         list_of_Q.append(Q(**{"my_card__balance__lt": card_balance}))
-    elif card_balance == 500:
+    elif card_balance and card_balance == 500:
         list_of_Q.append(Q(**{"my_card__balance__gte": card_balance}))
-    elif card_balance == 1:
+    elif card_balance and card_balance == 1:
         list_of_Q.append(Q(**{"my_card__balance__isnull": True}))
 
-    if applications:
+    if applications and applications:
         list_of_Q.append(Q(**{"my_apps__type_id__in": applications}))
         list_of_Q.append(Q(**{"my_apps__is_active": True}))
 

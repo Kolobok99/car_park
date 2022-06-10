@@ -76,7 +76,7 @@ class CarBrand(models.Model):
         Модель: марки автомобилей
     """
 
-    title = models.CharField(verbose_name='Марка', max_length=20)
+    title = models.CharField(verbose_name='Марка', max_length=20, unique=True)
 
     def __str__(self):
         return self.title

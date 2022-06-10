@@ -1,22 +1,40 @@
-"""car_park URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, title='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), title='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path, include
-from cabinet import urls
+
+from cabinet import urls as cabinet_urls
+from cabinet.API import urls as api_urls
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("", include(urls))
+    path("", include(cabinet_urls)),
+    path("my_api/v1/", include(api_urls))
 ]
+
+# #API LESSON 2
+# from cabinet.API.lesson2.api_views import CarAPIView
+#
+# urlpatterns += [
+#     path('api/v1/carlist/', CarAPIView.as_view())
+# ]
+
+#API LESSON 5
+# from cabinet.API.lesson_s.api_view import BrandAPIView
+#
+# urlpatterns += [
+#     path('api/v1/brandlist/', BrandAPIView.as_view()),
+#     path('api/v1/brandlist/<int:pk>/', BrandAPIView.as_view())
+# ]
+
+
+# urlpatterns += [
+#     path('api/v1/carlist/', CarAPIView.as_view()),
+#     path('api/v1/carlist/<int:pk>/', CarAPIView.as_view()),
+#
+#
+#     path('my_api/v1/carlist/', CarListAPIView.as_view()),
+#     path('my_api/v1/carcreate/', CarCreateAPIView.as_view()),
+#     path('my_api/v1/carupdate/<str:registration_number>/', CarUpdateAPIView.as_view()),
+#     path('my_api/v1/carset/owner_none/', MyCarAPIView.as_view({'post': 'owner_none'}))
+#
+# ]

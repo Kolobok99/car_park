@@ -56,17 +56,18 @@ class CarsCreateAndFilterView(Context, LoginRequiredMixin, CreateView):
         if action == 'owner-none':
             # Изъятие автомобилей
             none_owner_pk = self.request.POST.getlist('owner_refuse_id')
-            cars_none = Car.objects.filter(pk__in=none_owner_pk)
-            for car in cars_none:
-                # # Уведомление об изъятии авто
-                # Notifications.objects.create(
-                #     creator=self.request.user,
-                #     recipient=MyUser.objects.get(pk=car.owner.pk),
-                #     content=f"Ваша машина с номером {car.registration_number} изъята",
-                #     content_object=car
-                # )
-                car.owner = None
-                car.save()
+            # print(f"{none_owner_pk=}")
+            cars_none = Car.objects.filter(pk__in=none_owner_pk).update(owner=None)
+            # for car in cars_none:
+            #     # # Уведомление об изъятии авто
+            #     # Notifications.objects.create(
+            #     #     creator=self.request.user,
+            #     #     recipient=MyUser.objects.get(pk=car.owner.pk),
+            #     #     content=f"Ваша машина с номером {car.registration_number} изъята",
+            #     #     content_object=car
+            #     # )
+            #     car.owner = None
+            #     car.save()
 
             # Удаление автомобилей
             delete_owner_pk = self.request.POST.getlist('owner_delete_id')
@@ -477,7 +478,6 @@ class AccountView(LoginRequiredMixin, UpdateView):
             return self.form_valid(form)
         else:
             return self.form_invalid(**{action_type: form})
-
 
 class RegistrationView(CreateView):
     """
