@@ -4,7 +4,7 @@ from cabinet.API.api import CarAPIViewSet, DriverAPIViewSet, AutoDocsAPIViewSet,
     ApplicationsPIViewSet, HistoryAPIViewSet, UserAPIViewSet
 
 urlpatterns = [
-    path('cars/list', CarAPIViewSet.as_view({'get': 'list'})),
+    path('cars/list/', CarAPIViewSet.as_view({'get': 'list'})),
     path('cars/filtration', CarAPIViewSet.as_view({'get': 'filtration'})),
     path('cars/create', CarAPIViewSet.as_view({'post': 'create'})),
     path('cars/<str:registration_number>/', CarAPIViewSet.as_view({'get': 'retrieve'})),
@@ -30,19 +30,23 @@ urlpatterns = [
     path('car_docs/update/<str:registration_number>/', AutoDocsAPIViewSet.as_view({'patch': 'update'})),
     path('car_docs/delete/<str:registration_number>/', AutoDocsAPIViewSet.as_view({'post': 'destroy'})),
 
-    path('driver_docs/list', DriverDocsAPIViewSet.as_view({"get": "list"})),
-    path('driver_docs/filtation', DriverDocsAPIViewSet.as_view({"get": "filtration"})),
-    path('driver_docs/create', DriverDocsAPIViewSet.as_view({'post': 'create'})),
+    path('driver_docs/list/', DriverDocsAPIViewSet.as_view({"get": "list"})),
+    path('driver_docs/filtation/', DriverDocsAPIViewSet.as_view({"get": "filtration"})),
+    path('driver_docs/create/', DriverDocsAPIViewSet.as_view({'post': 'create'})),
     path('driver_docs/<str:registration_number>/', DriverDocsAPIViewSet.as_view({'get': 'retrieve'})),
     path('driver_docs/update/<str:registration_number>/', DriverDocsAPIViewSet.as_view({'patch': 'update'})),
     path('driver_docs/delete/<str:registration_number>/', DriverDocsAPIViewSet.as_view({'post': 'destroy'})),
 
-    path('cards/list', CardsAPIViewSet.as_view({"get": "list"})),
-    path('cards/filtation', CardsAPIViewSet.as_view({"get": "filtration"})),
-    path('cards/create', CardsAPIViewSet.as_view({'post': 'create'})),
-    path('cards/<str:registration_number>/', CardsAPIViewSet.as_view({'get': 'retrieve'})),
-    path('cards/update/<str:registration_number>/', CardsAPIViewSet.as_view({'patch': 'update'})),
-    path('cards/delete/<str:registration_number>/', CardsAPIViewSet.as_view({'post': 'destroy'})),
+    path('cards/list/', CardsAPIViewSet.as_view({"get": "list"})),
+    path('cards/filtation/', CardsAPIViewSet.as_view({"get": "filtration"})),
+
+    path('cards/create/', CardsAPIViewSet.as_view({'post': 'create'})),
+
+    path('cards/<str:number>/', CardsAPIViewSet.as_view({'get': 'retrieve'})),
+
+    path('cards/update/<str:number>/', CardsAPIViewSet.as_view({'put': 'partial_update'})),
+
+    path('cards/delete/<str:number>/', CardsAPIViewSet.as_view({'post': 'destroy'})),
     path("cards/owner_none/", CardsAPIViewSet.as_view({"post": 'owner_none'})),
     path("cards/list_to_delete/", CardsAPIViewSet.as_view({"post": 'list_to_delete'})),
 

@@ -143,6 +143,8 @@ class MyUserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 
+from rest_framework.exceptions import ValidationError as restValid
+
 class MyUser(AbstractBaseUser, PermissionsMixin):
     """
         Модель: Пользователя
@@ -224,7 +226,10 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     def get_absolute_url(self):
         return f"/drivers/{self.pk}"
 
-    def clean(self):
+    def clean(self, *args, **kwargs):
+        print("CLEAN вызван!")
+        print(f"{args=}")
+        print(f"{kwargs=}")
         cleaned_data = super().clean()
         errors = {}
 
@@ -246,7 +251,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         name_validate(patronymic, "'отчество'", 'patronymic')
 
         if errors:
-            raise ValidationError(errors)
+            raise restValid(errors)
         return cleaned_data
 
     class Meta:

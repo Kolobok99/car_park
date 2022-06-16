@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
-    'django_filters',
     'django_cleanup',
     'simple_history',
 
@@ -145,11 +144,6 @@ LOGIN_REDIRECT_URL = reverse_lazy('account')
 
 LOGIN_URL = '/login/'
 
-THUMBNAIL_ALIASES = {
-    '': {
-        'avatar': {'size': (50, 50), 'crop': True},
-    },
-}
 
 
 #REDIS:
@@ -158,21 +152,17 @@ REDIS_PORT = '6379'
 
 #CELERY
 CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ":" + REDIS_PORT + "/0"
-
 CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
-
 CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ":" + REDIS_PORT + '/0'
-
 CELERY_ACCEPT_CONTENT = {'application/json'}
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
-
-
-
+#EMAIL
 EMAIL_HOST = 'smtp.mail.ru'
 EMAIL_PORT = 2525
 EMAIL_HOST_USER = "zolotavin011@mail.ru"
 EMAIL_HOST_PASSWORD = "Fus746DZjb2CucvVgT8u"
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
+

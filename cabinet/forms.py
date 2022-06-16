@@ -2,7 +2,6 @@ import re
 from django import forms
 
 from .models import *
-# from django.core.exceptions import ValidationError as ValEr, FieldError
 
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import MyUser
@@ -33,7 +32,12 @@ class CarForm(forms.ModelForm):
 
     class Meta:
         model = Car
-        fields = ('registration_number', 'brand', 'region_code', 'last_inspection', 'owner', 'image')
+        fields = ('registration_number',
+                  'brand',
+                  'region_code',
+                  'last_inspection',
+                  'owner',
+                  'image')
         labels = {
             'registration_number': 'Номер',
             'brand': 'Марка',
@@ -159,7 +163,11 @@ class UserUpdateForm(forms.ModelForm):
 
     class Meta:
         model = MyUser
-        exclude = ('role', 'is_active', 'is_staff', 'is_superuser', 'password')
+        exclude = ('role',
+                   'is_active',
+                   'is_staff',
+                   'is_superuser',
+                   'password')
 
 
 class DriverActivationForm(forms.Form):
@@ -192,8 +200,6 @@ class FuelCardAddForm(forms.ModelForm):
     class Meta:
         model = FuelCard
         exclude = ('balance', )
-
-        # error_messages = widgets()
 
 class FuelCardChangeBalance(forms.ModelForm):
 

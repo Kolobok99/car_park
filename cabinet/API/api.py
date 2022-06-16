@@ -1,8 +1,10 @@
-from rest_framework import status
+from rest_framework import status, decorators
 from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ViewSet
 
+from cabinet.API import permissions
 from cabinet.API.serializers import CarSerializer, CarCreateSerializer, DriverSerializer, AutoDocsSerializer, \
     UserDocsSerializer, FuelCardSerializer, ApplicationSerializer, RegistrationSerializer
 from cabinet.models import Car, MyUser, AutoDoc, UserDoc, FuelCard, Application
@@ -15,8 +17,19 @@ from cabinet.services.services import Context
 class CarAPIViewSet(ModelViewSet):
     queryset = Car.objects.all()
     serializer_class = CarSerializer
+    # permission_classes = [IsAdminUser]
     lookup_field = 'registration_number'
 
+    def get_permissions(self):
+        action = self.action
+        print(action)
+        if action in ['retrieve', 'update', 'partial_update']:
+            self.permission_classes = [permissions.IsManagerOrOwner]
+        else:
+            self.permission_classes = [IsAdminUser, ]
+
+        return super(CarAPIViewSet, self).get_permissions()
+    # @decorators.action(permission_classes=(permissions.IsManagerOrOwner, ))
     def filtration(self, request):
         """
         :param:
@@ -69,6 +82,17 @@ class DriverAPIViewSet(ModelViewSet):
     queryset = MyUser.objects.filter(role='d')
     serializer_class = DriverSerializer
 
+
+    def get_permissions(self):
+        action = self.action
+        print(action)
+        if action in ['retrieve', 'update', 'partial_update']:
+            self.permission_classes = [permissions.IsStaffOrThisUser]
+        else:
+            self.permission_classes = [IsAdminUser, ]
+
+        return super().get_permissions()
+
     def filtration(self, request):
         """
         :param:
@@ -96,6 +120,16 @@ class AutoDocsAPIViewSet(ModelViewSet):
     queryset = AutoDoc.objects.all()
     serializer_class = AutoDocsSerializer
 
+    def get_permissions(self):
+        action = self.action
+        print(action)
+        if action in ['retrieve', 'update', 'partial_update', 'destroy']:
+            self.permission_classes = [permissions.IsManagerOrOwner]
+        else:
+            self.permission_classes = [IsAdminUser, ]
+
+        return super().get_permissions()
+
     def filtration(self, request):
         """
         :param:
@@ -118,6 +152,18 @@ class DriverDocsAPIViewSet(ModelViewSet):
     queryset = UserDoc.objects.all()
     serializer_class = UserDocsSerializer
 
+    def get_permissions(self):
+        action = self.action
+        print(action)
+        if action in ['retrieve', 'destroy']:
+            self.permission_classes = [permissions.IsManagerOrOwner]
+        if action in ['update', 'partial_update']:
+            self.permission_classes = [permissions.IsOwnerOnly]
+        else:
+            self.permission_classes = [IsAdminUser, ]
+
+        return super().get_permissions()
+
     def filtration(self, request):
         """
         :param:
@@ -138,8 +184,18 @@ class DriverDocsAPIViewSet(ModelViewSet):
 class CardsAPIViewSet(ModelViewSet):
     queryset = FuelCard.objects.all()
     serializer_class = FuelCardSerializer
+    lookup_field = 'number'
+    def get_permissions(self):
+        action = self.action
+        # print(action)
+        if action in ['retrieve', 'partial_update', 'destroy',]:
+            self.permission_classes = [permissions.IsManagerOrOwner, ]
+        # else:
+        #     self.permission_classes = [IsAdminUser, ]
+        return super().get_permissions()
 
     def filtration(self, request):
+
         """
         :param:
         ?
@@ -183,6 +239,16 @@ class CardsAPIViewSet(ModelViewSet):
 class ApplicationsPIViewSet(ModelViewSet):
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
+
+    def get_permissions(self):
+        action = self.action
+        user = self.request.user
+        if action in ['retrieve', 'update', 'create']:
+            self.permission_classes = [permissions.IsManagerOrOwner]
+        else:
+            self.permission_classes = [permissions.IsOwnerOnly]
+
+        return super().get_permissions()
 
     def filtration(self, request):
         """

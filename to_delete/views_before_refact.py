@@ -1,14 +1,10 @@
-from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib import messages
-from django.http import HttpResponseRedirect, HttpResponse
-from django.urls import reverse, reverse_lazy
-from django.views.generic.edit import FormMixin, DeletionMixin, UpdateView
+from django.urls import reverse_lazy
+from django.views.generic.edit import DeletionMixin, UpdateView
 
-from .early_forms import *
-from .models import *
+from to_delete.early_forms import *
 
-from django.views.generic import ListView, TemplateView, CreateView, DetailView
+from django.views.generic import ListView, TemplateView, CreateView
 
 from cabinet.services.filtration import *
 
@@ -307,17 +303,16 @@ class CarView(LoginRequiredMixin, UpdateView):
         if form != None and form.is_valid():
             form.save()
         return HttpResponseRedirect("")
-from django.contrib.auth import authenticate, login
+
+
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib import messages
-from django.http import HttpResponseRedirect, HttpResponse
-from django.urls import reverse, reverse_lazy
-from django.views.generic.edit import FormMixin, DeletionMixin, UpdateView
+from django.http import HttpResponseRedirect
+from django.urls import reverse_lazy
+from django.views.generic.edit import DeletionMixin, UpdateView
 
-from .early_forms import *
-from .models import *
+from to_delete.early_forms import *
 
-from django.views.generic import ListView, TemplateView, CreateView, DetailView
+from django.views.generic import ListView, TemplateView, CreateView
 
 from cabinet.services.filtration import *
 

@@ -1,7 +1,6 @@
 from car_bot.BOT.handlers.handler_all_text import HandlerAllText
 from car_bot.BOT.handlers.handler_com import HandlerCommands
-from car_bot.BOT.handlers.handler_content_types import HandlerContentTypes
-from car_bot.BOT.handlers.handler_inline_query import HandlerInlineQuery
+from to_delete.handler_content_types import HandlerContentTypes
 
 
 class HandlerMain:

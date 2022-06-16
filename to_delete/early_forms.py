@@ -5,11 +5,11 @@ from django.core import validators
 from django.core.exceptions import ValidationError
 from django.forms import modelformset_factory
 
-from .models import *
+from cabinet.models import *
 
 
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import MyUser
+from cabinet.models import MyUser
 
 
 

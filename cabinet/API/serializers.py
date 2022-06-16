@@ -43,10 +43,55 @@ class FuelCardSerializer(ModelSerializer):
         model = FuelCard
         fields = "__all__"
 
+    def update(self, instance, validated_data):
+        print("UPDATE")
+        user = self.context['request'].user
+        if user.is_manager():
+            instance.number = validated_data.get('number', instance.number)
+            instance.limit = validated_data.get('limit', instance.limit)
+            instance.balance = validated_data.get('balance', instance.balance)
+            instance.save()
+            return instance
+        else:
+            print(f"{validated_data=}")
+            print(validated_data.get('number', None))
+            print(len(validated_data))
+            print(f"{instance=}")
+            if len(validated_data) == 1 and validated_data.get('balance', None):
+                instance.balance = validated_data.get('balance')
+                instance.save()
+            return instance
+
+
+
 class ApplicationSerializer(ModelSerializer):
     class Meta:
         model = Application
         fields = "__all__"
+
+    def update(self, instance, validated_data):
+        user = self.context['request'].user
+        if user.is_manager() and instance.owner == user:
+            instance.type = validated_data.get('type', instance.type)
+            instance.engineer = validated_data.get('engineer', instance.engineer)
+            instance.car = validated_data.get('car', instance.car)
+            instance.start_date = validated_data.get('start_date', instance.start_date)
+            instance.urgency = validated_data.get('urgency', instance.urgency)
+            instance.description = validated_data.get('description', instance.description)
+            instance.manager_descr = validated_data.get('manager_descr', instance.manager_descr)
+        elif user.is_manager():
+            instance.engineer = validated_data.get('engineer', instance.engineer)
+            instance.manager_descr = validated_data.get('manager_descr', instance.manager_descr)
+        else:
+            instance.type = validated_data.get('type', instance.type)
+            instance.start_date = validated_data.get('start_date', instance.start_date)
+            instance.urgency = validated_data.get('urgency', instance.urgency)
+            instance.description = validated_data.get('description', instance.description)
+        instance.save()
+        return instance
+
+
+
 
 def generator_activation_code():
     """Возвращает рандомную строку из 6 символов"""
@@ -79,30 +124,30 @@ class RegistrationSerializer(ModelSerializer):
         pass1 = validated_data.get('password')
         pass2 = validated_data.get('password_repeat')
 
-        first_name = validated_data.get('first_name')
-        last_name = validated_data.get('last_name')
-        patronymic = validated_data.get('patronymic')
-
-        def name_validate(name: str, verbose_name, key):
-            if name is not None:
-                if not name[0].isupper():
-                    errors[key] = ValidationError(f'{verbose_name} должно начинаться с большой буквы!')
-                if re.search(r'[a-zA-Z]|\d', name):
-                    errors[key] = ValidationError(f'{verbose_name} может состоять только из Кириллицы!')
-                if not name.isalpha():
-                    errors[key] = ValidationError(f'{verbose_name} может состоять только из Кириллицы!')
-
-        name_validate(first_name, "'имя'", 'first_name')
-        name_validate(last_name, "'фамилия'", 'last_name')
-        name_validate(patronymic, "'отчество'", 'patronymic')
+        # first_name = validated_data.get('first_name')
+        # last_name = validated_data.get('last_name')
+        # patronymic = validated_data.get('patronymic')
+        #
+        # def name_validate(name: str, verbose_name, key):
+        #     if name is not None:
+        #         if not name[0].isupper():
+        #             errors[key] = f'{verbose_name} должно начинаться с большой буквы!'
+        #         if re.search(r'[a-zA-Z]|\d', name):
+        #             errors[key] = f'{verbose_name} может состоять только из Кириллицы!'
+        #         if not name.isalpha():
+        #             errors[key] = f'{verbose_name} может состоять только из Кириллицы!'
+        #
+        # name_validate(first_name, "'имя'", 'first_name')
+        # name_validate(last_name, "'фамилия'", 'last_name')
+        # name_validate(patronymic, "'отчество'", 'patronymic')
 
 
         if pass1 != pass2:
-            errors['password_repeat'] = ValidationError('Пароли не совпадают!')
+            errors['password_repeat'] = 'Пароли не совпадают!'
 
         # if email not in white_emails:
-        #     errors['email'] = ('Ваша почта не указана в списке допустимых. '
-        #                        'Обратитесь к администратору')
+        #     errors['email'] = 'Ваша почта не указана в списке допустимых. '\
+        #                        'Обратитесь к администратору'
         if errors:
             raise ValidationError(errors)
         else:
@@ -117,9 +162,9 @@ class RegistrationSerializer(ModelSerializer):
 
             )
             new_user.set_password(pass1)
+            new_user.full_clean()
             new_user.save()
             return new_user
-
     # def save(self, **kwargs):
     #     self.instance.set_password(self.cleaned_data['password'])
     #     self.instance.activation_code = self.activation_code

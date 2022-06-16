@@ -1,8 +1,8 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from cabinet.API.lesson_s.serializers import CarSerializer
-from cabinet.models import CarBrand, Car
+from to_delete.lesson_s.serializers import CarSerializer
+from cabinet.models import Car
 
 # LESSON 1
 """

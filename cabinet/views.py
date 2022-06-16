@@ -4,89 +4,252 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
+from django.core.mail import send_mail
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
-from django.views.generic.edit import FormMixin, DeletionMixin, UpdateView
+from django.views.generic.edit import FormMixin, DeletionMixin, UpdateView, FormView
 
-from .early_forms import *
+from car_bot.models import Notifications
+from . import forms
+from .forms import *
 from .models import *
 
 from django.views.generic import ListView, TemplateView, CreateView, DetailView
 
 from cabinet.services.filtration import *
 
-from cabinet.services.services import Context
+from cabinet.services.services import Context, generator_activation_code
+from .tasks import send_activation_code
 
 
 class CarsCreateAndFilterView(Context, LoginRequiredMixin, CreateView):
     """
-    Выводит список автомобилей
-    Фильтрует автомобили
-    Добавляет новый автомобиль
+    Контроллер: Автомобили (только менеджер)
+    Функционал:
+                Выводит:
+                        список автомобилей
+                        список отфильтрованных автомобилей
+                Добавляет:
+                        новый автомобиль
+                Удаляет и Изымает:
+                        выбранные автомобили
     """
     template_name = "cars.html"
     success_url = '/cars'
-    form_class = CarForm
-    # success_message = "Машина добавлена!"
+    form_class = CarAddForm
 
     def get_context_data(self, **kwargs):
+        """
+        Возвращает контекст:
+                все авто
+                или
+                отфильтрованные авто
+        """
         context = super().get_context_data(**kwargs)
-        reguest_GET = self.request.GET
-        if len(reguest_GET) == 0:
-            context['cars'] = Car.objects.all()
-        else:
-            context['cars'] = refact3_filtration_car(reguest_GET)
+        context['cars'] = Car.objects.all() if not len(self.request.GET) \
+            else refact3_filtration_car(self.request.GET)
         return context
 
     def post(self, request, *args, **kwargs):
-        print('post!')
         action = self.request.POST.get('action')
-        print(action)
         if action == 'owner-none':
-            none_owner_pk = self.request.POST.getlist('owner_id')
-            print(none_owner_pk)
-            cars = Car.objects.filter(pk__in=none_owner_pk)
-            print(cars)
-            for car in cars:
-                car.owner = None
-                car.save()
+            # Изъятие автомобилей
+            none_owner_pk = self.request.POST.getlist('owner_refuse_id')
+            # print(f"{none_owner_pk=}")
+            cars_none = Car.objects.filter(pk__in=none_owner_pk).update(owner=None)
+            # for car in cars_none:
+            #     # # Уведомление об изъятии авто
+            #     # Notifications.objects.create(
+            #     #     creator=self.request.user,
+            #     #     recipient=MyUser.objects.get(pk=car.owner.pk),
+            #     #     content=f"Ваша машина с номером {car.registration_number} изъята",
+            #     #     content_object=car
+            #     # )
+            #     car.owner = None
+            #     car.save()
+
+            # Удаление автомобилей
+            delete_owner_pk = self.request.POST.getlist('owner_delete_id')
+            cars_delete = Car.objects.filter(pk__in=delete_owner_pk).delete()
+            # for car in cars_delete:
+                # Уведомление об удалении авто
+                # Notifications.objects.create(
+                #     creator=self.request.user,
+                #     recipient=MyUser.objects.get(pk=car.owner.pk),
+                #     content=f"Ваша машина с номером {car.registration_number} удалена",
+                #     content_object=car
+                # )
+                # car.delete()
+
         else:
-            return super(CarsCreateAndFilterView, self).post(request, *args, **kwargs)
+            return super().post(request, *args, **kwargs)
         return HttpResponseRedirect("")
-    
+
     def form_valid(self, form):
         messages.success(self.request, "Машина добавлена")
-        return super(CarsCreateAndFilterView, self).form_valid(form)
+        return super().form_valid(form)
 
-    # def form_invalid(self, form):
-    #     messages.error(self.request, "Ошибка добавления!")
-    #     form = CarForm(self.request.POST)
-    #     return super(CarsCreateAndFilterView, self).form_invalid(form)
+class CarView(LoginRequiredMixin, UpdateView):
+    """
+        Контроллер: выбранное авто
+        Менеджер + владелец авто:
+                                Выводит информацию о конкретном авто
+                                Добавление:
+                                            заявки
+                                            документа
+                                Удаление:
+                                        документа
+        Менеджер:
+                Изменение данных авто
+    """
+
+    template_name = 'car.html'
+    form_class = CarUpdateForm
+
+    app_form_class = AppCreateForm
+    doc_form_class = AutoDocForm
+
+    def get_success_url(self, **kwargs):
+        return self.get_object().get_absolute_url()
+
+    def get_object(self, queryset=None):
+        return Car.objects.get(registration_number=self.kwargs['slug'])
+
+    def form_invalid(self, **kwargs):
+        """Формирует ответ с невыалидной формой"""
+        return self.render_to_response(self.get_context_data(**kwargs))
+
+    def get_context_data(self, **kwargs):
+        """
+        Возвращает контекст:
+            формы:
+                Добавления документа:
+                Добавления заявки:
+                Изменения данных машины:
+        """
+        context = super().get_context_data(**kwargs)
+        action_type = self.request.POST.get('action')
+
+        context['doc_create_form'] = self.doc_form_class(self.request.POST) \
+            if action_type == 'doc_create' else self.doc_form_class()
+        context['app_create_form'] = self.app_form_class(self.request.POST)\
+            if action_type == 'app_create' else self.app_form_class()
+        context['form'] = self.form_class(self.request.POST) \
+            if action_type == 'car_update' else self.form_class(instance=self.get_object())
+        return context
+
+    def post(self, request, *args, **kwargs):
+        """
+        Обновление данных машины
+        Создание заявки
+        Добавление документа
+        Удаление документа
+        """
+        self.object = self.get_object()
+        action_type = self.request.POST.get('action')
+        if action_type == 'car_update':
+            form = self.form_class(self.request.POST, request.FILES, instance=self.object, car=self.get_object())
+        elif action_type == 'app_create':
+            form = self.app_form_class(self.request.POST, user=self.request.user, car=self.object)
+        elif action_type == 'doc_create':
+            form = self.doc_form_class(self.request.POST, self.request.FILES, car=self.object)
+        elif "doc-" in action_type:
+            doc_pk_to_delete = "".join([i for i in action_type if i.isdigit()])
+            doc_to_delete = AutoDoc.objects.get(pk=doc_pk_to_delete)
+            doc_to_delete.delete()
+            messages.success(self.request, "Документ удален!")
+            return HttpResponseRedirect("")
+        if form.is_valid():
+            if action_type == 'car_update':
+                messages.success(self.request, "Данные машины изменены!")
+            elif action_type == 'app_create':
+                messages.success(self.request, "Заявка добавлена!")
+            elif action_type == 'doc_create':
+                messages.success(self.request, "Документ добавлен!")
+
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(**{action_type: form})
+
 class DriversFilterView(Context, LoginRequiredMixin, TemplateView):
     """
-    Выводит список водителей
-    Фильтрует список водителей
+        Контроллер: Водители (только менеджер)
+        Функционал:
+                    Выводит список водителей
+                    Выводит список отфильтрованных водителей
     """
     template_name = 'drivers.html'
 
     def get_context_data(self, **kwargs):
+        """
+        Возвращает контекст:
+            все водители
+            отфильтрованные водители
+        """
         context = super(DriversFilterView, self).get_context_data(**kwargs)
-        request_GET = self.request.GET
-        if len(request_GET) == 0:
-            context['drivers'] = MyUser.objects.filter(role='d')
-        else:
-            context['drivers'] = refact3_filtration_driver(request_GET)
+        context['drivers'] = MyUser.objects.filter(role='d') if not len(self.request.GET) \
+            else refact3_filtration_driver(self.request.GET)
         return context
+
+class DriverView(LoginRequiredMixin, DetailView):
+    """
+        Контроллер: выбранный водитель (только менеджер)
+        Функционал:
+                    Выводит:
+                            Информацию о водители
+                            Записанные автомобили
+                            Заявки
+                            Документы
+                    Добавляет:
+                            топливную карту водителю
+
+    """
+
+    template_name = 'driver.html'
+    context_object_name = 'driver'
+    model = MyUser
+
+    def get_context_data(self, **kwargs):
+        """
+        Возвраащает контекст:
+            карты без владельца
+        """
+        context = super(DriverView, self).get_context_data(**kwargs)
+        context['free_cards'] = FuelCard.objects.filter(owner__isnull=True)
+        return context
+
+    def post(self, request, *args, **kwargs):
+        """добавляет карту водителю"""
+        self.object = self.get_object()
+        action_type = self.request.POST.get('action')
+        if action_type == 'add-card':
+            card = FuelCard.objects.get(pk=request.POST.get('card'))
+            card.owner = self.get_object()
+            card.save()
+
+            # Уведомление о новой карте
+            # if card.owner
+        return HttpResponseRedirect("")
 
 class DocumentsView(Context, LoginRequiredMixin, TemplateView):
     """
-        Выводит список документов (водители+авто)
-        Фильтрует список документов (водители+авто)
+        Контроллер: Документы (только менеджер)
+        Функционал:
+                    Выводит список документов
+                    Выводит список отфильтрованных документов
     """
     template_name = 'documents.html'
 
     def get_context_data(self, **kwargs):
+        """
+        Возвраащает контекст документов:
+           все авто + водители
+           отфильтрованные:
+                            авто + водители
+                            авто
+                            водители
+        """
         context = super().get_context_data(**kwargs)
         request_GET = self.request.GET
         if len(request_GET) == 0:
@@ -107,37 +270,47 @@ class DocumentsView(Context, LoginRequiredMixin, TemplateView):
 
 class CardFilterAndCreateView(Context, LoginRequiredMixin, CreateView):
     """
-        Выводит список топливных карт
-        Фильтрует топливные карты
-        Добавляет новые топливные карты
+        Контроллер: Топливные карты (только менеджер)
+        Функционал:
+                    Выводит:
+                            список топливных карт
+                            список отфильтрованных топливных карт
+                    Добавляет:
+                            новую карту
+                    Удаляет и Изымает:
+                            выбранные карты
     """
     template_name = 'cards.html'
     success_url = '/cards'
     form_class = FuelCardAddForm
 
     def get_context_data(self, **kwargs):
+        """
+       Возвраащает контекст:
+           все карты
+           отфильтрованные карты
+       """
         context = super().get_context_data(**kwargs)
-        request_GET = self.request.GET
-        if len(request_GET) == 0:
-            context['all_cards'] = FuelCard.objects.all()
-        else:
-            context['all_cards'] = refact3_filtration_cards(request_GET)
+        context['all_cards'] = FuelCard.objects.all() if not len(self.request.GET) \
+            else refact3_filtration_cards(self.request.GET)
         return context
 
     def post(self, request, *args, **kwargs):
-        print('post!')
+
         action = self.request.POST.get('action')
-        print(action)
         if action == 'owner-none':
-            none_owner_pk = self.request.POST.getlist('owner_id')
-            print(none_owner_pk)
-            cards = FuelCard.objects.filter(pk__in=none_owner_pk)
-            print(cards)
-            for card in cards:
+            # Изымает карты
+            owner_id_to_none = self.request.POST.getlist('owner_id_to_none')
+            cards_to_none = FuelCard.objects.filter(pk__in=owner_id_to_none)
+            for card in cards_to_none:
                 card.owner = None
                 card.save()
+            # Удаляет карты
+            owner_id_to_delete = self.request.POST.getlist('owner_id_to_delete')
+            cards_to_delete = FuelCard.objects.filter(pk__in=owner_id_to_delete)
+            for card in cards_to_delete:
+                card.delete()
         else:
-            print('111')
             return super(CardFilterAndCreateView, self).post(request, *args, **kwargs)
         return HttpResponseRedirect("")
 
@@ -147,298 +320,216 @@ class CardFilterAndCreateView(Context, LoginRequiredMixin, CreateView):
 
 class AplicationsView(Context, LoginRequiredMixin, TemplateView):
     """
-        Выводит список активных заявок
-        Фильтрует активные заявок
+        Контроллер: Заявки (только менеджер)
+        Функционал:
+                    Выводит:
+                            список активных заявок
+                            список отфильтрованных активных заявок
     """
     template_name = 'applications.html'
 
     def get_context_data(self, **kwargs):
+        """
+        Возвращает контекст:
+             все активные заявки
+             отфильтрованные активные заявки
+        """
         context = super(AplicationsView, self).get_context_data(**kwargs)
-        request_GET = self.request.GET
-        if len(request_GET) == 0:
-            context['all_apps'] = Application.objects.all()
-        else:
-            context['all_apps'] = refact3_filtration_apps(request_GET)
-
+        context['all_apps'] = Application.objects.filter(is_active=True) if not len(self.request.GET) \
+            else refact3_filtration_apps(self.request.GET)
         return context
 
 class AppView(LoginRequiredMixin,UpdateView, DeletionMixin):
     '''
-    Просмотр выбраной заявки
-    изменение выбраной заявки
-    удаление выбраной заявки
+        Контроллер: выбранная заявка
+        Функционал:
+            Менеджер + Владелец заявки:
+                просмотр заявки
+            Менеджер:
+                одобрение заявки (отправка механикам)
+                возврат заявки на доработку
+            Владелец заявки:
+                удаление заявки
+                изменение заявки
     '''
 
     model = Application
     form_class = AppUpdateForm
     template_name = 'app.html'
+    context_object_name = 'app'
 
     def get_success_url(self):
         if self.request.POST['action'] == 'delete-yes':
-            app = Application.objects.get(pk=self.kwargs['pk'])
-            return reverse('choose-car', args=[app.car.registration_number])
-        elif self.request.POST['action'] == 'app_update': return ""
+            return reverse('choose-car', args=[self.get_object().car.registration_number])
+        else:
+            return ""
 
     def get_context_data(self, **kwargs):
+        """Возвращает контекст:
+                            форму комментирования заявки
+        """
         context = super(AppView, self).get_context_data(**kwargs)
-        context['app'] = Application.objects.get(pk=self.kwargs['pk'])
-        context['manager_commit_form'] = ManagerCommitAppForm(instance=Application.objects.get(pk=self.kwargs['pk']))
+        context['manager_commit_form'] = ManagerCommitAppForm(instance=self.get_object())
         return context
 
     def post(self, request, *args, **kwargs):
+        """
+            Удаляет заявку
+            Возвращает заявку на доработку
+            Подтверждает заявку
+        """
         action = self.request.POST['action']
         if action == 'delete-yes':
             return self.delete(request, *args, **kwargs)
         if action == 'refuse-yes':
-            instanse = Application.objects.get(pk=self.kwargs['pk'])
-            instanse.status = 'T'
-            instanse.save()
+            object = self.get_object()
+            object.status = 'T'
+            object.manager_descr = None
+            object.engineer = None
+            object.save()
         if action == 'app_confirm':
-                form = ManagerCommitAppForm(self.request.POST, instance=Application.objects.get(pk=self.kwargs['pk']))
-                form.instance.status = 'R'
-                if form.is_valid(): form.save()
-
+            form = ManagerCommitAppForm(self.request.POST, instance=Application.objects.get(pk=self.kwargs['pk']))
+            if form.is_valid():
+                form.save()
         return super(AppView, self).post(request, *args, **kwargs)
 
-
-
-
-class RegistrationView(CreateView):
-    '''Регистрация пользователя'''
-
-    template_name = 'registration.html'
-    form_class = UserCreateForm
-    # success_url = reverse_lazy('account')
-
-    def get_success_url(self):
-        return reverse_lazy('login')
-
-    def form_valid(self, form):
-        form.instance.set_password(form.cleaned_data['password'])
-        return super(RegistrationView, self).form_valid(form)
-
 class AccountView(LoginRequiredMixin, UpdateView):
-    '''Обработка страницы ЛК'''
+    """
+        Контроллер: личная страница пользователя
+        Функционал:
+                    Вывод:
+                          автомобилей
+                          заявок
+                          документов
+                    Изменение:
+                          личный данных
+                          баланса карты
+                    Добавление:
+                          документов
+    """
 
     template_name = 'account.html'
+
     form_class = UserUpdateForm
+    form_change_balance = FuelCardChangeBalance
+    form_add_doc = DriverDocForm
+
     success_url = reverse_lazy('account')
 
     def get_object(self, queryset=None):
         return MyUser.objects.get(pk=self.request.user.pk)
 
     def get_context_data(self, **kwargs):
+        """
+        Возвращает контекст:
+            формы:
+                добавления документа:
+                изменение баланса:
+                изменение данных пользователя:
+        """
         context = super().get_context_data(**kwargs)
-        context['doc_create_form'] = DriverDocForm
+        action_type = self.request.POST.get('action')
+
+        context['doc_create_form'] = self.form_add_doc(self.request.POST) \
+            if action_type == 'doc_create' else self.form_add_doc()
+        context['form_change_balance'] = self.form_change_balance(self.request.POST) \
+            if action_type == 'change_balance' else self.form_change_balance()
+        context['form'] = self.form_class(self.request.POST) \
+            if action_type == 'user_update' else self.form_class(instance=self.get_object())
+        print(f"{context=}")
         return context
 
+    def form_invalid(self, **kwargs):
+        """Формирует ответ с невалидной формой"""
+        return self.render_to_response(self.get_context_data(**kwargs))
+
     def post(self, request, *args, **kwargs):
-        action_type = self.request.POST['action']
-        print("IS_POST_USER!!!")
-        if 'change_balance' in action_type:
-            card_id = "".join([i for i in action_type if i.isdigit()])
-            card = FuelCard.objects.get(pk=card_id)
-            card.balance = self.request.POST['balance']
-            card.save()
-            messages.success(self.request, "Баланс карты изменен!")
+        """
+        Изменение личных данных
+        Изменение баланса карты
+        Добавление документа
+        Удаление документа
+        """
+        self.object = self.get_object()
+        action_type = self.request.POST.get('action')
+
+        if action_type == 'user_update':
+            form = self.form_class(self.request.POST, request.FILES, instance=self.get_object(), user=self.get_object())
+        elif action_type == 'change_balance':
+            form = self.form_change_balance(request.POST, instance=self.object.my_card)
+        elif action_type == 'doc_create':
+            form = self.form_add_doc(self.request.POST, self.request.FILES, user=request.user)
         elif "doc-" in action_type:
             doc_pk_to_delete = "".join([i for i in action_type if i.isdigit()])
             doc_to_delete = UserDoc.objects.get(pk=doc_pk_to_delete)
             doc_to_delete.delete()
-            messages.error(self.request, "Документ успешно удален!")
-        elif action_type == 'doc_create':
-            form = DriverDocForm(self.request.POST, self.request.FILES)
-            form.instance.owner = MyUser.objects.get(pk=self.request.user.pk)
-            if form.is_valid():
-                messages.success(self.request, "Документ успешно добавлен")
-                form.save()
+            messages.success(self.request, "Документ успешно удален!")
+            return HttpResponseRedirect("")
+
+        if form.is_valid():
+            """Формирует контекст сообщений"""
+            if action_type == 'change_balance':
+                messages.success(self.request, "Баланс изменен!")
+            elif action_type == 'doc_create':
+                messages.success(self.request, "Документ добавлен!")
+            elif action_type == 'user_update':
+                messages.success(self.request, "Данные изменены!")
+
+            return self.form_valid(form)
         else:
-            return super().post(request, *args, **kwargs)
-        return HttpResponseRedirect("")
+            return self.form_invalid(**{action_type: form})
+
+class RegistrationView(CreateView):
+    """
+        Контроллер: Регистрация пользователя
+    """
+
+    template_name = 'registration.html'
+    form_class = UserCreateForm
+    success_url = reverse_lazy('driver-activation')
 
     def form_valid(self, form):
-        # self.post()
-        print(form.fields)
-        print("YES_VALID!!!")
-        action_type = self.request.POST['action']
-        print(action_type)
-        if action_type == 'user_update':
-            form.instance.password = self.request.user.password
-            list_of_fields = ['first_name', 'last_name', 'patronymic',
-                              'phone', 'email']
-            for field in list_of_fields:
-                if form.cleaned_data[field] is None:
-                    setattr(form.instance, field, getattr(self.request.user, field))
-        if form.is_valid():
-            messages.success(self.request, "Данные аккаунта изменены!")
-            return super().form_valid(form)
-        else:
-            print("error")
-            messages.error(self.request, "Ошибка ввода!")
-        return HttpResponseRedirect("")
 
+        activation_code = generator_activation_code()
+        form.activation_code = activation_code
+        send_activation_code.delay(driver_email=form.instance.email, activation_code=activation_code)
+        # send_mail(
+        #     'Подтверждение регистрации',
+        #     f'ВАШ КОД: {activation_code}',
+        #     'izolotavin99@gmail.com',
+        #     [form.instance.email],
+        #     fail_silently=False
+        # )
 
-class CarView(LoginRequiredMixin, UpdateView):
-    """Обработка страницы Машины"""
+        return super(RegistrationView, self).form_valid(form)
 
-    template_name = 'car.html'
-    form_class = CarUpdateForm
+class EmailConfirmView(FormView):
 
-    def get_success_url(self):
-        return self.request.path_info
-
-    def get_object(self, queryset=None):
-        return Car.objects.get(registration_number=self.kwargs['slug'])
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        if 'form1' in context:
-            if context['form1'] == 'app_form':
-                context['app_create_form'] = AppCreateForm(self.request.POST)
-                context['doc_create_form'] = AutoDocForm()
-            elif context['form1'] == 'doc_form':
-                context['app_create_form'] = AppCreateForm()
-                context['doc_create_form'] = AutoDocForm(self.request.POST)
-        else:
-            context['app_create_form'] = AppCreateForm()
-            context['doc_create_form'] = AutoDocForm()
-        return context
-
-    def post(self, request, *args, **kwargs):
-        print("YES_IS_POST")
-        action_type = self.request.POST.get('action')
-        self.object = self.get_object()
-        print(action_type)
-        if "doc-" in action_type:
-            doc_pk_to_delete = "".join([i for i in action_type if i.isdigit()])
-            doc_to_delete = AutoDoc.objects.get(pk=doc_pk_to_delete)
-            doc_to_delete.delete()
-        if action_type == 'app_create':
-            form = AppCreateForm(self.request.POST)
-            form.instance.car = Car.objects.get(registration_number=self.kwargs['slug'])
-            form.instance.owner = self.request.user
-            form1 = 'app_form'
-            if self.request.user.role == 'm':
-                form.instance.status = 'R'
-        elif action_type == 'doc_create':
-            form = AutoDocForm(self.request.POST, self.request.FILES)
-            form.instance.owner = Car.objects.get(registration_number=self.kwargs['slug'])
-            form1 = 'doc_form'
-        else:
-            return super().post(request, *args, **kwargs)
-        return HttpResponseRedirect("")
-
+    template_name = 'user_activation.html'
+    form_class = DriverActivationForm
 
     def form_valid(self, form):
-        action_type = self.request.POST['action']
-        print("YES_IS_VALID")
-        if action_type == 'car_update':
-            list_of_fields = ['registration_number', 'brand', 'region_code',
-                              'last_inspection']
-            self.get_object()
-            for field in list_of_fields:
-                if form.cleaned_data[field] is None:
-                    setattr(form.instance, field, getattr(self.get_object(), field))
-            return super(CarView, self).form_valid(form)
-        # elif action_type == 'doc_create':
-        #     form = DriverDocForm(self.request.POST)
-        #     form.instance.owner = MyUser.objects.get(pk=self.request.user.pk)
-        # if action_type == 'app_create':
-        #     form = AppCreateForm(self.request.POST)
-        #     form.instance.car = Car.objects.get(registration_number=self.kwargs['slug'])
-        #     form.instance.owner = self.request.user
-        #     # if self.request.user.is_manager:
-        #     #     form.instance.status = 'R'
-        # elif action_type == 'doc_create':
-        #     form = AutoDocForm(self.request.POST, self.request.FILES)
-        #     form.instance.owner = Car.objects.get(registration_number=self.kwargs['slug'])
-        # print(f"{form=}")
-        if form.is_valid():
-            return super().form_valid(form)
-        else:
-            return super().form_invalid(form)
-        # return HttpResponseRedirect("")
+        print(f"form.activation_code = {form.cleaned_data['activation_code']}")
+        try:
+            new_driver = MyUser.objects.get(is_active=False, activation_code=form.cleaned_data['activation_code'])
+            new_driver.is_active = True
+            new_driver.activation_code = ''
+            new_driver.save()
+            return HttpResponseRedirect('')
+        except:
+            return HttpResponseRedirect('/registration')
 
-    def form_invalid(self, **kwargs):
-        return self.render_to_response(self.get_context_data(**kwargs))
+class HistoryView(Context, TemplateView):
+    """
+        Контроллер: выводит историю действия user'ов
+    """
 
-class GoodCar(LoginRequiredMixin, UpdateView):
-    """Обработка страницы Машины"""
-
-    template_name = 'car.html'
-    form_class = CarUpdateForm
-    app_form_class = AppCreateForm
-    doc_form_class = AutoDocForm
-
-
-    def get_success_url(self):
-        return self.request.path_info
-
-    def get_object(self, queryset=None):
-        return Car.objects.get(registration_number=self.kwargs['slug'])
+    template_name = 'history.html'
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        if 'form1' in context:
-            if context['form1'] == 'app_form':
-                context['app_create_form'] = AppCreateForm(self.request.POST)
-                context['doc_create_form'] = AutoDocForm()
-            elif context['form1'] == 'doc_form':
-                context['app_create_form'] = AppCreateForm()
-                context['doc_create_form'] = AutoDocForm(self.request.POST)
+        context = super(HistoryView, self).get_context_data(**kwargs)
+        if len(self.request.GET):
+            context['history'] = filtration_logs(self.get_all_history(), self.request.GET)
         else:
-            context['app_create_form'] = AppCreateForm()
-            context['doc_create_form'] = AutoDocForm()
+            context['history'] = self.get_all_history()
         return context
-
-
-class DriverView(LoginRequiredMixin, UpdateView):
-    """Страница выбранного водителя"""
-
-    template_name = 'driver.html'
-    slug_field = 'pk'
-    form_class = UserUpdateForm
-    success_url = reverse_lazy('choose-driver', slug_field)
-    context_object_name = 'driver'
-
-    def get_object(self, queryset=None):
-        return MyUser.objects.get(pk=self.kwargs['pk'])
-
-    def get_context_data(self, **kwargs):
-        context = super(DriverView, self).get_context_data(**kwargs)
-        context['free_cards'] = FuelCard.objects.filter(owner__isnull=True)
-
-        return context
-
-    def post(self, request, *args, **kwargs):
-        action = request.POST.get('action')
-            # action = request.POST['action']
-        if action == 'add-card':
-            card = FuelCard.objects.get(pk=request.POST.get('card'))
-            card.owner = self.get_object()
-            card.save()
-        return HttpResponseRedirect("")
-
-# class NewCarView(UpdateView):
-#     template_name = "car.html"
-#     success_url = '/'
-#     model = Car
-#     slug_field = 'registration_number'
-#     # fields = "__all__"
-#     # form_class = NewCarUpdateForm
-#
-#     def form_valid(self, form):
-#         print("valit!")
-#         return super(NewCarView, self).form_valid(form)
-
-
-from django.http import FileResponse
-import os
-
-def show_pdf(request):
-    filepath = os.path.join('static', 'sample.pdf')
-    return FileResponse(open(filepath, 'rb'), content_type='application/pdf')
-
-def example(request):
-    messages.info(request, "Документ удален!")
-    return render(request, 'example.html')

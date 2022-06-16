@@ -1,10 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
+from cabinet.forms import MyUserCreationForm, MyUserChangeForm
+from cabinet.models import *
 from car_bot.models import Notifications
-from .models import *
 from simple_history.admin import SimpleHistoryAdmin
-from .early_forms import *
 # Register your models here.
 list_of_moderls = [Car, CarBrand, FuelCard,
                    UserDoc, AutoDoc, DocType,
