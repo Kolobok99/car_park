@@ -4,7 +4,7 @@ import random
 import string
 from django.utils.html import format_html
 
-from cabinet.models import CarBrand, MyUser, Car, TypeOfAppl, DocType, AutoDoc, UserDoc, FuelCard, Application
+from cabinet import models
 from car_bot.models import Notifications
 
 
@@ -15,32 +15,32 @@ class Context():
 
     def get_car_brands(self):
         """Возвращает все марки машин"""
-        return CarBrand.objects.all()
+        return models.CarBrand.objects.all()
 
     def get_drivers(self):
         """Возвращает всех водителей"""
-        return MyUser.objects.filter(role='d')
+        return models.MyUser.objects.filter(role='d')
 
     def get_regions(self):
         """Возвращает все коды регионов авто"""
-        return Car.objects.all().values('region_code').distinct()
+        return models.Car.objects.all().values('region_code').distinct()
 
     def get_types_of_app(self):
         """Возвращает все типы заявок"""
-        return TypeOfAppl.objects.all()
+        return models.TypeOfAppl.objects.all()
 
     def get_car_types_of_docs(self):
         """Возвращает все типы документов (авто) """
-        return DocType.objects.filter(type='a')
+        return models.DocType.objects.filter(type='a')
 
     def get_man_types_of_docs(self):
         """Возвращает все типы документов (водители) """
-        return DocType.objects.filter(type='m')
+        return models.DocType.objects.filter(type='m')
 
     def get_all_docs(self):
         """Возвращает документы (авто+водители)"""
-        auto_doc = AutoDoc.objects.all()
-        driver_doc = UserDoc.objects.all()
+        auto_doc = models.AutoDoc.objects.all()
+        driver_doc = models.UserDoc.objects.all()
         query_set = list(chain(auto_doc, driver_doc))
 
         sorting_list_of_querysets = sort_by_date_start(query_set)
@@ -48,15 +48,15 @@ class Context():
 
     def get_all_cards(self):
         """Возвращает все топливные карты"""
-        return FuelCard.objects.all()
+        return models.FuelCard.objects.all()
 
     def get_all_urgecny_types(self):
         """Возвращает все типы срочности заявок"""
-        return Application.URGENCY_CHOISES
+        return models.Application.URGENCY_CHOISES
 
     def get_all_status_types(self):
         """Возвращает все типы статусов заявок"""
-        return Application.STATUS_CHOISES
+        return models.Application.STATUS_CHOISES
 
     def get_all_history(self):
         """Возвращает всю историю действий на сайте (почти для всех моделей)"""
@@ -71,11 +71,11 @@ class Context():
                 fields.append(delta)
             return fields
 
-        car_history = Car.history.all()
-        app_history = Application.history.all()
-        driver_history = MyUser.history.all()
-        user_doc_history = UserDoc.history.all()
-        car_doc_history = AutoDoc.history.all()
+        car_history = models.Car.history.all()
+        app_history = models.Application.history.all()
+        driver_history = models.MyUser.history.all()
+        user_doc_history = models.UserDoc.history.all()
+        car_doc_history = models.AutoDoc.history.all()
 
         query = list(chain(car_history,
                            app_history,
@@ -117,15 +117,15 @@ class Context():
             if sub_list[1] != '-':
                 for change in sub_list[1].changes:
                     if model_name == 'Car':
-                        change.field = Car._meta.get_field(change.field).verbose_name
+                        change.field = models.Car._meta.get_field(change.field).verbose_name
                     elif model_name == 'Application':
-                        change.field = Application._meta.get_field(change.field).verbose_name
+                        change.field = models.Application._meta.get_field(change.field).verbose_name
                     elif model_name == 'MyUser':
-                        change.field = MyUser._meta.get_field(change.field).verbose_name
+                        change.field = models.MyUser._meta.get_field(change.field).verbose_name
                     elif model_name == 'UserDoc':
-                        change.field = UserDoc._meta.get_field(change.field).verbose_name
+                        change.field = models.UserDoc._meta.get_field(change.field).verbose_name
                     elif model_name == 'AutoDoc':
-                        change.field = AutoDoc._meta.get_field(change.field).verbose_name
+                        change.field = models.AutoDoc._meta.get_field(change.field).verbose_name
 
         return lists_with_history_and_changed_data
 
@@ -178,12 +178,3 @@ def generator_activation_code():
     rand_string = ''.join(random.choice(letters) for i in range(length))
     # print("Random string of length", length, "is:", rand_string)
     return rand_string
-
-
-# def notifications_creator(creator, recipient, content, content_object):
-#     """Создает уведомления"""
-#
-#     note = Notifications()
-#     note.creator = creator
-#     note.recipient = recipient
-#     note.content_object =

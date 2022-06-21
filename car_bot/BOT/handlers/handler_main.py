@@ -8,17 +8,15 @@ class HandlerMain:
     Класс компоновщик
     """
     def __init__(self, bot):
-        # получаем нашего бота
+        # получаем бота
         self.bot = bot
-        # здесь будет иницаилизация обработчиков
+        # иницаилизация обработчиков
         self.handler_commands = HandlerCommands(self.bot)
         self.handler_contypes = HandlerContentTypes(self.bot)
         self.handler_all_text = HandlerAllText(self.bot)
-        # self.handler_inline_query = HandlerInlineQuery(self.bot)
 
     def handle(self):
-        # здесь будет запуск обработчиков
+        # запуск обработчиков
         self.handler_commands.handle()
         self.handler_contypes.handle()
         self.handler_all_text.handle()
-        # self.handler_inline_query.handle()

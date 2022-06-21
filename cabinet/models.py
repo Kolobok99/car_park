@@ -1,14 +1,12 @@
 import datetime
 import re
-
 from PIL import Image
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.core import validators
-
-from datetime import timedelta
+from rest_framework.exceptions import ValidationError as restValid
 
 from simple_history.models import HistoricalRecords
 
@@ -89,11 +87,6 @@ class CarBrand(models.Model):
 class FuelCard(models.Model):
     """топливные карты"""
 
-    def __init__(self, *args, **kwargs):
-        """При создании карты устанавливается баланс равный лимиту"""
-        super(FuelCard, self).__init__(*args, **kwargs)
-        if self.balance is None:
-            self.balance = self.limit
 
     limit = models.PositiveIntegerField('Лимит', blank=True)
     number = models.CharField('Номер', unique=True, max_length=16,
@@ -107,6 +100,7 @@ class FuelCard(models.Model):
     history = HistoricalRecords()
 
     def __str__(self):
+        # 1234-5678-1234-5678
         return f"{self.number[0:4]}-{self.number[4:8]}-{self.number[8:12]}-{self.number[12:16]}"
 
     class Meta:
@@ -137,26 +131,23 @@ class MyUserManager(BaseUserManager):
         extra_fields.setdefault('is_active', True)
 
         if extra_fields.get('is_staff') is not True:
-            raise ValueError("Root должен иметь is_staph=True.")
+            raise ValueError("Root должен иметь is_staff=True.")
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Root должен иметь is_superuser=True.')
         return self.create_user(email, password, **extra_fields)
 
 
-from rest_framework.exceptions import ValidationError as restValid
-
 class MyUser(AbstractBaseUser, PermissionsMixin):
     """
         Модель: Пользователя
     """
-
+    # Типы user'ов
     KINDES = (
         ('a', 'admin'),
         ('m', 'manager'),
         ('d', 'driver'),
         ('e', 'engineer'),
     )
-    last_login = None
 
     def path_to_upload_image(self, *args):
         """Возвращает путь загрузки фотографии"""
@@ -183,14 +174,14 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     role = models.CharField('Роль', max_length=1, choices=KINDES, default='d')
 
     is_active = models.BooleanField(default=False)
-    activation_code = models.CharField(max_length=6, default='111111', null=True, blank=True)
+    activation_code = models.CharField(max_length=6, null=True, blank=True)
 
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
 
     history = HistoricalRecords()
 
-    chat_id = models.PositiveIntegerField(default=0)
+    chat_id = models.PositiveIntegerField("ID телеграмм чата", null=True, blank=True, default=0)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -211,11 +202,14 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
             pass
         super(MyUser, self).save()
 
+    # заглушка для избежания ошибок переопределения AbstractBaseUser
+    last_login = None
     def update_last_login(sender, user, **kwargs):
         pass
 
     def is_manager(self):
-        if self.role == 'm': return True
+        if self.role == 'm':
+            return True
         return False
 
     def __str__(self):
@@ -227,9 +221,6 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         return f"/drivers/{self.pk}"
 
     def clean(self, *args, **kwargs):
-        print("CLEAN вызван!")
-        print(f"{args=}")
-        print(f"{kwargs=}")
         cleaned_data = super().clean()
         errors = {}
 
@@ -238,6 +229,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         patronymic = self.patronymic
 
         def name_validate(name: str, verbose_name, key):
+            """Валидирует имя, фамилию, отчество"""
             if name is not None:
                 if not name[0].isupper():
                     errors[key] = ValidationError(f'{verbose_name} должно начинаться с большой буквы!')
@@ -251,7 +243,13 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         name_validate(patronymic, "'отчество'", 'patronymic')
 
         if errors:
-            raise restValid(errors)
+            # Вызывает ValidationError (from DRF)
+            try:
+                raise restValid(errors)
+            except:
+                # Если метод вызван из обычной формы,
+                # вызывает станадртную ValidationError (from django.core.exceptions)
+                raise ValidationError(errors)
         return cleaned_data
 
     class Meta:
@@ -400,19 +398,6 @@ class Application(models.Model):
     def get_absolute_url(self):
         return f"/applications/{self.pk}"
 
-    # def save(self, *args, **kwargs):
-    #     """Устанавливается время на выполнение в зависимости от выбранной 'срочности' """
-    #     super().save(*args, **kwargs)
-        # if not self.time_to_execute:
-        #     if self.urgency == 'N':
-        #         self.end_date = self.start_date + timedelta(days=10)
-        #     elif self.urgency == 'U':
-        #         self.end_date = self.start_date + timedelta(days=7)
-        #     elif self.urgency == 'V':
-        #         self.end_date = self.start_date + timedelta(days=3)
-        # else:
-        #     self.end_date = self.start_date + timedelta(days=self.time_to_execute)
-        # super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Заявка'
@@ -449,33 +434,3 @@ class WhiteListEmail(models.Model):
         verbose_name = 'White List of Emil'
         verbose_name_plural = 'White List of Emil'
 
-
-# class ActionLogging(models.Model):
-#     """
-#         абстрактаная модель: Логирование действий пользователей
-#     """
-#
-#     LOG_TYPE_CHOICES = (
-#         ('CAR', 'Автомобиль'),
-#         ('DRV', 'Водитель'),
-#         ('DOC', 'Документ'),
-#         ('CRD', 'Топ. карта'),
-#         ('APP', 'Заявка'),
-#     )
-#     LOG_STATUS_CHOICES = (
-#         ('CRT', 'Создана'),
-#         ('UPD', 'Изменена'),
-#         ('DEL', 'Удалена'),
-#     )
-#
-#     type = models.CharField("Тип", max_length=3, choices=LOG_TYPE_CHOICES)
-#     time = models.DateTimeField("Дата и время", auto_now_add=True)
-#     status = models.CharField("Статус", max_length=3, choices=LOG_STATUS_CHOICES)
-#
-#     class Meta:
-#         abstract = True
-#
-#
-#
-# class CarLogging(ActionLogging):
-#     owner = models.ForeignKey(Car, verbose_name='Лог', on_delete=)

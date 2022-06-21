@@ -9,12 +9,15 @@ from car_park.celery import app
 
 @app.task
 def check_last_inspection():
+    """
+    Проверяет дату последнего ТО авто.
+    Если срок действия осмотра истекает, создает новую заявку на ТО
+    """
     cars = Car.objects.all()
 
     today = datetime.date.today()
-    # today = pytz.utc.localize(today)
 
-    # Сравнимаем текущую дату с датой последнего осмотра каждого авто
+    # Сравнимаем текущую дату с датой последнего ТО каждого авто
     for car in cars:
         time_delta = today - (car.last_inspection + datetime.timedelta(days=365))
         if time_delta <= datetime.timedelta(days=30):
@@ -22,21 +25,20 @@ def check_last_inspection():
                 go = car.applications.get(owner=None)
             except:
                 go = None
-            if go:
-                print("Заявка уже создана!")
-            else:
+            if not go:
                 new_app = Application()
                 new_app.type_id = 1
                 new_app.car = car
                 new_app.description = "АВТОМАТИЧЕСКИ!!!"
                 new_app.save()
-                print(f"Заявка №{new_app.pk} создана!")
-
-        else:
-            print("Нет подходящий машин!")
 
 @app.task
 def check_car_docs_date():
+    """
+    Проверяет срок действия документов авто.
+    Если срок действия истекает, создает уведомление владельцу авто
+    """
+
     car_docs = AutoDoc.objects.all()
     today = datetime.date.today()
 
@@ -52,6 +54,11 @@ def check_car_docs_date():
 
 @app.task
 def check_user_docs_date():
+    """
+    Проверяет срок действия документов водителя.
+    Если срок действия истекает, создает уведомление водитлею
+    """
+
     user_docs = UserDoc.objects.all()
     today = datetime.date.today()
 
@@ -77,19 +84,16 @@ def send_activation_code(driver_email, activation_code):
     )
 
 @app.task
-def a_plus_b(a, b):
-    return a + b
-
-@app.task
 def delete_empty_card():
-    cards = FuelCard.objects.filter(balance=0)
-    for card in cards:
-        card_pk = card.pk
-        card.delete()
-        print(f"{card_pk} удалена!")
+    """Удаляет карты с 0 балансом"""
+    cards = FuelCard.objects.filter(balance=0).delete()
 
 @app.task
 def create_note_about_ending_cards():
+    """
+    Создает уведолмение менеджеру о том,
+    что заканчиваются свободные карты
+    """
     cards = FuelCard.objects.filter(owner__isnull=True)
     if len(cards) < 2:
         Notifications.objects.create(
@@ -100,10 +104,10 @@ def create_note_about_ending_cards():
 
 @app.task
 def checking_timing_app():
-    """Проверка просроченности заявки"""
+    """Создает уведомление о просроченности заявки"""
 
     # Получить все заявки находящиеся в ремонте
-    active_apps = Application.objects.filter(is_active=True)
+    active_apps = Application.objects.filter(end_date__isnull=False)
     today = datetime.date.today()
     for app in active_apps:
         # Если заявка просрочена

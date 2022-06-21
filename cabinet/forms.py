@@ -1,17 +1,16 @@
-import re
 from django import forms
+from django.core.exceptions import ValidationError
 
-from .models import *
-
+from cabinet import models
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import MyUser
 
 
 # -----------------------  ADMIN -----------------------
 
 class MyUserCreationForm(UserCreationForm):
+    """Форма регистрации юсера, используемая в admin-gfy"""
     class Meta(UserCreationForm):
-        model = MyUser
+        model = models.MyUser
         fields = ('email',
                   'first_name',
                   'last_name',
@@ -22,7 +21,7 @@ class MyUserCreationForm(UserCreationForm):
 
 class MyUserChangeForm(UserChangeForm):
     class Meta:
-        model = MyUser
+        model = models.MyUser
         fields = ('email',)
 
 # -----------------------  CAR -----------------------
@@ -31,7 +30,7 @@ class CarForm(forms.ModelForm):
     """Базовая форма машины"""
 
     class Meta:
-        model = Car
+        model = models.Car
         fields = ('registration_number',
                   'brand',
                   'region_code',
@@ -63,10 +62,9 @@ class CarUpdateForm(CarForm):
         super().__init__(*args, **kwargs)
 
     def save(self, **kwargs):
+        # Заполняет пустые поля формы
         list_of_fields = ['registration_number', 'brand', 'region_code',
                           'last_inspection']
-        print("cleaned-last: ", self.cleaned_data['last_inspection'])
-        print("self-last: ", self.car.last_inspection)
         for field in list_of_fields:
             if self.cleaned_data[field] is None:
                 setattr(self.instance, field, getattr(self.car, field))
@@ -103,24 +101,24 @@ class UserCreateForm(forms.ModelForm):
         cleaned_data = super().clean()
         errors = {}
         email = cleaned_data.get('email')
-        white_emails = [obj.email for obj in WhiteListEmail.objects.all()]
+        white_emails = [obj.email for obj in models.WhiteListEmail.objects.all()]
 
         pass1 = cleaned_data.get('password')
         pass2 = cleaned_data.get('password_repeat')
 
         if pass1 != pass2:
-            errors['password_repeat'] = ValidationError('Пароли не совпадают!')
+            errors['password_repeat'] = 'Пароли не совпадают!'
 
         if email not in white_emails:
-            errors['email'] = ('Ваша почта не указана в списке допустимых. '
-                                              'Обратитесь к администратору')
+            errors['email'] = 'Ваша почта не указана в списке допустимых. '\
+                                              'Обратитесь к администратору'
         if errors:
             raise ValidationError(errors)
         else:
             return cleaned_data
 
     class Meta:
-        model = MyUser
+        model = models.MyUser
         fields = (
             'email',
             'password',
@@ -153,16 +151,16 @@ class UserUpdateForm(forms.ModelForm):
         super(UserUpdateForm, self).__init__(*args, **kwargs)
 
     def save(self, **kwargs):
-        """Заполняет пустые поля формы"""
+        # Заполняет пустые поля формы
         list_of_fields = ['first_name', 'last_name', 'patronymic',
-                          'phone', 'email']
+                          'phone', 'email', 'chat_id']
         for field in list_of_fields:
             if self.cleaned_data[field] is None:
                 setattr(self.instance, field, getattr(self.user, field))
         return super().save(**kwargs)
 
     class Meta:
-        model = MyUser
+        model = models.MyUser
         exclude = ('role',
                    'is_active',
                    'is_staff',
@@ -184,21 +182,21 @@ class FuelCardAddForm(forms.ModelForm):
         Форма: добавление данных
     """
 
-    owner = forms.ModelChoiceField(queryset=MyUser.objects.filter(my_card__isnull=True), required=False)
+    owner = forms.ModelChoiceField(queryset=models.MyUser.objects.filter(my_card__isnull=True), required=False)
 
     def clean(self):
         cleaned_data = super().clean()
         errors = {}
 
         if not cleaned_data['number'].isdigit():
-            errors['number'] = ValidationError('номер карты может состоять только из цифр!')
+            errors['number'] = 'номер карты может состоять только из цифр!'
         if errors:
             raise ValidationError(errors)
         return cleaned_data
 
 
     class Meta:
-        model = FuelCard
+        model = models.FuelCard
         exclude = ('balance', )
 
 class FuelCardChangeBalance(forms.ModelForm):
@@ -210,7 +208,7 @@ class FuelCardChangeBalance(forms.ModelForm):
     action = forms.CharField(widget=forms.HiddenInput(), initial="change_balance")
 
     class Meta:
-        model = FuelCard
+        model = models.FuelCard
         fields = ('balance', )
 
 # -----------------------  APP -----------------------
@@ -223,7 +221,7 @@ class AppForm(forms.ModelForm):
     """
 
     class Meta:
-        model = Application
+        model = models.Application
         fields = ('type',
                   'urgency',
                   'description',
@@ -238,7 +236,7 @@ class AppCreateForm(AppForm):
     """
 
     action = forms.CharField(widget=forms.HiddenInput(), initial="app_create")
-    engineer = forms.ModelChoiceField(queryset=MyUser.objects.filter(role='e'), required=False)
+    engineer = forms.ModelChoiceField(queryset=models.MyUser.objects.filter(role='e'), required=False)
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
@@ -247,16 +245,14 @@ class AppCreateForm(AppForm):
 
 
     def save(self, **kwargs):
+        # Привязывает заявку к переданному инстансу юсера и авто
         self.instance.owner = self.user
         self.instance.car = self.car
-        # if self.instance.urgency == 'N':
-        #     self.instance.end_date = self.cleaned_data['start_date'] + timedelta(days=10)
-        # elif self.instance.urgency == 'U':
-        #     self.instance.end_date = self.cleaned_data['start_date'] + timedelta(days=7)
-        # elif self.instance.urgency == 'V':
-        #     self.instance.end_date = self.cleaned_data['start_date'] + timedelta(days=3)
         if self.user.is_manager():
+            # При создании заявки менеджером,
+            # сразу меняет ее стутус на "Ожидает рассмотрения механика"
             self.instance.status = 'OE'
+            # Привязывает заявку к переданному инстансу механика
             self.instance.engineer = self.cleaned_data['engineer']
         return super(AppForm, self).save()
 
@@ -266,10 +262,11 @@ class AppUpdateForm(AppForm):
     """
 
     action = forms.CharField(widget=forms.HiddenInput(), initial="app_update")
-    engineer = forms.ModelChoiceField(queryset=MyUser.objects.filter(role='e'), required=False, label="Механик")
+    engineer = forms.ModelChoiceField(queryset=models.MyUser.objects.filter(role='e'), required=False, label="Механик")
 
     def save(self, **kwargs):
         if self.instance.owner.is_manager():
+            # Привязывает заявку к переданному инстансу механика
             self.instance.engineer = self.cleaned_data['engineer']
         return super(AppForm, self).save()
 
@@ -286,7 +283,7 @@ class ManagerCommitAppForm(forms.ModelForm):
 
     action = forms.CharField(widget=forms.HiddenInput(), initial="app_confirm")
 
-    engineer = forms.ModelChoiceField(queryset=MyUser.objects.filter(role='e'), required=True, label='Выберите инженера')
+    engineer = forms.ModelChoiceField(queryset=models.MyUser.objects.filter(role='e'), required=True, label='Выберите инженера')
 
     def save(self, **kwargs):
         self.instance.status = 'OE'
@@ -295,7 +292,7 @@ class ManagerCommitAppForm(forms.ModelForm):
 
 
     class Meta:
-        model = Application
+        model = models.Application
         fields = ('manager_descr', 'engineer')
 
 # -----------------------  DOC -----------------------
@@ -314,15 +311,14 @@ class AutoDocForm(forms.ModelForm):
 
 
     def save(self, **kwargs):
+        # Привязывает заявку к переданному инстансу авто
         self.instance.owner = self.car
         return super(AutoDocForm, self).save(**kwargs)
 
     class Meta:
-        model = AutoDoc
-        # fields = '__all__'
+        model = models.AutoDoc
         exclude = ('owner',)
         widgets = {
-            # 'owner': forms.widgets.HiddenInput(),
             'start_date': forms.widgets.DateInput(attrs={
                 "type": 'date',
 
@@ -348,12 +344,13 @@ class DriverDocForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
     def save(self, **kwargs):
+        # Привязывает заявку к переданному инстансу юсера
         self.instance.owner = self.user
         return super(DriverDocForm, self).save(**kwargs)
 
 
     class Meta:
-        model = UserDoc
+        model = models.UserDoc
         exclude = ('owner',)
         widgets = {
             'start_date': forms.widgets.DateInput(attrs={

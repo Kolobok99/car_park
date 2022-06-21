@@ -1,12 +1,10 @@
 import datetime
-
 import pytz
 from django.db.models import Q
+from cabinet import models
 
-from cabinet.models import *
 
-
-def refact3_filtration_car(get_params):
+def filtration_car(get_params):
     """
         Возвращает отфильтрованные по get_params (авто)
     """
@@ -48,11 +46,11 @@ def refact3_filtration_car(get_params):
         list_of_Q.append(Q_applications)
         list_of_Q.append(Q_active_apps)
 
-    return Car.objects.filter(
+    return models.Car.objects.filter(
         *list_of_Q
     ).distinct()
 
-def refact3_filtration_driver(get_params):
+def filtration_driver(get_params):
     """
         Возвращает отфильтрованные по get_params (водители)
     """
@@ -67,7 +65,7 @@ def refact3_filtration_driver(get_params):
 
     list_of_Q = []
 
-    drivers = MyUser.objects.filter(role='d')
+    drivers = models.MyUser.objects.filter(role='d')
 
     if last_name and last_name != '':
         list_of_Q.append(Q(**{"last_name__icontains": last_name}))
@@ -89,11 +87,10 @@ def refact3_filtration_driver(get_params):
         *list_of_Q
     ).distinct()
 
-def refact3_filtration_cards(get_params):
+def filtration_cards(get_params):
     """
         Возвращает отфильтрованные по get_params (топливные карты)
     """
-    print("YES")
     number = get_params.get('number')
     owner = get_params.getlist('owner')
 
@@ -124,11 +121,11 @@ def refact3_filtration_cards(get_params):
     if balance_max != '':
         list_of_Q.append(Q(**{"balance__lte": balance_max}))
 
-    return FuelCard.objects.filter(
+    return models.FuelCard.objects.filter(
         *list_of_Q
     ).distinct()
 
-def refact3_filtration_apps(get_params):
+def filtration_apps(get_params):
     """
         Возвращает отфильтрованные по get_params (активные заявки)
     """
@@ -141,7 +138,7 @@ def refact3_filtration_apps(get_params):
 
     list_of_Q = []
     # list_of_Q.append(Q(**{"":}))
-    active_applications = Application.objects.filter(is_active=True)
+    active_applications = models.Application.objects.filter(is_active=True)
     if start_date != '':
         list_of_Q.append(Q(**{"start_date__gte": start_date}))
     if end_date != '':
@@ -161,7 +158,7 @@ def refact3_filtration_apps(get_params):
         *list_of_Q
     ).distinct()
 
-def refact3_filtration_documents(model, get_params):
+def filtration_documents(model, get_params):
     """
         Возвращает отфильтрованные по get_params (документы)
     """
@@ -186,7 +183,7 @@ def refact3_filtration_documents(model, get_params):
     ).distinct()
 
 
-def filtration_logs(list_with_logs, get_params):
+def filtration_history(list_with_logs, get_params):
     """
         Возвращает отфильтрованный список по get_params (все логи)
     """
@@ -213,7 +210,7 @@ def filtration_logs(list_with_logs, get_params):
         for l in list_with_logs:
             today = datetime.datetime.now()
             today = pytz.utc.localize(today)
-            filter_date = today - timedelta(days=int(log_time))
+            filter_date = today - datetime.timedelta(days=int(log_time))
             if l[0].history_date > filter_date:
                 return_time.append(l)
 

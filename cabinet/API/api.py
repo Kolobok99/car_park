@@ -8,8 +8,8 @@ from cabinet.API import permissions
 from cabinet.API.serializers import CarSerializer, CarCreateSerializer, DriverSerializer, AutoDocsSerializer, \
     UserDocsSerializer, FuelCardSerializer, ApplicationSerializer, RegistrationSerializer
 from cabinet.models import Car, MyUser, AutoDoc, UserDoc, FuelCard, Application
-from cabinet.services.filtration import refact3_filtration_car, refact3_filtration_driver, refact3_filtration_documents, \
-    refact3_filtration_cards, refact3_filtration_apps
+from cabinet.services.filtration import filtration_car, filtration_driver, filtration_documents, \
+    filtration_cards, filtration_apps
 
 from cabinet.services.services import Context
 
@@ -42,7 +42,7 @@ class CarAPIViewSet(ModelViewSet):
         if len(request.GET) == 0:
             queryset = self.get_queryset()
         else:
-            queryset = refact3_filtration_car(request.GET)
+            queryset = filtration_car(request.GET)
         serializer = CarSerializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -106,7 +106,7 @@ class DriverAPIViewSet(ModelViewSet):
         if len(request.GET) == 0:
             queryset = self.get_queryset()
         else:
-            queryset = refact3_filtration_driver(request.GET)
+            queryset = filtration_driver(request.GET)
         serializer = DriverSerializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -143,7 +143,7 @@ class AutoDocsAPIViewSet(ModelViewSet):
         if len(request.GET) == 0:
             queryset = self.get_queryset()
         else:
-            queryset = refact3_filtration_documents(request.GET)
+            queryset = filtration_documents(request.GET, )
         serializer = AutoDocsSerializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -177,7 +177,7 @@ class DriverDocsAPIViewSet(ModelViewSet):
         if len(request.GET) == 0:
             queryset = self.get_queryset()
         else:
-            queryset = refact3_filtration_documents(request.GET)
+            queryset = filtration_documents(request.GET, )
         serializer = UserDocsSerializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -208,7 +208,7 @@ class CardsAPIViewSet(ModelViewSet):
         if len(request.GET) == 0:
             queryset = self.get_queryset()
         else:
-            queryset = refact3_filtration_cards(request.GET)
+            queryset = filtration_cards(request.GET)
         serializer = FuelCardSerializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -263,7 +263,7 @@ class ApplicationsPIViewSet(ModelViewSet):
         if len(request.GET) == 0:
             queryset = self.get_queryset()
         else:
-            queryset = refact3_filtration_apps(request.GET)
+            queryset = filtration_apps(request.GET)
         serializer = ApplicationSerializer(queryset, many=True)
         return Response(serializer.data)
 

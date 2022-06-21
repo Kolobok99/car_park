@@ -3,8 +3,6 @@ import abc
 # импортируем разметку клавиатуры и клавиш
 from car_bot.BOT.markup.markup import Keyboards
 
-
-
 class Handler(metaclass=abc.ABCMeta):
 
     def __init__(self, bot):

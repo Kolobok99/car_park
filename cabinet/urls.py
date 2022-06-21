@@ -21,6 +21,7 @@ urlpatterns = [
 
     path('registration/', views.RegistrationView.as_view(), name='registration'),
     path('reg-activation/', views.EmailConfirmView.as_view(), name='driver-activation'),
+    # path('password-change/', LoginView.as_view(), name='password-change'),
     path('', LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', LogoutView.as_view(template_name='login.html', next_page='login'), name='logout'),
 

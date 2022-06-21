@@ -2,20 +2,21 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from cabinet.forms import MyUserCreationForm, MyUserChangeForm
-from cabinet.models import *
-from car_bot.models import Notifications
+from cabinet import models
+from car_bot import models as bot_models
 from simple_history.admin import SimpleHistoryAdmin
+
 # Register your models here.
-list_of_moderls = [Car, CarBrand, FuelCard,
-                   UserDoc, AutoDoc, DocType,
-                   Application, TypeOfAppl, WhiteListEmail, Notifications]
-for m in list_of_moderls:
+list_of_models = [models.Car, models.CarBrand, models.FuelCard,
+                  models.UserDoc, models.AutoDoc, models.DocType,
+                  models.Application, models.TypeOfAppl, models.WhiteListEmail, bot_models.Notifications]
+for m in list_of_models:
     admin.site.register(m, SimpleHistoryAdmin)
 
 class MyUserAdmin(UserAdmin):
     add_form = MyUserCreationForm
     form = MyUserChangeForm
-    model = MyUser
+    model = models.MyUser
     list_display = ('email', 'is_staff', 'is_active',)
     list_filter = ('email', 'is_staff', 'is_active',)
     fieldsets = (
@@ -32,4 +33,4 @@ class MyUserAdmin(UserAdmin):
     ordering = ('email',)
 
 
-admin.site.register(MyUser, MyUserAdmin)
+admin.site.register(models.MyUser, MyUserAdmin)

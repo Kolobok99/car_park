@@ -1,19 +1,11 @@
 from itertools import chain
-
-from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.contrib.messages.views import SuccessMessageMixin
-from django.core.mail import send_mail
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.views.generic.edit import FormMixin, DeletionMixin, UpdateView, FormView
 
-from car_bot.models import Notifications
-from . import forms
-from .forms import *
-from .models import *
+from cabinet import forms
 
 from django.views.generic import ListView, TemplateView, CreateView, DetailView
 
@@ -37,7 +29,7 @@ class CarsCreateAndFilterView(Context, LoginRequiredMixin, CreateView):
     """
     template_name = "cars.html"
     success_url = '/cars'
-    form_class = CarAddForm
+    form_class = forms.CarAddForm
 
     def get_context_data(self, **kwargs):
         """
@@ -47,8 +39,8 @@ class CarsCreateAndFilterView(Context, LoginRequiredMixin, CreateView):
                 отфильтрованные авто
         """
         context = super().get_context_data(**kwargs)
-        context['cars'] = Car.objects.all() if not len(self.request.GET) \
-            else refact3_filtration_car(self.request.GET)
+        context['cars'] = models.Car.objects.all() if not len(self.request.GET) \
+            else filtration_car(self.request.GET)
         return context
 
     def post(self, request, *args, **kwargs):
@@ -56,32 +48,10 @@ class CarsCreateAndFilterView(Context, LoginRequiredMixin, CreateView):
         if action == 'owner-none':
             # Изъятие автомобилей
             none_owner_pk = self.request.POST.getlist('owner_refuse_id')
-            # print(f"{none_owner_pk=}")
-            cars_none = Car.objects.filter(pk__in=none_owner_pk).update(owner=None)
-            # for car in cars_none:
-            #     # # Уведомление об изъятии авто
-            #     # Notifications.objects.create(
-            #     #     creator=self.request.user,
-            #     #     recipient=MyUser.objects.get(pk=car.owner.pk),
-            #     #     content=f"Ваша машина с номером {car.registration_number} изъята",
-            #     #     content_object=car
-            #     # )
-            #     car.owner = None
-            #     car.save()
-
+            Car.objects.filter(pk__in=none_owner_pk).update(owner=None)
             # Удаление автомобилей
             delete_owner_pk = self.request.POST.getlist('owner_delete_id')
-            cars_delete = Car.objects.filter(pk__in=delete_owner_pk).delete()
-            # for car in cars_delete:
-                # Уведомление об удалении авто
-                # Notifications.objects.create(
-                #     creator=self.request.user,
-                #     recipient=MyUser.objects.get(pk=car.owner.pk),
-                #     content=f"Ваша машина с номером {car.registration_number} удалена",
-                #     content_object=car
-                # )
-                # car.delete()
-
+            Car.objects.filter(pk__in=delete_owner_pk).delete()
         else:
             return super().post(request, *args, **kwargs)
         return HttpResponseRedirect("")
@@ -105,16 +75,16 @@ class CarView(LoginRequiredMixin, UpdateView):
     """
 
     template_name = 'car.html'
-    form_class = CarUpdateForm
+    form_class = forms.CarUpdateForm
 
-    app_form_class = AppCreateForm
-    doc_form_class = AutoDocForm
+    app_form_class = forms.AppCreateForm
+    doc_form_class = forms.AutoDocForm
 
     def get_success_url(self, **kwargs):
         return self.get_object().get_absolute_url()
 
     def get_object(self, queryset=None):
-        return Car.objects.get(registration_number=self.kwargs['slug'])
+        return models.Car.objects.get(registration_number=self.kwargs['slug'])
 
     def form_invalid(self, **kwargs):
         """Формирует ответ с невыалидной формой"""
@@ -156,11 +126,12 @@ class CarView(LoginRequiredMixin, UpdateView):
             form = self.doc_form_class(self.request.POST, self.request.FILES, car=self.object)
         elif "doc-" in action_type:
             doc_pk_to_delete = "".join([i for i in action_type if i.isdigit()])
-            doc_to_delete = AutoDoc.objects.get(pk=doc_pk_to_delete)
+            doc_to_delete = models.AutoDoc.objects.get(pk=doc_pk_to_delete)
             doc_to_delete.delete()
             messages.success(self.request, "Документ удален!")
             return HttpResponseRedirect("")
         if form.is_valid():
+            #  Формирует сообщение
             if action_type == 'car_update':
                 messages.success(self.request, "Данные машины изменены!")
             elif action_type == 'app_create':
@@ -188,8 +159,8 @@ class DriversFilterView(Context, LoginRequiredMixin, TemplateView):
             отфильтрованные водители
         """
         context = super(DriversFilterView, self).get_context_data(**kwargs)
-        context['drivers'] = MyUser.objects.filter(role='d') if not len(self.request.GET) \
-            else refact3_filtration_driver(self.request.GET)
+        context['drivers'] = models.MyUser.objects.filter(role='d') if not len(self.request.GET) \
+            else filtration_driver(self.request.GET)
         return context
 
 class DriverView(LoginRequiredMixin, DetailView):
@@ -208,7 +179,7 @@ class DriverView(LoginRequiredMixin, DetailView):
 
     template_name = 'driver.html'
     context_object_name = 'driver'
-    model = MyUser
+    model = models.MyUser
 
     def get_context_data(self, **kwargs):
         """
@@ -216,7 +187,7 @@ class DriverView(LoginRequiredMixin, DetailView):
             карты без владельца
         """
         context = super(DriverView, self).get_context_data(**kwargs)
-        context['free_cards'] = FuelCard.objects.filter(owner__isnull=True)
+        context['free_cards'] = models.FuelCard.objects.filter(owner__isnull=True)
         return context
 
     def post(self, request, *args, **kwargs):
@@ -224,12 +195,9 @@ class DriverView(LoginRequiredMixin, DetailView):
         self.object = self.get_object()
         action_type = self.request.POST.get('action')
         if action_type == 'add-card':
-            card = FuelCard.objects.get(pk=request.POST.get('card'))
+            card = models.FuelCard.objects.get(pk=request.POST.get('card'))
             card.owner = self.get_object()
             card.save()
-
-            # Уведомление о новой карте
-            # if card.owner
         return HttpResponseRedirect("")
 
 class DocumentsView(Context, LoginRequiredMixin, TemplateView):
@@ -257,13 +225,13 @@ class DocumentsView(Context, LoginRequiredMixin, TemplateView):
         else:
             if len(request_GET.getlist('aorm')) == 2:
                 context['all_docs'] = list(chain(
-                    refact3_filtration_documents(model=AutoDoc, get_params=request_GET),
-                    refact3_filtration_documents(model=UserDoc, get_params=request_GET)
+                    filtration_documents(model=models.AutoDoc, get_params=request_GET),
+                    filtration_documents(model=models.UserDoc, get_params=request_GET)
                 ))
             elif request_GET.get('aorm') == 'car':
-                context['all_docs'] = refact3_filtration_documents(model=AutoDoc, get_params=request_GET)
+                context['all_docs'] = filtration_documents(model=models.AutoDoc, get_params=request_GET)
             elif request_GET.get('aorm') == 'man':
-                context['all_docs'] = refact3_filtration_documents(model=UserDoc, get_params=request_GET)
+                context['all_docs'] = filtration_documents(model=models.UserDoc, get_params=request_GET)
 
             context['get_parametrs'] = request_GET.items()
         return context
@@ -282,7 +250,7 @@ class CardFilterAndCreateView(Context, LoginRequiredMixin, CreateView):
     """
     template_name = 'cards.html'
     success_url = '/cards'
-    form_class = FuelCardAddForm
+    form_class = forms.FuelCardAddForm
 
     def get_context_data(self, **kwargs):
         """
@@ -291,8 +259,8 @@ class CardFilterAndCreateView(Context, LoginRequiredMixin, CreateView):
            отфильтрованные карты
        """
         context = super().get_context_data(**kwargs)
-        context['all_cards'] = FuelCard.objects.all() if not len(self.request.GET) \
-            else refact3_filtration_cards(self.request.GET)
+        context['all_cards'] = models.FuelCard.objects.all() if not len(self.request.GET) \
+            else filtration_cards(self.request.GET)
         return context
 
     def post(self, request, *args, **kwargs):
@@ -301,15 +269,11 @@ class CardFilterAndCreateView(Context, LoginRequiredMixin, CreateView):
         if action == 'owner-none':
             # Изымает карты
             owner_id_to_none = self.request.POST.getlist('owner_id_to_none')
-            cards_to_none = FuelCard.objects.filter(pk__in=owner_id_to_none)
-            for card in cards_to_none:
-                card.owner = None
-                card.save()
+            models.FuelCard.objects.filter(pk__in=owner_id_to_none).update(owner=None)
+
             # Удаляет карты
             owner_id_to_delete = self.request.POST.getlist('owner_id_to_delete')
-            cards_to_delete = FuelCard.objects.filter(pk__in=owner_id_to_delete)
-            for card in cards_to_delete:
-                card.delete()
+            models.FuelCard.objects.filter(pk__in=owner_id_to_delete).delete()
         else:
             return super(CardFilterAndCreateView, self).post(request, *args, **kwargs)
         return HttpResponseRedirect("")
@@ -335,8 +299,8 @@ class AplicationsView(Context, LoginRequiredMixin, TemplateView):
              отфильтрованные активные заявки
         """
         context = super(AplicationsView, self).get_context_data(**kwargs)
-        context['all_apps'] = Application.objects.filter(is_active=True) if not len(self.request.GET) \
-            else refact3_filtration_apps(self.request.GET)
+        context['all_apps'] = models.Application.objects.filter(is_active=True) if not len(self.request.GET) \
+            else filtration_apps(self.request.GET)
         return context
 
 class AppView(LoginRequiredMixin,UpdateView, DeletionMixin):
@@ -344,17 +308,17 @@ class AppView(LoginRequiredMixin,UpdateView, DeletionMixin):
         Контроллер: выбранная заявка
         Функционал:
             Менеджер + Владелец заявки:
-                просмотр заявки
+                     просмотр заявки
             Менеджер:
-                одобрение заявки (отправка механикам)
-                возврат заявки на доработку
+                     одобрение заявки (отправка механикам)
+                     возврат заявки на доработку
             Владелец заявки:
-                удаление заявки
-                изменение заявки
+                     удаление заявки
+                     изменение заявки
     '''
 
-    model = Application
-    form_class = AppUpdateForm
+    model = models.Application
+    form_class = forms.AppUpdateForm
     template_name = 'app.html'
     context_object_name = 'app'
 
@@ -369,7 +333,7 @@ class AppView(LoginRequiredMixin,UpdateView, DeletionMixin):
                             форму комментирования заявки
         """
         context = super(AppView, self).get_context_data(**kwargs)
-        context['manager_commit_form'] = ManagerCommitAppForm(instance=self.get_object())
+        context['manager_commit_form'] = forms.ManagerCommitAppForm(instance=self.get_object())
         return context
 
     def post(self, request, *args, **kwargs):
@@ -388,7 +352,7 @@ class AppView(LoginRequiredMixin,UpdateView, DeletionMixin):
             object.engineer = None
             object.save()
         if action == 'app_confirm':
-            form = ManagerCommitAppForm(self.request.POST, instance=Application.objects.get(pk=self.kwargs['pk']))
+            form = forms.ManagerCommitAppForm(self.request.POST, instance=models.Application.objects.get(pk=self.kwargs['pk']))
             if form.is_valid():
                 form.save()
         return super(AppView, self).post(request, *args, **kwargs)
@@ -410,14 +374,14 @@ class AccountView(LoginRequiredMixin, UpdateView):
 
     template_name = 'account.html'
 
-    form_class = UserUpdateForm
-    form_change_balance = FuelCardChangeBalance
-    form_add_doc = DriverDocForm
+    form_class = forms.UserUpdateForm
+    form_change_balance =forms.FuelCardChangeBalance
+    form_add_doc = forms.DriverDocForm
 
     success_url = reverse_lazy('account')
 
     def get_object(self, queryset=None):
-        return MyUser.objects.get(pk=self.request.user.pk)
+        return models.MyUser.objects.get(pk=self.request.user.pk)
 
     def get_context_data(self, **kwargs):
         """
@@ -436,7 +400,6 @@ class AccountView(LoginRequiredMixin, UpdateView):
             if action_type == 'change_balance' else self.form_change_balance()
         context['form'] = self.form_class(self.request.POST) \
             if action_type == 'user_update' else self.form_class(instance=self.get_object())
-        print(f"{context=}")
         return context
 
     def form_invalid(self, **kwargs):
@@ -461,7 +424,7 @@ class AccountView(LoginRequiredMixin, UpdateView):
             form = self.form_add_doc(self.request.POST, self.request.FILES, user=request.user)
         elif "doc-" in action_type:
             doc_pk_to_delete = "".join([i for i in action_type if i.isdigit()])
-            doc_to_delete = UserDoc.objects.get(pk=doc_pk_to_delete)
+            doc_to_delete = models.UserDoc.objects.get(pk=doc_pk_to_delete)
             doc_to_delete.delete()
             messages.success(self.request, "Документ успешно удален!")
             return HttpResponseRedirect("")
@@ -485,33 +448,28 @@ class RegistrationView(CreateView):
     """
 
     template_name = 'registration.html'
-    form_class = UserCreateForm
+    form_class = forms.UserCreateForm
     success_url = reverse_lazy('driver-activation')
 
     def form_valid(self, form):
-
+        # User'у присвается код активации аккаунта
         activation_code = generator_activation_code()
         form.activation_code = activation_code
+        # Код активации отправляется user'у
         send_activation_code.delay(driver_email=form.instance.email, activation_code=activation_code)
-        # send_mail(
-        #     'Подтверждение регистрации',
-        #     f'ВАШ КОД: {activation_code}',
-        #     'izolotavin99@gmail.com',
-        #     [form.instance.email],
-        #     fail_silently=False
-        # )
 
         return super(RegistrationView, self).form_valid(form)
 
 class EmailConfirmView(FormView):
 
     template_name = 'user_activation.html'
-    form_class = DriverActivationForm
+    form_class = forms.DriverActivationForm
 
     def form_valid(self, form):
-        print(f"form.activation_code = {form.cleaned_data['activation_code']}")
+        # При вводе кода активации, код сбрасывается,
+        # а аккаунт становится активным
         try:
-            new_driver = MyUser.objects.get(is_active=False, activation_code=form.cleaned_data['activation_code'])
+            new_driver = models.MyUser.objects.get(is_active=False, activation_code=form.cleaned_data['activation_code'])
             new_driver.is_active = True
             new_driver.activation_code = ''
             new_driver.save()
@@ -529,7 +487,7 @@ class HistoryView(Context, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(HistoryView, self).get_context_data(**kwargs)
         if len(self.request.GET):
-            context['history'] = filtration_logs(self.get_all_history(), self.request.GET)
+            context['history'] = filtration_history(self.get_all_history(), self.request.GET)
         else:
             context['history'] = self.get_all_history()
         return context

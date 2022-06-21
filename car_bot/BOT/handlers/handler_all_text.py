@@ -1,6 +1,8 @@
 from datetime import time
 from time import sleep
 
+
+# Загушка для использования ORM
 import django
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "car_park.settings")
@@ -31,12 +33,12 @@ class HandlerAllText(Handler):
         self.nots = Notifications.objects.all()
         # текущие заявки
         self.apps = Application.objects.first()
-        # шаг в заметках/заявки
+        # шаг в заметках/заявках
         self.step = 0
 
     def pressed_btn_menu(self, message):
         """
-        Обрабатывает нажатие клавиши меню
+        Обрабатывает нажатие кнопки "меню"
         Создает смс "Главное меню"
         Генерирует разаметку Стартового меню
         """
@@ -50,10 +52,9 @@ class HandlerAllText(Handler):
     # ******* ОСНОВНОЕ МЕНЮ ******* #
     def pressed_btn_nots(self, message):
         """
-        Обрабатывает нажатие кнопки Уведомения
+        Обрабатывает нажатие кнопки "Уведомения"
         type_menu = уведомления
         юсер = юсер_по_чат_id
-
         """
 
         self.menu_type = 'nots'
@@ -69,6 +70,8 @@ class HandlerAllText(Handler):
                 'активные уведомления',
                 reply_markup=self.keybords.set_active_nots_btns(len(self.nots), self.step)
             )
+            # Отправляет первое уведомление и
+            # создает кнопку деактивации уведомления
             self.bot.send_message(
                 message.chat.id,
                 MESSAGES['notifications'].format(
@@ -86,14 +89,17 @@ class HandlerAllText(Handler):
             )
 
     def pressed_btn_about(self, message):
-        """Обрабытывает нажатие кнопки О программе"""
+        """Обрабытывает нажатие кнопки 'О программе'"""
 
         self.bot.send_message(message.chat.id, MESSAGES['settings'],
                               parse_mode="HTML",
                               reply_markup=self.keybords.set_start_menu(message))
 
     def pressed_btn_apps(self, message):
-        """Обрабатывает нажатие кнопки заявки"""
+        """
+        Обрабатывает нажатие кнопки 'заявки'
+        type_menu = уведомления
+        """
 
         self.menu_type = 'apps'
         self.bot.send_message(
@@ -104,11 +110,11 @@ class HandlerAllText(Handler):
 
     # ******* ЗАЯВКИ ******* #
     def pressed_btn_new_apps(self, message):
-        """Обрабатывает нажатие кнопки новые заявки"""
+        """Обрабатывает нажатие кнопки 'новые заявки'"""
 
         self.user = MyUser.objects.get(chat_id=message.chat.id)
-
         self.apps = Application.objects.filter(engineer=self.user, is_active=True, status='OE')
+
         if self.apps:
             app1 = self.apps[0]
             self.step = 1
@@ -121,6 +127,8 @@ class HandlerAllText(Handler):
                     count_apps=len(self.apps)
                 )
             )
+            # Отправляет первую заявку и
+            # создает кнопку подтверждения заявки
             message_to_del = self.bot.send_message(
                 message.chat.id,
                 MESSAGES['applications'].format(
@@ -143,25 +151,18 @@ class HandlerAllText(Handler):
             )
 
     def pressed_btn_active_apps(self, message):
-        """Обрабатывает нажатие кнопки Активные заявки"""
+        """Обрабатывает нажатие кнопки 'Активные заявки'"""
 
         self.user = MyUser.objects.get(chat_id=message.chat.id)
-
         self.apps = Application.objects.filter(engineer=self.user, status='REP')
-        if self.apps:
 
-            applications = """
-            ЗАЯВКА НОМЕР:           {}
-            МАШИНА                  {}
-            ТИП:                    {}
-            ОПИСАНИЕ:               {}
-            КОММЕНТАРИЙ МЕНЕДЖЕРА:  {}
-            ВЫПОЛНИТЬ ДО:           {}
-            """
+        if self.apps:
             self.bot.send_message(
                 message.chat.id,
                 "АКТИВНЫЕ ЗАЯВКИ"
             )
+            # Выводит все активные заявки
+            # создает кнопки завершени заявки
             for app1 in self.apps:
                 self.bot.send_message(
                     message.chat.id,
@@ -188,20 +189,12 @@ class HandlerAllText(Handler):
         """Обрабатывает нажатие кнопки Выполненные заявки"""
 
         self.user = MyUser.objects.get(chat_id=message.chat.id)
-
         self.apps = Application.objects.filter(engineer=self.user, status='V')
+
         if self.apps:
-
-            applications = """
-                    ЗАЯВКА НОМЕР:           {}
-                    МАШИНА                  {}
-                    ТИП:                    {}
-                    ОПИСАНИЕ:               {}
-                    КОММЕНТАРИЙ МЕНЕДЖЕРА:  {}
-                    ВЫПОЛНИТЬ ДО:           {}
-                    """
-
             for app1 in self.apps:
+                # Выводит все активные заявки
+                # создает кнопки завершени заявки
                 self.bot.send_message(
                     message.chat.id,
                     MESSAGES['applications'].format(
@@ -217,8 +210,9 @@ class HandlerAllText(Handler):
 
     # ******* НОВЫЕ ЗАЯВКИ ******* #
     def pressed_btn_next_app(self, message):
-        """Обработывает нажатие клавиши следующая НОВАЯ заявка"""
-        print("ВЫЗВАН btn_next_app")
+        """Обработывает нажатие клавиши следующая 'НОВАЯ заявка'
+           Выводит следующую заявку или первую (если текущая заявка последняя
+        """
 
         self.bot.delete_message(message.chat.id, message.message_id)
         self.bot.delete_message(message.chat.id, message.message_id - 1)
@@ -241,7 +235,8 @@ class HandlerAllText(Handler):
                     count_apps=len(self.apps)
                 )
             )
-
+            # Выводит следующую заявку
+            # создает кнопку подтверждения заявки
             self.bot.send_message(
                 message.chat.id,
                 MESSAGES['applications'].format(
@@ -263,14 +258,15 @@ class HandlerAllText(Handler):
             )
 
     def pressed_btn_last_app(self, message):
-        """Обработывает нажатие клавиши предыдущая НОВАЯ заявка"""
-
+        """Обработывает нажатие клавиши предыдущая 'НОВАЯ заявка'
+           Выводит предыдущую заявку или первую (если текущая заявка первая)
+        """
+        # Удаляет текущее уведомление
         self.bot.delete_message(message.chat.id, message.message_id)
         self.bot.delete_message(message.chat.id, message.message_id - 1)
-
-        # if self.step != 1:
         self.bot.delete_message(message.chat.id, message.message_id - 2)
 
+        # Изменяет шаг
         if self.step != 1:
             self.step = self.step - 1
         else:
@@ -278,7 +274,8 @@ class HandlerAllText(Handler):
 
         if self.apps:
             app1 = self.apps[self.step-1]
-
+            #  Выводит предыдущую заявку
+            #  создает кнопку подтверждения заявки
             self.bot.send_message(
                 message.chat.id,
                 "ПРЕДЫДУЩАЯ заявка",
@@ -310,10 +307,10 @@ class HandlerAllText(Handler):
 
     def pressed_inline_btn_start_repair(self, call, code):
         """
-        Обрабатывает нажатие inline-кнопки Приступить к ремонту
+        Обрабатывает нажатие inline-кнопки 'Приступить к ремонту'
         """
 
-        # 1) выбраная заявка status = "REP"
+        # 1) выбраная заявка переходит в стутус 'Ремонтируется'
         app_to_repair = Application.objects.get(pk=code)
         app_to_repair.status = 'REP'
         app_to_repair.save()
@@ -325,9 +322,10 @@ class HandlerAllText(Handler):
 
         # 2) self.step = 1
         self.step = 1
-        # sleep(5)
-        # 3) self.apps = Application.objects.filter(en=self.user, active=True)
+
+        # 3) Принятая заявка удаляется из списка активных заявок
         self.apps = Application.objects.filter(engineer=self.user, status="OE")
+        # 4) Сообщение с принятой заявков удаляется
         self.bot.delete_message(call.message.chat.id, call.message.message_id)
 
         if self.apps:
@@ -342,7 +340,8 @@ class HandlerAllText(Handler):
                     count_apps=len(self.apps)
                 )
             )
-
+            #Выводит первую оставшуются заявку
+            # создает кнопку подтверждения заявки
             self.bot.send_message(
                 call.message.chat.id,
                 MESSAGES['applications'].format(
@@ -366,11 +365,10 @@ class HandlerAllText(Handler):
     # ******* АКТИВНЫЕ ЗАЯВКИ ******* #
     def pressed_inline_btn_complete_app(self, call, code):
         """
-           Обрабатывает входящие запросы на нажатие inline-кнопки Выполнить заявку
+           Обрабатывает входящие запросы на нажатие inline-кнопки 'Выполнить заявку'
         """
-        print("YES!DEACTIVATE_BTN2")
 
-        # 1) выбраная заявка status = "V"
+        # 1) выбраная заявка принимает статус 'Выполнена'
         app_to_repair = Application.objects.get(pk=code)
         app_to_repair.status = 'V'
         app_to_repair.is_active = False
@@ -383,51 +381,17 @@ class HandlerAllText(Handler):
 
         # 2) self.step = 1
         self.step = 1
-        # sleep(5)
-        # 3) self.apps = Application.objects.filter(engineer=self.user, status="RED")
-        self.apps = Application.objects.filter(engineer=self.user, status="RED")
+        # 3) Выполненная заявка удаляется из списка ремонтируемых заявок
+        self.apps = Application.objects.filter(engineer=self.user, status="REP")
+        # 4) Удаляется сообщение выполненной заявки
         self.bot.delete_message(call.message.chat.id, call.message.message_id)
 
-        # if self.apps:
-        #     app1 = self.apps[0]
-        #     self.step = 1
-        #
-        #     self.bot.send_message(
-        #         call.message.chat.id,
-        #         "Оставшиеся новые заявки",
-        #         reply_markup=self.keybords.set_apps_control_btns(
-        #             app_step=self.step,
-        #             count_apps=len(self.apps)
-        #         )
-        #     )
-        #
-        #     self.bot.send_message(
-        #         call.message.chat.id,
-        #         MESSAGES['applications'].format(
-        #             app1.id,
-        #             app1.car.registration_number,
-        #             app1.type,
-        #             app1.description,
-        #             app1.manager_descr,
-        #             app1.end_date,
-        #         ),
-        #         reply_markup=self.keybords.set_accept_new_app(app_id=app1.id)
-        #     )
-        #
-        # else:
-        #     self.bot.send_message(
-        #         call.message.chat.id,
-        #         "У вас нет активных заявок!",
-        #         reply_markup=self.keybords.set_start_btns(call.message)
-        #     )
 
     def pressed_inline_btn_finalize_app(self, call, code):
         """
-           Обрабатывает входящие запросы на нажатие inline-кнопки Доработать заявку
+           Обрабатывает входящие запросы на нажатие inline-кнопки 'Доработать заявку'
         """
-        print("YES!DEACTIVATE_BTN2")
-
-        # 1) выбраная заявка status = "REP"
+        # 1) выбраная заявка получает статус "Ремонтируется"
         app_to_repair = Application.objects.get(pk=code)
         app_to_repair.status = 'REP'
         app_to_repair.is_active = True
@@ -440,8 +404,7 @@ class HandlerAllText(Handler):
 
         # 2) self.step = 1
         self.step = 1
-        # sleep(5)
-        # 3) self.apps = Application.objects.filter(engineer=self.user, status="RED")
+        # 3) ----------
         # self.apps = Application.objects.filter(engineer=self.user, status="RED")
         self.bot.delete_message(call.message.chat.id, call.message.message_id)
 
@@ -449,14 +412,14 @@ class HandlerAllText(Handler):
 
     def pressed_inline_btn_access_note(self, call, code):
         """
-           Обрабатывает входящие запросы на нажатие inline-кнопки подтвердить уведомление
+           Обрабатывает входящие запросы на нажатие inline-кнопки 'подтвердить уведомление'
         """
 
-        # 1) выбранное уведомление anotective=False
+        # 1) выбранное уведомление деактивируется
         not_to_deactivate = Notifications.objects.get(pk=code)
         not_to_deactivate.active = False
         not_to_deactivate.save()
-
+        # 2) создает callback сообщение
         self.bot.answer_callback_query(
             call.id,
             MESSAGES['notifications'].format(
@@ -468,19 +431,20 @@ class HandlerAllText(Handler):
         # 2) self.step = 1
         self.step = 1
 
-        # 3) self.nots = Notifications.objects.filter(recipient=self.user, active=True)
+        # 3) Подтвержденное уведомление удаляется из списка активных уведомлений
         self.nots = Notifications.objects.filter(recipient=self.user, active=True)
 
         if self.nots:
             not1 = self.nots[0]
 
-            # 4) Отправка смс "первое уведомление"
+            # 4) Создает размекту кнопкок
             self.bot.send_message(
                 call.message.chat.id,
                 f'Уведомление № {not1.id}',
                 reply_markup=self.keybords.set_active_nots_btns(len(self.nots), self.step)
             )
-            # 5) Создание размекти кнопок
+            # 5) Выводит первое уведомление и
+            # кнопку деактивации
             self.bot.send_message(
                 call.message.chat.id,
                 MESSAGES['notifications'].format(
@@ -499,23 +463,26 @@ class HandlerAllText(Handler):
             )
 
     def pressed_btn_next_not(self, message):
-        """Обработывает нажатие клавиши следующее уведомление"""
-        # print(f"{self.step}")
-        print("YES! NEXT NOT")
-        # print(f"{self.nots.count}")
-
+        """
+        Обработывает нажатие клавиши 'следующее уведомление'
+        Выводит следующее увед. или первую (если текущая заявка последняя)
+        """
+        # изменяем шаг
         if self.step != len(self.nots):
             self.step = self.step + 1
         else:
             self.step = 1
 
         not1 = list(self.nots)[self.step-1]
+
+        # Создает размекту кнопкок
         self.bot.send_message(
             message.chat.id,
             f'Уведомление № {not1.id}',
             reply_markup=self.keybords.set_active_nots_btns(len(self.nots), self.step)
         )
-
+        # 5) Выводит следующее уведомление и
+        # кнопку деактивации
         self.bot.send_message(
             message.chat.id,
             MESSAGES['notifications'].format(
@@ -527,22 +494,26 @@ class HandlerAllText(Handler):
         )
 
     def pressed_btn_last_not(self, message):
-        """Обработывает нажатие клавиши предыдущее уведомление уведомление"""
-        # print(f"{self.step}")
-        # print(f"{self.nots.count}")
-
+        """
+        Обработывает нажатие клавиши 'предыдущее уведомление'
+        Выводит предыдущее увед. или последнее (если текущая заявка первая)
+        """
+        # Изменяем шаг
         if self.step != 1:
             self.step = self.step - 1
         else:
             self.step = len(self.nots)
 
         not1 = list(self.nots)[self.step-1]
+
+        # Создает размекту кнопкок
         self.bot.send_message(
             message.chat.id,
             f'Уведомление № {not1.id}',
             reply_markup=self.keybords.set_active_nots_btns(len(self.nots), self.step)
         )
-
+        # Выводит следующее уведомление и
+        # кнопку деактивации
         self.bot.send_message(
             message.chat.id,
             MESSAGES['notifications'].format(
@@ -557,16 +528,17 @@ class HandlerAllText(Handler):
     # ******* ПРОСМОТРЕННЫЕ УВЕДОМЛЕНИЯ ******* #
 
     def pressed_btn_old_nots(self, message):
-        """Обрабатывает нажатие кнопки Просмотренные уведомления"""
+        """Обрабатывает нажатие кнопки 'Просмотренные уведомления'"""
 
+        # Получаем просмотренные уведомления
         old_nots = Notifications.objects.filter(recipient=self.user, active=False)
-
+        # Создаем разметку кнопок
         self.bot.send_message(
             message.chat.id,
             'Просмотренные уведомления ',
             reply_markup=self.keybords.set_start_menu(message)
         )
-
+        # Выводим все просмотренные уведомления
         for not1 in old_nots:
             self.bot.send_message(
                 message.chat.id,
@@ -576,8 +548,6 @@ class HandlerAllText(Handler):
                     not1.content
                 ),
             )
-
-
 
     def handle(self):
         # обработчик(декоратор) сообщений,
@@ -594,12 +564,15 @@ class HandlerAllText(Handler):
                 self.pressed_btn_menu(message)
 
             if message.text == '>>':
-                print(f"{self.menu_type=}")
+                # В зависимости от типа меню, выводим
+                # следующую заметку или уведмоление
                 if self.menu_type == 'nots':
                     self.pressed_btn_next_not(message)
                 elif self.menu_type == 'apps':
                     self.pressed_btn_next_app(message)
             if message.text == '<<':
+                # В зависимости от типа меню, выводим
+                # предыдущую заметку или уведмоление
                 if self.menu_type == 'nots':
                     self.pressed_btn_last_not(message)
                 elif self.menu_type == 'apps':
@@ -628,12 +601,10 @@ class HandlerAllText(Handler):
         #Обработчик нажатия инлайновых клавиш
         @self.bot.callback_query_handler(func=lambda call: True)
         def callback_inline(call):
+            # Код нажатой кнопки
             code = call.data
+            # Текст нажатой кнопки
             inline_text = call.message.json['reply_markup']['inline_keyboard'][0][0]['text']
-            # for key, value in call.message.json.items():
-            #     print(key, ":", value)
-            # print(call.message.json['reply_markup']['inline_keyboard'][0][0]['text'])
-            # 'reply_markup': {'inline_keyboard': [[{'text': 'Приступить к ремонту',
             if code.isdigit():
                 code = int(code)
 
@@ -642,7 +613,8 @@ class HandlerAllText(Handler):
                 self.pressed_inline_btn_access_note(call, code)
 
             # ********  ЗАЯВКИ ******** #
-
+            # В засимости от текста сообщения,
+            # запускаем соответветствующий обработчик
             if inline_text == 'Приступить к ремонту':
                 self.pressed_inline_btn_start_repair(call, code)
             if inline_text == 'Выполнить заявку':

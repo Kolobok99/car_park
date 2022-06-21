@@ -7,54 +7,57 @@
                     лишнии INSTALLED_APPS       -
                     (debug=False)
         urls.py
-                    комментарии
-                    лишнии импорты
+                    комментарии                 -
+                    лишнии импорты              -
     2. cabinet
         admin.py
-                лишнии импорта
+                лишнии импорта                  -
         apps.py
-                вроде все гуд
+                вроде все гуд                   -
         forms.py
-                лишнии импорта
-                комментерии к коду
+                лишнии импорта                  -
+                комментерии к коду              -
         models.py
-                стандарт имен
-                комментарии к коду
-                def __str__
+                стандарт имен                   -
+                комментарии к коду              -
+                def __str__                     -
 
         signals.py
-                ~
+                ~                               -
         urls.py
-                вроде все хорошо
+                вроде все хорошо                -
         views.py
-                комментарии к коду
+                комментарии к коду              -
         services/
                 filtration.py
-                              ~
+                            filtration_history
                 services.py
-                              ~
+                            get_all_history
     3.
 
 A.1 celery:
     cabinet/
-            tasks.py
+            tasks.py                            -
     car_park/cabinet/
-            celery.py
-            __init__.py
+            celery.py                           -
+            __init__.py                         -
 
 Б. Телеграм бот:
     car_bot/
             BOT
                /handlers/
-                        handler_com.py
-                        handler_all_text.py
-                        main_handler.py
-                        handler.py
-               /markup
-               /settings
+                        handler_com.py          -
+                        handler.py              -
+                        handler_all_text.py     +-
+                        main_handler.py         -
 
-               apps.py
-               models.py
+               /markup
+                        markup.py               -
+               /settings
+                        config.py               -
+                        message.py              -
+               apps.py                          -
+               models.py                        -
 
 
 

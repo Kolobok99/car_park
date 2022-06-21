@@ -9,36 +9,23 @@ from django.conf import settings
 from django.dispatch import Signal
 from cabinet.models import MyUser, Car, FuelCard, Application
 
-from simple_history.signals import (
-    pre_create_historical_record,
-    post_create_historical_record,
-)
 
 from car_bot.models import Notifications
-
-
-# @receiver(pre_save, sender=Application)
-# def pre_save_app(instance, **kwargs):
-#     if instance._state.adding:
-#         if instance.urgency == 'N':
-#             instance.end_date = instance.start_date + timedelta(days=10)
-#         elif instance.urgency == 'U':
-#             instance.end_date = instance.start_date + timedelta(days=7)
-#         elif instance.urgency == 'V':
-#             instance.end_date = instance.start_date + timedelta(days=3)
-#         # instance.save()
 
 @receiver(post_save, sender=Notifications)
 def post_save_nots(created, **kwargs):
     instance = kwargs['instance']
     if created:
+        # Записывает порядковый номер уведомления пользователя
         count = Notifications.objects.filter(recipient=instance.recipient).count()
-        instance.owner_pk = Notifications.objects.filter(recipient=instance.recipient).count()
+        instance.owner_pk = count
         instance.save()
 @receiver(signal=post_save, sender=Application)
 def post_save_apps(created, instance, **kwargs):
     manager = MyUser.objects.get(role='m')
     if created:
+        # исходя из срочности заявки,
+        # автоматически устанавливает время на выполнения
         if instance.urgency == 'N':
             instance.end_date = instance.start_date + timedelta(days=10)
         elif instance.urgency == 'U':
@@ -46,36 +33,10 @@ def post_save_apps(created, instance, **kwargs):
         elif instance.urgency == 'V':
             instance.end_date = instance.start_date + timedelta(days=3)
         instance.save()
-    #
-    #     # Создана новая заявка
-    #     if instance.status == 'O':
-    #         if instance.owner != manager:
-    #             Notifications.objects.create(
-    #                 recipient=manager,
-    #                 content=f"Заявка №{instance.pk}  ожидает рассмотрения",
-    #                 content_object=instance
-    #             )
-    #     # Заявка направлена механику
-    #     elif instance.status == 'OE':
-    #         if instance.owner != manager:
-    #             # Уведомление владельцу заявки
-    #             Notifications.objects.create(
-    #                 recipient=instance.owner,
-    #                 content=f"Ваша заявка №{instance.pk} рассмотрена\n"
-    #                         f"Комментарий менеджера: {instance.manager_descr}",
-    #                 content_object=instance
-    #             )
-    #         # Уведомление механику
-    #         Notifications.objects.create(
-    #             recipient=instance.engineer,
-    #             content=f"У вас новая заявка на ремонт {instance.pk}\n"
-    #                     f"Комментарий менеджера: {instance.manager_descr}",
-    #             content_object=instance
-    #         )
 
-    # Заявка направлена механику
+    # Заявка "Ожидает рассмотрения механика"
     elif instance.status == 'OE':
-        # Уведомление владельцу заявки
+        # Уведомление владельцу заявки (о рассмотрении заявки)
         if instance.owner != manager:
             Notifications.objects.create(
                 recipient=instance.owner,
@@ -83,7 +44,7 @@ def post_save_apps(created, instance, **kwargs):
                         f"Комментарий менеджера: {instance.manager_descr}",
                 content_object=instance
             )
-        # Уведомление механику
+        # Уведомление механику (о том, что нужно рассмотреть новую заявку)
         Notifications.objects.create(
             recipient=instance.engineer,
             content=f"У вас новая заявка на ремонт {instance.pk}\n"
@@ -92,7 +53,7 @@ def post_save_apps(created, instance, **kwargs):
         )
     # Механик приступил к работе
     elif instance.status == 'REP':
-        # Уведомление менеджеру
+        # Уведомление менеджеру (о начале работы над заявкой)
         Notifications.objects.create(
             recipient=manager,
             content=f"Механик приступил к выполнению заявки № {instance.pk}",
@@ -100,7 +61,7 @@ def post_save_apps(created, instance, **kwargs):
         )
     # Механик выполнил заявку
     elif instance.status == 'V':
-        # Уведомление менеджеру
+        # Уведомление менеджеру (о выполнении заявки)
         Notifications.objects.create(
             recipient=manager,
             content=f"Механик выполнил заявку № {instance.pk}",
@@ -108,6 +69,7 @@ def post_save_apps(created, instance, **kwargs):
         )
 
     elif instance.status == 'T':
+        # Уведомление владельцу заявки (об отклоениии заявки)
         Notifications.objects.create(
             recipient=instance.owner,
             content=f"Ваша заявка №{instance.pk} ОТКЛОНЕНА!",
@@ -117,15 +79,17 @@ def post_save_apps(created, instance, **kwargs):
 
 @receiver(post_save, sender=MyUser)
 def post_save_myuser(created, **kwargs):
-    """Создает директорию для нового user'a"""
     instance = kwargs['instance']
     if created:
-        #создание папки для пользователя
-        os.mkdir(f'{settings.MEDIA_ROOT}/drivers/{instance.email}')
-        #создание папки для хранения аватарок
-        os.mkdir(f'{settings.MEDIA_ROOT}/drivers/{instance.email}/avatars')
-        #создание папки для хранения документов
-        os.mkdir(f'{settings.MEDIA_ROOT}/drivers/{instance.email}/docs')
+        try:
+            #создание папки пользователя
+            os.mkdir(f'{settings.MEDIA_ROOT}/drivers/{instance.email}')
+            #создание папки для хранения аватарок
+            os.mkdir(f'{settings.MEDIA_ROOT}/drivers/{instance.email}/avatars')
+            #создание папки для хранения документов
+            os.mkdir(f'{settings.MEDIA_ROOT}/drivers/{instance.email}/docs')
+        except:
+            pass
 
 @receiver(pre_save, sender=MyUser)
 def pre_save_myuser(instance, **kwargs):
@@ -170,7 +134,6 @@ def post_save_cars(created, **kwargs):
     """Создает директорию для нового авто"""
     instance = kwargs['instance']
     if created:
-        print(f"{instance.registration_number} создана!")
         # создание папки для машины
         os.mkdir(f'{settings.MEDIA_ROOT}/cars/{instance.registration_number}')
         # создание папки для хранения аватарок
@@ -178,8 +141,9 @@ def post_save_cars(created, **kwargs):
         # создание папки для хранения документов
         os.mkdir(f'{settings.MEDIA_ROOT}/cars/{instance.registration_number}/docs')
 
-        # Если машина впервые добавляется
+        # Если у машины задан водитель
         if instance.owner:
+            # Уведомлению водителю о новом авто
             Notifications.objects.create(
                 recipient=instance.owner,
                 content=f"Вам присвоена новое авто ({instance.registration_number})",
@@ -218,6 +182,7 @@ def pre_save_car(instance, **kwargs):
         manager = MyUser.objects.get(role='m')
         old_owner = car.owner
         new_owner = instance.owner
+        """возможные варианты создания/изменения машины"""
         # 1) old_owner = None, new_owner = some_owner (добавление водителя)
         # 2) old_owner = some_owner, new_owner = some_owner_2 (изменение водителя)
         # 3) old_owner = some_owner, new_owner = None (удаление водителя)
@@ -226,6 +191,7 @@ def pre_save_car(instance, **kwargs):
 
         # 1) old_owner = None, new_owner = some_owner (добавление водителя)
         if old_owner is None and new_owner is not None:
+            # Уведомление водителю (о присвоении машины)
             Notifications.objects.create(
                 recipient=new_owner,
                 content=f"Вам присвоена новое авто ({instance.registration_number})",
@@ -234,6 +200,7 @@ def pre_save_car(instance, **kwargs):
 
         # 3) old_owner = some_owner, new_owner = None (удаление водителя)
         elif old_owner is not None and new_owner is None:
+            #  Уведомление водителю (об изъятии машины)
             Notifications.objects.create(
                 recipient=old_owner,
                 content=f"Ваша машина ({instance.registration_number}) изъята :-(",
@@ -243,6 +210,7 @@ def pre_save_car(instance, **kwargs):
 
         # 2) old_owner = some_owner, new_owner = some_owner_2 (изменение водителя)
         elif old_owner != new_owner:
+            # Уведомление водителю (об изътии машины)
             Notifications.objects.create(
                 recipient=old_owner,
                 content=f"Ваша машина ({instance.registration_number}) изъята :-(",
@@ -250,30 +218,23 @@ def pre_save_car(instance, **kwargs):
             )
 
             Notifications.objects.create(
+                # Уведомление водителю (о присвоении машины)
                 recipient=new_owner,
                 content=f"Вам присвоена новое авто ({instance.registration_number})",
                 content_object=instance
             )
 
 
-
-
-            # pathes = [f'{settings.MEDIA_ROOT}/drivers/{instance.email}/docs/{os.path.basename(doc.file.name)}' for doc
-            #           in user.my_docs.all()]
-            # files = [open(path, 'rb') for path in pathes]
-            # django_files = [File(file) for file in files]
-            # for id, obj in enumerate(instance.my_docs.all()):
-            #     obj.file = django_files[id]
-            #     obj.save()
-            #     os.remove(pathes[id])
-
 @receiver(pre_delete, sender=Car)
 def pre_delete_car(instance, **kwargs):
     """Удаляет директорию удаляемого авто"""
-    car_dir = f"{settings.MEDIA_ROOT}/cars/{instance.registration_number}"
-    shutil.rmtree(car_dir)
-
+    try:
+        car_dir = f"{settings.MEDIA_ROOT}/cars/{instance.registration_number}"
+        shutil.rmtree(car_dir)
+    except:
+        pass
     if instance.owner:
+        # Уведомление водителю (об удалении машины)
         Notifications.objects.create(
             recipient=instance.owner,
             content=f"Ваша машина ({instance.registration_number}) УДАЛЕНА :-(",
@@ -284,7 +245,10 @@ def pre_delete_car(instance, **kwargs):
 def post_save(created, **kwargs):
     instance = kwargs['instance']
     if created:
+        # устанавливает "стартовый" баланс
+        instance.balance = instance.limit
         if instance.owner:
+            # Уведомление водителю (о присвоении карты)
             Notifications.objects.create(
                 recipient=instance.owner,
                 content=f"Вам добавлена новая карта!",
@@ -299,9 +263,9 @@ def pre_save_card(instance, **kwargs):
         old_owner = FuelCard.objects.get(pk=instance.pk).owner
         new_owner = instance.owner
 
-
         # 1) old_owner = None, new_owner = some_owner (присваивание карты)
         if old_owner is None and new_owner is not None:
+            # Уведомление водителю (о присвоении карты)
             Notifications.objects.create(
                 recipient=new_owner,
                 content=f"Вам добавлена новая карта!",
@@ -309,6 +273,7 @@ def pre_save_card(instance, **kwargs):
             )
         # 2) old_owner = some_owner, new_owner = None (изъятие карты)
         elif old_owner and new_owner is None:
+            # Уведомление водителю (об изятии карты)
             Notifications.objects.create(
                 recipient=old_owner,
                 content=f"У вас изъята карта",
@@ -319,6 +284,7 @@ def pre_save_card(instance, **kwargs):
 def pre_delete_card(instance, **kwargs):
     """Создает уведомление об удалении карты"""
     if instance.owner:
+        # Уведомление водителю (об удалении карты)
         Notifications.objects.create(
             recipient=instance.owner,
             content=f"Ваша карту УДАЛЕНА!",

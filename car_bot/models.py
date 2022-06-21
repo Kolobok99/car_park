@@ -11,9 +11,6 @@ class Notifications(models.Model):
         Модель: уведомлений, присылаемых ботом
     """
 
-    # creator = models.ForeignKey(MyUser, verbose_name='создатель',
-    #                             on_delete=models.SET(1),
-    #                             null=True, blank=True, related_name='my_nots')
     recipient = models.ForeignKey(MyUser, verbose_name='получатель',
                                   on_delete=models.SET(1),
                                   related_name='received_nots')
@@ -29,13 +26,6 @@ class Notifications(models.Model):
                                        fk_field='object_id',)
 
     owner_pk = models.PositiveIntegerField(default=0)
-
-    # def save(self):
-    #     """Генерирует номер уведомления пользователя"""
-    #     super().save()
-    #     if not self.owner_pk:
-    #         self.owner_pk = Notifications.objects.filter(recipient=self.recipient).count()
-    #     super().save()
 
     def __str__(self):
         return self.content

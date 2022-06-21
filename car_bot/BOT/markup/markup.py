@@ -21,11 +21,6 @@ class Keyboards:
 
     def __init__(self):
         self.markup = None
-        # инициализируем менеджер для работы с БД
-        # self.BD = DBManager()
-
-        # шаг в заказе
-        # self.step = 0
 
     def set_send_number_btn(self):
         """Создает кнопку отправки телефона"""
@@ -45,6 +40,7 @@ class Keyboards:
         """Создает разметку кнопок стартового меню"""
         user = MyUser.objects.get(chat_id=message.chat.id)
         self.markup = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
+
         nots_btn = KeyboardButton(text="уведомления")
         about_btn = KeyboardButton(text="О программе")
 
@@ -60,7 +56,9 @@ class Keyboards:
         """Создает кнопку подтверждения уведомления"""
 
         self.markup = InlineKeyboardMarkup(row_width=1)
+
         deactivate_btn = InlineKeyboardButton("Подтвердить", callback_data=not_id)
+
         self.markup.add(deactivate_btn)
 
         return self.markup
@@ -69,13 +67,16 @@ class Keyboards:
         """Создает разметку кнопок для работы с АКТИВНЫМИ уведомлениями"""
 
         self.markup = ReplyKeyboardMarkup(True, True)
+
         next_not_btn = KeyboardButton(text=">>")
         last_not_btn = KeyboardButton(text="<<")
         counter_nots_btn = KeyboardButton(text=f"{not_step} из {count_nots}")
         main_menu_btn = KeyboardButton(text="Меню")
         old_notes = KeyboardButton(text='Просмотренные уведомления')
+
         if count_nots:
             self.markup.add(last_not_btn, counter_nots_btn, next_not_btn)
+
         self.markup.add(old_notes, main_menu_btn)
 
         return self.markup
@@ -99,6 +100,7 @@ class Keyboards:
 
         self.markup = InlineKeyboardMarkup(row_width=1)
         deactivate_btn = InlineKeyboardButton("Подтвердить", callback_data=app_id)
+
         self.markup.add(deactivate_btn)
 
         return self.markup
@@ -108,6 +110,7 @@ class Keyboards:
 
         self.markup = InlineKeyboardMarkup(row_width=1)
         deactivate2_btn = InlineKeyboardButton("Выполнить заявку", callback_data=app_id)
+
         self.markup.add(deactivate2_btn)
 
         return self.markup
@@ -117,6 +120,7 @@ class Keyboards:
 
         self.markup = InlineKeyboardMarkup(row_width=1)
         deactivate3_btn = InlineKeyboardButton("Доработать заявку", callback_data=app_id)
+
         self.markup.add(deactivate3_btn)
 
         return self.markup
@@ -126,8 +130,8 @@ class Keyboards:
 
         self.markup = ReplyKeyboardMarkup(True, True)
 
-        next_app_btn = KeyboardButton(text=">> ")
-        last_app_btn = KeyboardButton(text="<< ")
+        next_app_btn = KeyboardButton(text=">>")
+        last_app_btn = KeyboardButton(text="<<")
         counter_apps_btn = KeyboardButton(text=f"{app_step} из {count_apps}")
         main_menu_btn = KeyboardButton(text="Меню")
         all_apps = KeyboardButton(text='Заявки')
@@ -143,6 +147,5 @@ class Keyboards:
         self.markup = InlineKeyboardMarkup(row_width=1)
         deactivate_btn = InlineKeyboardButton("Приступить к ремонту", callback_data=app_id)
         self.markup.add(deactivate_btn)
-
 
         return self.markup
