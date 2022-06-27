@@ -45,7 +45,7 @@
                     <li class="filtr-items__item">
                         <p class="filtr-items__title" id="opacity-title-car">Тип (Авто)</p>
                         <div id="block-to_hide-car">
-                            <ul class="filtr-items__sub-menu">
+                            <ul class="filtr-items__sub-menu car-doc">
                                 {% for car_type_of_docs in view.get_car_types_of_docs %}
                                     <label for="{{ car_type_of_docs.id }}" class="filtr-items__check-label">
                                         <li class="filtr-items__sub-item"><input class="filtr-items__check" value="{{ car_type_of_docs.id }}" type="checkbox" name="doc_type" id="{{ car_type_of_docs.id }}">
@@ -59,9 +59,9 @@
                     </li>
 
                     <li class="filtr-items__item">
-                        <p class="filtr-items__title" id="opacity-title-man">Тип (Человек)</p>
+                        <p class="filtr-items__title" id="opacity-title-man">Тип (Водитель)</p>
                         <div id="block-to_hide-man">
-                            <ul class="filtr-items__sub-menu">
+                            <ul class="filtr-items__sub-menu driver-doc">
                                 {% for man_type_of_docs in view.get_man_types_of_docs %}
                                     <label for="{{ man_type_of_docs.id }}" class="filtr-items__check-label">
                                         <li class="filtr-items__sub-item"><input class="filtr-items__check"  value="{{ man_type_of_docs.id }}" type="checkbox" name="doc_type" id="{{ man_type_of_docs.id }}">
@@ -84,7 +84,7 @@
 
             <div class="main__information">
                 {% if all_docs %}
-                    <table class="main__table table">
+                    <table class="main__table table documents">
 
                         <!-- ID -->                            <col style="width:5%">
                         <!-- Дата создания -->                 <col style="width:15%">

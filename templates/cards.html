@@ -60,7 +60,7 @@
 
                     <div class="main__information">
                         {% if all_cards.count %}
-                            <table class="main__table table">
+                            <table class="main__table table cards">
 
                                 <!-- ID -->                            <col style="width:5%">
                                 <!-- Дата создания -->                 <col style="width:15%">
@@ -79,7 +79,7 @@
                                     <th class="table__title">Владелец</th>
                                     <form method="post"> {% csrf_token %}
                                     <th><button class="table__confiscate" type="submit">Изъять</button></th>
-                                    <th><button class="table__confiscate" type="submit">Удалить</button></th>
+                                    <th><button style="background-color: rgba(255, 0, 0, 0.523);"  class="table__confiscate" type="submit">Удалить</button></th>
                                 </tr>
 
                                 <input type="hidden" name="action" value="owner-none">
@@ -101,7 +101,7 @@
                                         </td>
                                         <td class="table__cell">
                                             <label class="table__check-label">
-                                                <input type="checkbox" class="table__check" name="owner_id_to_delete" value="{{ card.pk }}">
+                                                <input type="checkbox"class="table__check" name="owner_id_to_delete" value="{{ card.pk }}">
                                             </label>
                                         </td>
                                     </tr>

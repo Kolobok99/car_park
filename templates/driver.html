@@ -20,40 +20,40 @@
 
                     <div class="account-area__item">
                         <p>Имя:</p>
-                        <span>{{ driver.first_name }}</span>
+                        <span id="id_first_name">{{ driver.first_name }}</span>
                     </div>
 
                     <div class="account-area__item">
                         <p>Фамилия:</p>
-                        <span>{{ driver.last_name}}</span>
+                        <span id="id_last_name">{{ driver.last_name}}</span>
                     </div>
 
                     <div class="account-area__item">
                         <p>Отчество:</p>
-                        <span>{{ driver.patronymic }}</span>
+                        <span id="id_patronymic">{{ driver.patronymic }}</span>
                     </div>
 
                     <div class="account-area__item">
                         <p>Номер телефона:</p>
-                        <span>{{ driver.phone|first }}-{{ driver.phone|slice:"1:4" }}-{{ driver.phone|slice:"4:7" }}-{{ driver.phone|slice:"7:11" }}</span>
+                        <span id="id_phone">{{ driver.phone|first }}-{{ driver.phone|slice:"1:4" }}-{{ driver.phone|slice:"4:7" }}-{{ driver.phone|slice:"7:11" }}</span>
                     </div>
 
                     <div class="account-area__item">
                         <p>Email:</p>
-                        <span>{{ driver.email }}</span>
+                        <span id="id_email">{{ driver.email }}</span>
                     </div>
                 </div>
             </div>
 
             <div class="main__tables">
-                <div class="main__table table">
+                <div class="main__table table cars">
                     <h1 class="table__table-title">Автомобили</h1>
                     {% if driver.my_cars.all %}
                         <table>
                             <tr class="table__titles">
                                 <th class="table__title">Номер</th>
                                 <th class="table__title">Марка</th>
-                                <th class="table__title">регион</th>
+                                <th class="table__title">Регион</th>
                                 <th class="table__title">Последний <br>осмотр</th>
                                 <th class="table__title">Активные <br>заявки</th>
                             </tr>
@@ -80,7 +80,7 @@
                     {% endif %}
                 </div>
 
-                <div class="main__table table">
+                <div class="main__table table applications">
                     <h1 class="table__table-title">Заявки</h1>
                     {% if driver.my_apps.all %}
                         <table>
@@ -143,7 +143,7 @@
                     {% endif %}
                 </div>
 
-                <div class="main__table table">
+                <div class="main__table table cards">
                     <h1 class="table__table-title _doc-title">Топливные карты</h1>
                     {% if driver.my_card %}
                         <table>
@@ -171,7 +171,7 @@
                     {% endif %}
                 </div>
 
-                <div class="main__table table">
+                <div class="main__table table documents">
                     <h1 class="table__table-title _doc-title">Документы</h1>
                     {% if driver.my_docs.all %}
                         <table>

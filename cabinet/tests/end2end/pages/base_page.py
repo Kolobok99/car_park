@@ -18,21 +18,14 @@ class BasePage():
     Базовая страница, от которой будут унаследованы все остальные классы.
     """
 
-    # @classmethod
-    # def setUpClass(cls):
-    #     super(cls).setUpClass()
-    #     django.setup()
-    #     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
     def __init__(self, browser, url, timeout=5):
-        super().__init__()
         self.browser = browser
         self.url = url
         self.browser.implicitly_wait(timeout)
 
     def open(self):
         self.browser.get(self.url)
-        # self.browser.get(('%s%s' % (self.live_server_url, '/admin/')))
 
     def is_element_present(self, locator, data):
         """Проверяет наличие элемента на стр."""
@@ -41,3 +34,30 @@ class BasePage():
         except NoSuchElementException:
             return False
         return True
+
+    def is_not_element_present(self, locator, data, timeout=4):
+        """
+        Проверяем, что элемент не появился на странице в течении заданного времени.
+        """
+        try:
+            WebDriverWait(self.browser, timeout).until(
+                EC.presence_of_element_located((locator, data))
+            )
+        except TimeoutException:
+            return True
+        return False
+
+    def user_logout(self):
+        """Выход из ЛК"""
+
+        try:
+            self.browser.find_element(*HeaderLocators.LOGOUT_BTN).click()
+        except NoSuchElementException:
+            assert False, "Элемент logout не найден"
+
+    def user_can_go_to_page_by_header(self, page):
+        """ фывыфвыф """
+        # try:
+            # element =  self.browser.find_element()
+        pass
+

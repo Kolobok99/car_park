@@ -11,6 +11,7 @@ class HeaderLocators:
 
     LOGOUT_BTN = (By.CSS_SELECTOR, ".auth__exit")
 
+    ERROR_404 = (By.XPATH, "//*[contains(@id,'summary')]//span[text() = '(404)']")
 class LoginPageLocators:
 
     # ссылки

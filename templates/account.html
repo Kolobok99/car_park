@@ -52,13 +52,15 @@
             </form>
         </div>
         <div class="main__tables">
-            <div class="main__table table">
+{#      //th[text() = 'Номер']#}
+
+            <div class="main__table table cars">
             <h1 class="table__table-title">Автомобили</h1>
             <table>
                 <tr class="table__titles">
                     <th class="table__title">Номер</th>
                     <th class="table__title">Марка</th>
-                    <th class="table__title">регион</th>
+                    <th class="table__title">Регион</th>
                     <th class="table__title">Последний <br>осмотр</th>
                     <th class="table__title">Активные <br>заявки</th>
                 </tr>
@@ -84,7 +86,7 @@
 
             </table>
         </div>
-            <div class="main__table table">
+            <div class="main__table table apps">
             <h1 class="table__table-title">Заявки</h1>
             <table>
                 <!--  -->
@@ -147,7 +149,7 @@
             </table>
 
         </div>
-            <div class="main__table table">
+            <div class="main__table table cards">
             <h1 class="table__table-title _doc-title">Топливные карты</h1>
             <table>
             <!-- ID -->                            <col style="width:5%">
@@ -179,7 +181,7 @@
             {% endif %}
             </table>
         </div>
-            <div class="main__table table">
+            <div class="main__table table docs">
             <h1 class="table__table-title _doc-title">Документы</h1>
             <button class="table__btn-add-doc">Добавить</button>
             <table>

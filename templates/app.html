@@ -16,51 +16,51 @@
                     <div class="info-app__main-info">
                         <div class="info-app__item">
                             <p class="info-app__title">Заявка</p>
-                            <p>№ {{ app.pk }}</p>
+                            <p id="id_pk">№ {{ app.pk }}</p>
                         </div>
                         <div class="info-app__item">
                             <p class="info-app__title">Срочность</p>
                             {% if app.urgency == 'N' %}
-                                <p>Не срочно (10 дней на выполнение)</p>
+                                <p id="id_urgency">Не срочно (10 дней на выполнение)</p>
                             {% elif app.urgency == 'U' %}
-                                <p>Срочно (7 дней на выполнение)</p>
+                                <p id="id_urgency">Срочно (7 дней на выполнение)</p>
                             {% else %}
-                                <p>Очень срочно (3 дня на выполнение)</p>
+                                <p id="id_urgency">Очень срочно (3 дня на выполнение)</p>
                             {% endif %}
                         </div>
 
                         <div class="info-app__item">
                             <p class="info-app__title">Статус выполнения</p>
                             {% if app.status == 'O' %}
-                                <p style="color: #ffac50">Ожидает рассмотрения</p>
+                                <p id="id_status" style="color: #ffac50">Ожидает рассмотрения</p>
                             {% elif app.status == 'OE' %}
-                                <p style="color: #389b4c">Ожидает подтверждение механика</p>
+                                <p id="id_status" style="color: #389b4c">Ожидает подтверждение механика</p>
                             {% elif app.status == 'V' %}
-                                <p style="color: green">Выполнена</p>
+                                <p id="id_status" style="color: green">Выполнена</p>
                             {% elif app.status == 'P' %}
-                                <p style="color: red">Просрочена</p>
+                                <p id="id_status" style="color: red">Просрочена</p>
                             {% elif app.status == 'T' %}
-                                <p style="color: orange">Отклонена</p>
+                                <p id="id_status" style="color: orange">Отклонена</p>
                             {% endif %}
                         </div>
 
                         <div class="info-app__item">
-                            <p class="info-app__title">Дата создания</p>
+                            <p id="id_start_date"  class="info-app__title">Дата создания</p>
                             <p>{{ app.start_date|date:"d-m-Y" }}</p>
                         </div>
 
                         <div class="info-app__item">
-                            <p class="info-app__title">Дата рассмотрения (ожидаемая)</p>
+                            <p id="id_consideration_date" class="info-app__title">Дата рассмотрения (ожидаемая)</p>
                             <p>21.05.2022</p>
                         </div>
 
                         <div class="info-app__item">
-                            <p class="info-app__title">Дата завершения (ожидаемая)</p>
+                            <p id="id_end_date" class="info-app__title">Дата завершения (ожидаемая)</p>
                             <p>{{ app.end_date|date:"d-m-Y" }}</p>
                         </div>
 
                         <div class="info-app__item">
-                            <p class="info-app__title">Создатель</p>
+                            <p id="id_creator" class="info-app__title">Создатель</p>
                             <p> {{ app.owner.last_name}} {{ app.owner.first_name|slice:'0:1' }}. {{ app.owner.patronymic|slice:"0:1" }} </p>
                         </div>
 
@@ -68,16 +68,16 @@
                         <div class="info-app__item">
                             <p class="info-app__title">Механик</p>
                             {% if app.engineer %}
-                                <p> {{ app.engineer.last_name}} {{ app.engineer.first_name|slice:'0:1' }}. {{ app.engineer.patronymic|slice:"0:1" }} </p>
+                                <p  id="id_engineer"> {{ app.engineer.last_name}} {{ app.engineer.first_name|slice:'0:1' }}. {{ app.engineer.patronymic|slice:"0:1" }} </p>
                             {% else %}
-                                <p>Не выбран</p>
+                                <p  id="id_engineer">Не выбран</p>
                             {% endif %}
                         </div>
 
 
                         <div class="info-app__item">
                             <p class="info-app__title">Авто</p>
-                            <p>
+                            <p  id="id_car">
                                 <a href="{% url 'choose-car' app.car.registration_number %}">
                                     {{ app.car.registration_number|slice:'0:1'}}-{{ app.car.registration_number|slice:'1:4'}}-{{ app.car.registration_number|slice:'4:6'}}
                                 </a>
@@ -87,12 +87,12 @@
                     <div class="info-app__detail">
                         <div class="info-app__item">
                             <p class="info-app__title">Описание</p>
-                            <p class="info-app__description">{{ app.description }}</p>
+                            <p  id="id_description" class="info-app__description">{{ app.description }}</p>
                         </div>
                         {% if app.manager_descr %}
                             <div class="info-app__item">
                                 <p class="info-app__title">Комментарий:</p>
-                                <p class="info-app__description">{{ app.manager_descr }}</p>
+                                <p  id="id_comment" class="info-app__description">{{ app.manager_descr }}</p>
                             </div>
                         {% endif %}
                         {% if app.owner == user %}

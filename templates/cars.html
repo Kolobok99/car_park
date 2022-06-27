@@ -91,12 +91,12 @@
                 <div class="main__information">
                     {% if cars.count %}
                         <form method="post"> {% csrf_token %}
-                            <table class="main__table table" style="text-align: center">
+                            <table class="main__table table cars" style="text-align: center">
                                 <tr class="table__titles">
                                     <th class="table__title">Номер</th>
                                     <th class="table__title">Водитель</th>
                                     <th class="table__title">Марка</th>
-                                    <th class="table__title">регион</th>
+                                    <th class="table__title">Регион</th>
                                     <th class="table__title">Последний <br>осмотр</th>
                                     <th class="table__title">Активные <br>заявки</th>
                                     <th class="table__title"><button class="table__confiscate" type="submit">Изъять</button></th>

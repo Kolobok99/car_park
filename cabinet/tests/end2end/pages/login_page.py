@@ -1,7 +1,7 @@
 from selenium.common import NoSuchElementException
 
 from .base_page import BasePage
-from .locators import LoginPageLocators
+from .locators import LoginPageLocators, CarPageLocators, CarsPageLocators
 
 
 class LoginPage(BasePage):
@@ -9,7 +9,7 @@ class LoginPage(BasePage):
 
 
     def should_be_login_page(self):
-        """ asd"""
+        """ """
         text = ""
         assert self.browser.current_url.endswith(f"{text}"), \
             f"This is not {text} URL."
@@ -62,18 +62,32 @@ class LoginPage(BasePage):
                 'btn_submit': btn_submit
             }
 
-    def manager_can_login_with_valid_data(self, test_manager, password, form_data):
+    def user_login_with_valid_data(self, test_manager, password, form_data):
         """Попытка войти юсера с валидными данными"""
 
-        print(f"{test_manager.email=}")
         form_data['email_input'].send_keys(test_manager.email)
         form_data['pass_input'].send_keys(password)
         form_data['btn_submit'].click()
 
+    def guest_login_with_INvalid_data(self, email, password, form_data):
+        """Попытка войти юсера с валидными данными"""
+
+        form_data['email_input'].send_keys(email)
+        form_data['pass_input'].send_keys(password)
+        form_data['btn_submit'].click()
+
+    def should_be_login_error(self):
+        """Проверка наличия вывода ошибки при авторизации"""
+
+        assert self.is_element_present(*LoginPageLocators.LOGIN_ERROR), \
+            "Сообщение об ошибки входа не найдена"
 
 
-
-
+    def guest_canT_go_to_cars_pages(self, live_server):
+        """Проверка может ли гость попасть на стр. 'автомобили'"""
+        link = '/cars'
+        self.browser.open(live_server.url + link)
+        self.browser.is_not_element_present(*CarsPageLocators.CAR_TITLE_COUNT)
 
 
 

@@ -42,20 +42,37 @@ def browser(request):
     browser.quit()
 
 @pytest.fixture
-def create_manager(db):
+def create_user(db):
+
+    # password = "12345"
+    # MyUser.objects.create_user(
+    #     email="test_manager@mail.com",
+    #     password=password,
+    #     first_name="Иван",
+    #     last_name="Иванов",
+    #     patronymic="Иванович",
+    #     chat_id=1234,
+    #     role=role,
+    #     is_active=True,
+    # )
+    #
+    # my_user = MyUser.objects.first()
+    # print(f"{my_user=}")
+    #
+    # return MyUser.objects.first(), password
+    #
+
     password = "12345"
-    MyUser.objects.create_user(
-        email="test_manager@mail.com",
-        password=password,
-        first_name="Иван",
-        last_name="Иванов",
-        patronymic="Иванович",
-        chat_id=1234,
-        role='m',
-        is_active=True,
-    )
-
-    my_user = MyUser.objects.first()
-    print(f"{my_user=}")
-
-    return MyUser.objects.first(), password
+    def create_manager(role):
+        MyUser.objects.create_user(
+            email="test_manager@mail.com",
+            password=password,
+            first_name="Иван",
+            last_name="Иванов",
+            patronymic="Иванович",
+            chat_id=1234,
+            role=role,
+            is_active=True,
+        )
+        return MyUser.objects.first(), password
+    return create_manager

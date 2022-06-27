@@ -254,6 +254,7 @@ def post_save(created, **kwargs):
                 content=f"Вам добавлена новая карта!",
                 content_object=instance
             )
+        instance.save()
 
 
 @receiver(pre_save, sender=FuelCard)
