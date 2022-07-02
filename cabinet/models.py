@@ -238,9 +238,9 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
                 if not name.isalpha():
                     errors[key] = ValidationError(f'{verbose_name} может состоять только из Кириллицы!')
 
-        name_validate(first_name, "'имя'", 'first_name')
-        name_validate(last_name, "'фамилия'", 'last_name')
-        name_validate(patronymic, "'отчество'", 'patronymic')
+        name_validate(first_name, "имя", 'first_name')
+        name_validate(last_name, "фамилия", 'last_name')
+        name_validate(patronymic, "отчество", 'patronymic')
 
         if errors:
             # Вызывает ValidationError (from DRF)

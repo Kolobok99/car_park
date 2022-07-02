@@ -25,8 +25,8 @@
                             <div>{{field}}</div>
                             {% if field.errors%}
                                 {% for error in field.errors %}
-                                    <div style="color: red; opacity: 1;">
-                                        {{error}}
+                                    <div class="errors" style="color: red; opacity: 1;">
+                                        <span>{{error}}</span>
                                     </div>
                                 {% endfor %}
                             {% endif %}

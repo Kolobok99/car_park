@@ -207,6 +207,16 @@ class FuelCardChangeBalance(forms.ModelForm):
 
     action = forms.CharField(widget=forms.HiddenInput(), initial="change_balance")
 
+    def clean(self):
+        cleaned_data = super().clean()
+        errors = {}
+        new_balance =cleaned_data['balance']
+        if new_balance > self.instance.limit:
+            errors['balance'] = 'Баланс превышает лимит!'
+        if errors:
+            raise ValidationError(errors)
+        return cleaned_data
+
     class Meta:
         model = models.FuelCard
         fields = ('balance', )

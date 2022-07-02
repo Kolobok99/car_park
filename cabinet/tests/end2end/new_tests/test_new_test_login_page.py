@@ -22,7 +22,7 @@ class TestLoginPage():
         # Гость переходит на стр. авторизации
         page.open()
         # Гость проверяет, что он на стр. "авторизации"
-        page.should_be__page('')
+        page.should_be_login_page(live_server)
 
 
     # @pytest.mark.skip
@@ -40,7 +40,7 @@ class TestLoginPage():
         # Инициализация объекта "Регистрация"
         reg_page = RegistrationPage(browser, browser.current_url)
         # Гость проверяет, что он на стр. "/registration"
-        reg_page.should_be__page('/registration/')
+        reg_page.should_be_registration_page()
 
     @pytest.mark.xfail
     def test_quest_can_go_to_password_change_page(self, browser, live_server):
@@ -52,7 +52,7 @@ class TestLoginPage():
         page.open()
 
         # Гость нажимает на кнопку "Регистрация"
-        page.go_to__page_by_href_btn(LoginPageLocators.PASSWORD_CHANGE_LINK, 'смена пароля')
+        page.go_to__page_by_btn(LoginPageLocators.LINK_BTN_PASSWORD_CHANGE, 'смена пароля')
         # Инициализация объекта "Регистрация"
         pass_change_page = PasswordChange(browser, browser.current_url)
         # Гость проверяет, что он на стр. "/registration"
@@ -68,7 +68,7 @@ class TestLoginPage():
         page.open()
 
         # Гость нажимает на кнопку "Активация аккаунта"
-        page.go_to__page_by_href_btn(LoginPageLocators.ACC_ACTIVATION_LINK, 'активация аккаунта')
+        page.go_to__page_by_btn(LoginPageLocators.LINK_BTN_ACC_ACTIVATION, 'активация аккаунта')
         # Инициализация объекта "Регистрация"
         pass_change_page = AccountActivationPage(browser, browser.current_url)
         # Гость проверяет, что он на стр. "/registration"

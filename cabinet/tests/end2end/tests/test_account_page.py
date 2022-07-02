@@ -37,7 +37,7 @@ class TestAccountPage:
     def test_manager_can_logount(self, browser, live_server, create_user):
         """Тест: менеджер может выйти из ЛК"""
         page = self.manager_login(browser, live_server, create_user)
-        page.user_logout()
+        page.logout()
         login_page = LoginPage(browser, browser.current_url)
         login_page.guest_canT_go_to_cars_pages(live_server)
 

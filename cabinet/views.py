@@ -427,16 +427,16 @@ class AccountView(LoginRequiredMixin, UpdateView):
             doc_to_delete = models.UserDoc.objects.get(pk=doc_pk_to_delete)
             doc_to_delete.delete()
             messages.success(self.request, "Документ успешно удален!")
-            return HttpResponseRedirect("")
+            return HttpResponseRedirect("/account/")
 
         if form.is_valid():
             """Формирует контекст сообщений"""
             if action_type == 'change_balance':
-                messages.success(self.request, "Баланс изменен!")
+                messages.success(self.request, "<span>Баланс изменен!</span>")
             elif action_type == 'doc_create':
-                messages.success(self.request, "Документ добавлен!")
+                messages.success(self.request, "<span>Документ добавлен!</span>")
             elif action_type == 'user_update':
-                messages.success(self.request, "Данные изменены!")
+                messages.success(self.request, "<span>Данные изменены!</span>")
 
             return self.form_valid(form)
         else:
@@ -473,7 +473,7 @@ class EmailConfirmView(FormView):
             new_driver.is_active = True
             new_driver.activation_code = ''
             new_driver.save()
-            return HttpResponseRedirect('')
+            return HttpResponseRedirect('/')
         except:
             return HttpResponseRedirect('/registration')
 

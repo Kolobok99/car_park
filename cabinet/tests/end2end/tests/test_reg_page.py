@@ -35,7 +35,7 @@ class TestRegistrationPage():
         page.should_be_login_url()
 
 
-    def test_quest_can_go_to_registration_page(self, browser, live_server):
+    def test_quest_can_go_to_login_page(self, browser, live_server):
         """Тест: возможность перехода на стр. авторизации"""
         pass
 

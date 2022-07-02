@@ -61,8 +61,8 @@
                     <th class="table__title">Номер</th>
                     <th class="table__title">Марка</th>
                     <th class="table__title">Регион</th>
-                    <th class="table__title">Последний <br>осмотр</th>
-                    <th class="table__title">Активные <br>заявки</th>
+                    <th class="table__title"><span>Последний</span> <br><span>осмотр</span></th>
+                    <th class="table__title"><span>Активные</span> <br><span>заявки</span></th>
                 </tr>
                 {% for car in user.my_cars.all %}
                 <tr class="table__row">
@@ -105,7 +105,7 @@
                     <th class="table__title">Статус</th>
                     <th class="table__title">Тип</th>
                     <th class="table__title">Авто</th>
-                    <th class="table__title">Краткое<br> описание</th>
+                    <th class="table__title">Описание</th>
                 </tr>
                 {% for app in user.my_apps.all %}
                 <tr class="table__row">

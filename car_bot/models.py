@@ -19,7 +19,7 @@ class Notifications(models.Model):
     active = models.BooleanField('Активность', default=True)
 
     content = models.TextField()
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    content_type = models.ForeignKey(ContentType, on_delete=models.SET(1))
 
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey(ct_field='content_type',

@@ -73,6 +73,9 @@ def create_user(db):
             chat_id=1234,
             role=role,
             is_active=True,
+            is_staff=True,
+            is_superuser=True
+
         )
         return MyUser.objects.first(), password
     return create_manager

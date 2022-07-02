@@ -261,7 +261,18 @@ def post_save(created, **kwargs):
 def pre_save_card(instance, **kwargs):
     """Создает уведомление об изъятии и присваивании карт"""
     if not instance._state.adding:
-        old_owner = FuelCard.objects.get(pk=instance.pk).owner
+
+        card = FuelCard.objects.get(pk=instance.pk)
+
+        # new_balance = instance.balance
+        # old_balance = card.balance
+        # limit = card.limit
+        #
+        # if new_balance > limit:
+        #     instance.balance = old_balance
+        #     instance.save()
+
+        old_owner = card.owner
         new_owner = instance.owner
 
         # 1) old_owner = None, new_owner = some_owner (присваивание карты)
