@@ -43,25 +43,6 @@ def browser(request):
 
 @pytest.fixture
 def create_user(db):
-
-    # password = "12345"
-    # MyUser.objects.create_user(
-    #     email="test_manager@mail.com",
-    #     password=password,
-    #     first_name="Иван",
-    #     last_name="Иванов",
-    #     patronymic="Иванович",
-    #     chat_id=1234,
-    #     role=role,
-    #     is_active=True,
-    # )
-    #
-    # my_user = MyUser.objects.first()
-    # print(f"{my_user=}")
-    #
-    # return MyUser.objects.first(), password
-    #
-
     password = "12345"
     def create_manager(role):
         MyUser.objects.create_user(
@@ -79,3 +60,8 @@ def create_user(db):
         )
         return MyUser.objects.first(), password
     return create_manager
+
+@pytest.fixture
+def create_car(db):
+    def create_car(reg_number, brand, region_code, last_inspection):
+        pass

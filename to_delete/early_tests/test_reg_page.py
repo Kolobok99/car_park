@@ -1,14 +1,4 @@
-import time
-from unittest import TestCase
-
-import pytest
-
-from cabinet.models import MyUser, CarBrand
-from cabinet.tests.end2end.pages.account_page import AccountPage
-from cabinet.tests.end2end.pages.base_page import BasePage
-from cabinet.tests.end2end.pages.reg_page import RegistrationPage
-from django.test import LiveServerTestCase
-from cabinet.tests.end2end.pages.login_page import LoginPage
+from to_delete.early_pages import RegistrationPage
 
 LINK = "/"
 class TestRegistrationPage():

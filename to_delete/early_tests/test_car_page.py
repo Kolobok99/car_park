@@ -1,10 +1,5 @@
 import pytest
 
-from cabinet.models import MyUser, CarBrand
-from cabinet.tests.end2end.pages.account_page import AccountPage
-from cabinet.tests.end2end.pages.reg_page import RegistrationPage
-from cabinet.tests.end2end.pages.login_page import LoginPage
-
 LINK = " "
 class TestCarPage:
 

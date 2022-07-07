@@ -109,15 +109,17 @@
                                       {% endif %}
                                   </td>
                                   <td class="table__cell">
-                                      {% if app.status == 'O' %}
-                                      Ожидает рассмотрения
-                                      {% elif app.status == 'R' %}
-                                      Рассмотрена
-                                      {% elif app.status == 'V' %}
-                                      Выполнена
-                                      {% else %}
-                                      Просрочена
-                                      {% endif %}
+                                    {% if app.status == 'O' %}
+                                        <p id="id_status" style="color: #ffac50">Ожидает рассмотрения</p>
+                                    {% elif app.status == 'OE' %}
+                                        <p id="id_status" style="color: #389b4c">Ожидает подтверждение механика</p>
+                                    {% elif app.status == 'V' %}
+                                        <p id="id_status" style="color: green">Выполнена</p>
+                                    {% elif app.status == 'P' %}
+                                        <p id="id_status" style="color: red">Просрочена</p>
+                                    {% elif app.status == 'T' %}
+                                        <p id="id_status" style="color: orange">Отклонена</p>
+                                    {% endif %}
                                   </td>
                                   <td class="table__cell">{{ app.type }}</td>
                                   <td class="table__cell">{{ app.owner.last_name}} {{ app.owner.first_name|slice:'0:1' }}. {{ app.owner.patronymic|slice:"0:1" }}.</td>

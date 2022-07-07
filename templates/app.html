@@ -169,7 +169,7 @@
 
     <form method="post">{% csrf_token %}
         <div class="confirm-delete">
-            <h1>Удалить заявку №{{ application.pk }}</h1>
+            <h1>Удалить заявку №{{ app.pk }}</h1>
             <input type="hidden" name="action" value="delete-yes">
             <button type="submit">Да</button>
             <button  type="reset" id="notsubmit">Нет</button>
@@ -178,7 +178,7 @@
 
     <form method="post">{% csrf_token %}
         <div class="confirm-refuse">
-            <h1>Отправить на дороботку<br> заявку №{{ application.pk }}</h1>
+            <h1>Отправить на дороботку<br> заявку №{{ app.pk }}</h1>
             <input type="hidden" name="action" value="refuse-yes">
             <button type="submit">Да</button>
             <button  type="reset" id="notsubmit-refuse">Нет</button>

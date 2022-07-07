@@ -48,10 +48,10 @@ class CarsCreateAndFilterView(Context, LoginRequiredMixin, CreateView):
         if action == 'owner-none':
             # Изъятие автомобилей
             none_owner_pk = self.request.POST.getlist('owner_refuse_id')
-            Car.objects.filter(pk__in=none_owner_pk).update(owner=None)
+            models.Car.objects.filter(pk__in=none_owner_pk).update(owner=None)
             # Удаление автомобилей
             delete_owner_pk = self.request.POST.getlist('owner_delete_id')
-            Car.objects.filter(pk__in=delete_owner_pk).delete()
+            models.Car.objects.filter(pk__in=delete_owner_pk).delete()
         else:
             return super().post(request, *args, **kwargs)
         return HttpResponseRedirect("")

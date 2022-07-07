@@ -106,9 +106,8 @@
                                 {% for car in cars %}
                                     <tr class="table__row">
                                         <td class="table__cell">
-                                            <a href="{{ car.get_absolute_url }}">
-                                                {{ car.registration_number|slice:'0:1'}}-{{ car.registration_number|slice:'1:4'}}-{{ car.registration_number|slice:'4:6'}}
-                                            </a>
+                                            <a href="{{ car.get_absolute_url }}">{{ car.registration_number|slice:'0:1'}}-{{ car.registration_number|slice:'1:4'}}-{{ car.registration_number|slice:'4:6'}}</a>
+
                                         </td>
                                         <td class="table__cell"><a href="{{ car.owner.get_absolute_url }}">{{ car.owner.last_name}} {{ car.owner.first_name|first}}.{{ car.owner.patronymic|first}}.</a></td>
                                         <td class="table__cell">{{ car.brand }}</td>

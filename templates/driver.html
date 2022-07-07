@@ -190,8 +190,8 @@
                             {% for doc in driver.my_docs.all %}
                                 <tr class="table__row">
                                     <td class="table__cell">{{ doc.type }}</td>
-                                    <td class="table__cell">{{ doc.date_start|date:"d-m-Y"}}</td>
-                                    <td class="table__cell">{{ doc.date_end|date:"d-m-Y"}}</td>
+                                    <td class="table__cell">{{ doc.start_date|date:"d-m-Y"}}</td>
+                                    <td class="table__cell">{{ doc.end_date|date:"d-m-Y"}}</td>
                                     <td class="table__cell">
                                         <button class="table__btn-delete-app" id="doc-{{ doc.pk }}" style="background: red">Удалить</button>
                                     </td>

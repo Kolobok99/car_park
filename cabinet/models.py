@@ -410,7 +410,6 @@ class TypeOfAppl(models.Model):
     """
 
     title = models.CharField('Наименование', max_length=50)
-    car_is = models.BooleanField('Машина?', default=True)
 
     def __str__(self):
         return self.title

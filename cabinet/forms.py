@@ -6,6 +6,8 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
 
 # -----------------------  ADMIN -----------------------
+from cabinet.models import MyUser
+
 
 class MyUserCreationForm(UserCreationForm):
     """Форма регистрации юсера, используемая в admin-gfy"""
@@ -263,7 +265,10 @@ class AppCreateForm(AppForm):
             # сразу меняет ее стутус на "Ожидает рассмотрения механика"
             self.instance.status = 'OE'
             # Привязывает заявку к переданному инстансу механика
-            self.instance.engineer = self.cleaned_data['engineer']
+            if self.cleaned_data['engineer']:
+                self.instance.engineer = self.cleaned_data['engineer']
+            else:
+                self.instance.engineer = MyUser.objects.filter(role='e').first()
         return super(AppForm, self).save()
 
 class AppUpdateForm(AppForm):
