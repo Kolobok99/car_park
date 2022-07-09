@@ -6,7 +6,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
 
 # -----------------------  ADMIN -----------------------
-from cabinet.models import MyUser
+from cabinet.models import MyUser, TypeOfAppl, CarBrand
 
 
 class MyUserCreationForm(UserCreationForm):
@@ -31,6 +31,9 @@ class MyUserChangeForm(UserChangeForm):
 class CarForm(forms.ModelForm):
     """Базовая форма машины"""
 
+    owner = forms.ModelChoiceField(queryset=MyUser.objects.filter(role='d'), empty_label="не выбран", label='Закрепить за', required=False)
+    brand = forms.ModelChoiceField(queryset=CarBrand.objects.all(), empty_label=None, label='Марка')
+
     class Meta:
         model = models.Car
         fields = ('registration_number',
@@ -46,6 +49,7 @@ class CarForm(forms.ModelForm):
             'last_inspection': 'Последний осмотр',
             'owner': 'Закрепить за',
         }
+
 
 class CarAddForm(CarForm):
     """
@@ -141,6 +145,7 @@ class UserCreateForm(forms.ModelForm):
         }
 
 
+
 class UserUpdateForm(forms.ModelForm):
     """
         Форма: обновление данных пользователя
@@ -181,10 +186,10 @@ class DriverActivationForm(forms.Form):
 
 class FuelCardAddForm(forms.ModelForm):
     """
-        Форма: добавление данных
+        Форма: добавление карты
     """
 
-    owner = forms.ModelChoiceField(queryset=models.MyUser.objects.filter(my_card__isnull=True), required=False)
+    owner = forms.ModelChoiceField(queryset=models.MyUser.objects.filter(my_card__isnull=True, role='d'), required=False)
 
     def clean(self):
         cleaned_data = super().clean()
@@ -231,7 +236,7 @@ class AppForm(forms.ModelForm):
     """
         Базовая форма заявки
     """
-
+    type = forms.ModelChoiceField(empty_label=None, queryset=TypeOfAppl.objects.all(), label='Тип')
     class Meta:
         model = models.Application
         fields = ('type',
@@ -242,13 +247,14 @@ class AppForm(forms.ModelForm):
             'urgency': forms.widgets.RadioSelect(),
         }
 
+
 class AppCreateForm(AppForm):
     """
         Форма: создание заявки
     """
 
     action = forms.CharField(widget=forms.HiddenInput(), initial="app_create")
-    engineer = forms.ModelChoiceField(queryset=models.MyUser.objects.filter(role='e'), required=False)
+    engineer = forms.ModelChoiceField(queryset=models.MyUser.objects.filter(role='e'), required=False, empty_label="не выбран", label='Механик')
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
@@ -298,7 +304,7 @@ class ManagerCommitAppForm(forms.ModelForm):
 
     action = forms.CharField(widget=forms.HiddenInput(), initial="app_confirm")
 
-    engineer = forms.ModelChoiceField(queryset=models.MyUser.objects.filter(role='e'), required=True, label='Выберите инженера')
+    engineer = forms.ModelChoiceField(queryset=models.MyUser.objects.filter(role='e'), required=True, label='Выберите инженера', empty_label=None)
 
     def save(self, **kwargs):
         self.instance.status = 'OE'

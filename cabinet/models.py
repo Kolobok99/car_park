@@ -164,7 +164,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField('Имя', max_length=20)
     last_name = models.CharField('Фамилия', max_length=20, )
     patronymic = models.CharField('Отчество', max_length=20)
-    phone = models.CharField('Номер телефона', max_length=11, validators=[
+    phone = models.CharField('Номер телефона', max_length=11, unique=True, validators=[
         validators.RegexValidator("^\d{11}$", "Номер телефона состоит из 11 цифр"),
 
     ])

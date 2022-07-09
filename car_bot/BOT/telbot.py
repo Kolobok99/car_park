@@ -1,5 +1,7 @@
 # импортируем функцию создания объекта бота
 # from django.conf import settings
+import time
+
 from telebot import TeleBot
 # импортируем основные настройки проекта
 from car_bot.BOT.settings import config
@@ -44,5 +46,13 @@ class TelBot:
 
 
 if __name__ == '__main__':
-    bot = TelBot()
-    bot.run_bot()
+    while True:
+        try:
+            bot = TelBot()
+            bot.run_bot()
+
+        except Exception as e:
+            print(e)  # или просто print(e) если у вас логгера нет,
+            # или import traceback; traceback.print_exc() для печати полной инфы
+            # time.sleep(15)
+

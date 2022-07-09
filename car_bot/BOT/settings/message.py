@@ -39,5 +39,6 @@ applications = """
 # словарь ответов пользователю
 MESSAGES = {
     'notifications': notifications,
-    'applications': applications
+    'applications': applications,
+    'settings': settings,
 }

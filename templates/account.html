@@ -126,15 +126,15 @@
                     </td>
                     <td class="table__cell">
                         {% if app.status == 'O' %}
-                            <p style="color: #ffac50">Ожидает рассмотрения</p>
-                        {% elif app.status == 'R' %}
-                            <p style="color: #389b4c">Рассмотрена</p>
+                            <p id="id_status" style="color: #ffac50">Ожидает рассмотрения</p>
+                        {% elif app.status == 'OE' %}
+                            <p id="id_status" style="color: #389b4c">Ожидает подтверждение механика</p>
                         {% elif app.status == 'V' %}
-                            <p style="color: green">Выполнена</p>
+                            <p id="id_status" style="color: green">Выполнена</p>
                         {% elif app.status == 'P' %}
-                            <p style="color: red">Просрочена</p>
+                            <p id="id_status" style="color: red">Просрочена</p>
                         {% elif app.status == 'T' %}
-                            <p style="color: orange">Отклонена</p>
+                            <p id="id_status" style="color: orange">Отклонена</p>
                         {% endif %}
                     </td>
                     <td class="table__cell">{{ app.type }}</td>

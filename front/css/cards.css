@@ -233,6 +233,8 @@ body {
 .auth__avatar {
   border-radius: 50%;
   border: 1px solid #F5F5F5;
+  width: 60px;
+  height: 60px;
 }
 
 .auth__settings {

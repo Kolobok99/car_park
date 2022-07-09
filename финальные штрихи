@@ -1,0 +1,8 @@
+1. routers
+2. API в отдельное приложение
+3. удалить ненужные файлы
+4. аннотация типов
+5. перенос валидации в validation.py
+6. docker - django + (celery) + (telebot)
+7. docker - MySql
+8.

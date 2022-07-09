@@ -41,7 +41,7 @@ class Keyboards:
         user = MyUser.objects.get(chat_id=message.chat.id)
         self.markup = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
 
-        nots_btn = KeyboardButton(text="уведомления")
+        nots_btn = KeyboardButton(text="Уведомления")
         about_btn = KeyboardButton(text="О программе")
 
         self.markup.add(nots_btn, about_btn)

@@ -134,15 +134,13 @@ def post_save_cars(created, **kwargs):
     """Создает директорию для нового авто"""
     instance = kwargs['instance']
     if created:
-        try:
-            # создание папки для машины
-            os.mkdir(f'{settings.MEDIA_ROOT}/cars/{instance.registration_number}')
-            # создание папки для хранения аватарок
-            os.mkdir(f'{settings.MEDIA_ROOT}/cars/{instance.registration_number}/avatars')
-            # создание папки для хранения документов
-            os.mkdir(f'{settings.MEDIA_ROOT}/cars/{instance.registration_number}/docs')
-        except:
-            pass
+        # создание папки для машины
+        os.mkdir(f'{settings.MEDIA_ROOT}/cars/{instance.registration_number}')
+        # создание папки для хранения аватарок
+        os.mkdir(f'{settings.MEDIA_ROOT}/cars/{instance.registration_number}/avatars')
+        # создание папки для хранения документов
+        os.mkdir(f'{settings.MEDIA_ROOT}/cars/{instance.registration_number}/docs')
+
         # Если у машины задан водитель
         if instance.owner:
             # Уведомлению водителю о новом авто

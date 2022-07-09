@@ -35,6 +35,8 @@
                                 <p id="id_status" style="color: #ffac50">Ожидает рассмотрения</p>
                             {% elif app.status == 'OE' %}
                                 <p id="id_status" style="color: #389b4c">Ожидает подтверждение механика</p>
+                             {% elif app.status == 'REP' %}
+                                <p id="id_status" style="color: #389b4c">Ремонтируется</p>
                             {% elif app.status == 'V' %}
                                 <p id="id_status" style="color: green">Выполнена</p>
                             {% elif app.status == 'P' %}

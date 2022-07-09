@@ -146,8 +146,8 @@ class HandlerAllText(Handler):
         else:
             self.bot.send_message(
                 message.chat.id,
-                "У вас нет активных заявок!",
-                reply_markup=self.keybords.set_start_menu()
+                "У вас нет новых заявок!",
+                reply_markup=self.keybords.set_start_menu(message)
             )
 
     def pressed_btn_active_apps(self, message):
