@@ -89,8 +89,12 @@ class FuelCard(models.Model):
 
 
     limit = models.PositiveIntegerField('Лимит', blank=True)
-    number = models.CharField('Номер', unique=True, max_length=16,
-                              validators=[validators.MinLengthValidator(16)], blank=True)
+    number = models.CharField('Номер', unique=True, max_length=16, blank=True,
+                              validators=[
+                                  validators.RegexValidator(
+                                      "^\d{16}$",
+                                      "Номер топливной карты состоит из 16 цифр"
+                                  )],)
 
     owner = models.OneToOneField('MyUser', verbose_name='Владелец', on_delete=models.SET_NULL,
                                  related_name='my_card', blank=True, null=True)
@@ -248,7 +252,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
                 raise restValid(errors)
             except:
                 # Если метод вызван из обычной формы,
-                # вызывает станадртную ValidationError (from django.core.exceptions)
+                # вызывает стандартную ValidationError (from django.core.exceptions)
                 raise ValidationError(errors)
         return cleaned_data
 
@@ -276,7 +280,13 @@ class Document(models.Model):
             errors['start_date'] = ValidationError("Дата окончания меньше даты выпуска")
 
         if errors:
-            raise ValidationError(errors)
+            # Вызывает ValidationError (from DRF)
+            try:
+                raise restValid(errors)
+            except:
+                # Если метод вызван из обычной формы,
+                # вызывает стандартную ValidationError (from django.core.exceptions)
+                raise ValidationError(errors)
         return cleaned_data
 
     class Meta:

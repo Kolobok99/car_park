@@ -1,0 +1,30 @@
+version: '3.7'
+services:
+  car_db:
+    image: mysql:latest
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_DATABASE: 'car_db'
+#      MYSQL_USER: 'root'
+      MYSQL_PORT: 3306
+      MYSQL_PASSWORD: 'root'
+      MYSQL_ROOT_PASSWORD: 'root'
+    restart: always
+    volumes:
+#      - ./db_django:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
+
+  web:
+     build: .
+     command: python manage.py runserver 0.0.0.0:8000
+#     command: pwd
+     volumes:
+       - .:/usr/src/car_park
+     ports:
+       - 8000:8000
+     depends_on:
+       - car_db
+
+volumes:
+  mysql-data:

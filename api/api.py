@@ -1,11 +1,10 @@
-from rest_framework import status, decorators
-from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView
+from rest_framework import status
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ViewSet
-
-from cabinet.API import permissions
-from cabinet.API.serializers import CarSerializer, CarCreateSerializer, DriverSerializer, AutoDocsSerializer, \
+from rest_framework.decorators import action
+from api import permissions
+from api.serializers import CarSerializer, DriverSerializer, AutoDocsSerializer, \
     UserDocsSerializer, FuelCardSerializer, ApplicationSerializer, RegistrationSerializer
 from cabinet.models import Car, MyUser, AutoDoc, UserDoc, FuelCard, Application
 from cabinet.services.filtration import filtration_car, filtration_driver, filtration_documents, \
@@ -30,6 +29,8 @@ class CarAPIViewSet(ModelViewSet):
 
         return super(CarAPIViewSet, self).get_permissions()
     # @decorators.action(permission_classes=(permissions.IsManagerOrOwner, ))
+
+    @action(methods=['get'], detail=False)
     def filtration(self, request):
         """
         :param:
@@ -46,6 +47,7 @@ class CarAPIViewSet(ModelViewSet):
         serializer = CarSerializer(queryset, many=True)
         return Response(serializer.data)
 
+    @action(methods=['post'], detail='False')
     def owner_none(self, request, *args, **kwargs):
         """
         Удаляет владельца у переданного списка машин
@@ -66,6 +68,7 @@ class CarAPIViewSet(ModelViewSet):
         else:
             return Response({"error": "Некорректный формат"})
 
+    @action(methods=['post'], detail='False')
     def list_to_delete(self, request, *args, **kwargs):
         """ Удаляет список машин  """
         action = request.data.get('action')
@@ -93,6 +96,7 @@ class DriverAPIViewSet(ModelViewSet):
 
         return super().get_permissions()
 
+    @action(methods=['get'], detail='False')
     def filtration(self, request):
         """
         :param:
@@ -130,6 +134,7 @@ class AutoDocsAPIViewSet(ModelViewSet):
 
         return super().get_permissions()
 
+    @action(methods=['get'], detail='False')
     def filtration(self, request):
         """
         :param:
@@ -164,6 +169,7 @@ class DriverDocsAPIViewSet(ModelViewSet):
 
         return super().get_permissions()
 
+    @action(methods=['get'], detail='False')
     def filtration(self, request):
         """
         :param:
@@ -194,6 +200,7 @@ class CardsAPIViewSet(ModelViewSet):
         #     self.permission_classes = [IsAdminUser, ]
         return super().get_permissions()
 
+    @action(methods=['get'], detail='False')
     def filtration(self, request):
 
         """
@@ -212,6 +219,7 @@ class CardsAPIViewSet(ModelViewSet):
         serializer = FuelCardSerializer(queryset, many=True)
         return Response(serializer.data)
 
+    @action(methods=['post'], detail='False')
     def owner_none(self, request, *args, **kwargs):
         """
         Удаляет владельца у переданного списка карт
@@ -226,6 +234,7 @@ class CardsAPIViewSet(ModelViewSet):
         else:
             return Response({"error": "Некорректный формат"})
 
+    @action(methods=['post'], detail='False')
     def list_to_delete(self, request, *args, **kwargs):
         """ Удаляет список машин  """
         action = request.data.get('action')
@@ -250,6 +259,7 @@ class ApplicationsPIViewSet(ModelViewSet):
 
         return super().get_permissions()
 
+    @action(methods=['get'], detail='False')
     def filtration(self, request):
         """
         :param:
@@ -285,6 +295,7 @@ class UserAPIViewSet(ModelViewSet):
     # permission_classes = [AllowAny]
 
     # Создаём метод для создания нового пользователя
+    @action(methods=['post'], detail='False')
     def create(self, request, *args, **kwargs):
         # Добавляем UserRegistrSerializer
         serializer = RegistrationSerializer(data=request.data)

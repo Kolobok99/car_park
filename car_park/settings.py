@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'simple_history',
 
     'cabinet',
-    'car_bot'
+    'car_bot',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -81,18 +82,28 @@ WSGI_APPLICATION = 'car_park.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
+#
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'db_car_park',
+#         'USER': 'root',
+#         'PASSWORD': 'rootroot',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#     }
+# }
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'db_car_park',
+        'NAME': 'car_db',
         'USER': 'root',
-        'PASSWORD': 'rootroot',
-        'HOST': 'localhost',
+        'PASSWORD': 'root',
+        'HOST': 'car_db',
         'PORT': '3306',
     }
 }
-
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
