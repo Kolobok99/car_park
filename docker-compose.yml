@@ -15,18 +15,43 @@ services:
 #      - ./db_django:/var/lib/mysql
       - mysql-data:/var/lib/mysql
 
-  web:
-     build: .
+  django:
+     container_name: car_park
+     build:
+       context: ./
+       dockerfile: Dockerfile
      command:
-       bash -c "python manage.py migrate &&
-       python manage.py runserver 0.0.0.0:8000"
+#       ./wait-for-it.sh car_db:3306 &&
+       bash -c "python manage.py wait_for_db
+       && python manage.py migrate
+       && python manage.py runserver 0.0.0.0:8000
+       "
 #     command: pwd
      volumes:
        - .:/usr/src/car_park
      ports:
        - 8000:8000
      depends_on:
+       - redis
        - car_db
 
+  redis:
+    image: redis:alpine
+  celery:
+    restart: always
+    build:
+      context: .
+    command: celery -A car_park worker -l info
+    volumes:
+      - .:/usr/src/car_park
+    environment:
+      - DB_HOST=car_db
+      - DB_NAME=car_db
+      - DB_USER=mysql
+      - DB_PASS=123456
+    depends_on:
+      - car_db
+      - redis
+      - django
 volumes:
   mysql-data:

@@ -157,8 +157,12 @@ LOGIN_URL = '/login/'
 
 
 
+# #REDIS:
+# REDIS_HOST = '0.0.0.0'
+# REDIS_PORT = '6379'
+
 #REDIS:
-REDIS_HOST = '0.0.0.0'
+REDIS_HOST = 'redis'
 REDIS_PORT = '6379'
 
 #CELERY
