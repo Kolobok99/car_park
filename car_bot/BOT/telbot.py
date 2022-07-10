@@ -46,14 +46,14 @@ class TelBot:
 
 
 if __name__ == '__main__':
-    while True:
-        try:
-            bot = TelBot()
-            bot.run_bot()
+    # while True:
+    #     try:
+    bot = TelBot()
+    bot.run_bot()
 
-        except Exception as e:
-            time.sleep(10)
-            print(e)  # или просто print(e) если у вас логгера нет,
-            # или import traceback; traceback.print_exc() для печати полной инфы
-            # time.sleep(15)
+        # except Exception as e:
+        #     time.sleep(10)
+        #     print(e)  # или просто print(e) если у вас логгера нет,
+        #     # или import traceback; traceback.print_exc() для печати полной инфы
+        #     # time.sleep(15)
 
