@@ -4,8 +4,8 @@ import time
 
 from telebot import TeleBot
 # импортируем основные настройки проекта
-from car_bot.BOT.settings import config
 # импортируем главный класс-обработчик бота
+from settings import config
 from car_bot.BOT.handlers.handler_main import HandlerMain
 
 
@@ -52,6 +52,7 @@ if __name__ == '__main__':
             bot.run_bot()
 
         except Exception as e:
+            time.sleep(10)
             print(e)  # или просто print(e) если у вас логгера нет,
             # или import traceback; traceback.print_exc() для печати полной инфы
             # time.sleep(15)

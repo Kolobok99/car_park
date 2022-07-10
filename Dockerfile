@@ -2,13 +2,14 @@
 # которого будет создан контейнер
 FROM python:3.8
 
+# Создаем рабочую директорию внутри контейнера
+WORKDIR /usr/src/car_park
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+ENV PATH=$PATH:/usr/src/car_park
+ENV PYTHONPATH /usr/src/car_park
 
-
-# Создаем рабочую директорию внутри контейнера
-WORKDIR /usr/src/car_park
 
 # копируем файл req.txt
 COPY ./req.txt /usr/src/req.txt
