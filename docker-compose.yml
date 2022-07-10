@@ -6,9 +6,9 @@ services:
       - '3306:3306'
     environment:
       MYSQL_DATABASE: 'car_db'
-      MYSQL_USER: 'root'
+      MYSQL_USER: 'car_manager'
       MYSQL_PORT: 3306
-      MYSQL_PASSWORD: 'root'
+      MYSQL_PASSWORD: '123456'
       MYSQL_ROOT_PASSWORD: 'root'
     restart: always
     volumes:
@@ -17,7 +17,9 @@ services:
 
   web:
      build: .
-     command: python manage.py runserver 0.0.0.0:8000
+     command:
+       bash -c "python manage.py migrate &&
+       python manage.py runserver 0.0.0.0:8000"
 #     command: pwd
      volumes:
        - .:/usr/src/car_park

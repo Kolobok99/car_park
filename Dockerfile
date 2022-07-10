@@ -11,7 +11,7 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /usr/src/car_park
 
 # копируем файл req.txt
-COPY ./req.txt /usr/src/requirements.txt
+COPY ./req.txt /usr/src/req.txt
 
 # выполняем установу зависимостей
 RUN pip install --upgrade pip && pip install -r /usr/src/req.txt
