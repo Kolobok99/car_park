@@ -36,11 +36,13 @@
                 <div class="header__auth auth">
 
                     <a href="{% url 'account' %}" class="auth__settings">
-                        <img style=" border-radius: 50%;
-                                     border: 1px solid #F5F5F5;
-                                     width: 60px;
-                                     height: 60px;"
-                             class="auth__avatar" src="{{ user.image.url }}" alt="avatar">
+                        {% if user.image %}
+                            <img style=" border-radius: 50%;
+                                         border: 1px solid #F5F5F5;
+                                         width: 60px;
+                                         height: 60px;"
+                                 class="auth__avatar" src="{{ user.image.url }}" alt="avatar">
+                        {% endif %}
                     </a>
 {#                    {{ user.role }}#}
 {#                    {{ user.pk }}#}
