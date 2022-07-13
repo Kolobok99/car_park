@@ -4,8 +4,8 @@
 4. аннотация типов
 5. перенос валидации в validation.py
 
-6. docker - django + (celery) + (telebot)
-7. docker - MySql
+6. docker - django + (celery) + (telebot)   +
+7. docker - MySql                           +
 8. документация API
 9. тест api
 
@@ -15,7 +15,7 @@
 4) настроить пароли и пользователя mysql    +
 5) протестировать что все работает          +
 6) добавить запуск celery                   +
-7) добавить запуск telebot
+7) добавить запуск telebot                  +
 8)
 
 
