@@ -4,3 +4,8 @@
 
 
 финальные штрихи
+!media/cars/.getkeep
+media/cars/*
+
+!media/drivers/.getkeep
+media/drivers/*
