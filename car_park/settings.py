@@ -83,27 +83,27 @@ WSGI_APPLICATION = 'car_park.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 #
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'db_car_park',
-#         'USER': 'root',
-#         'PASSWORD': 'rootroot',
-#         'HOST': 'localhost',
-#         'PORT': '3306',
-#     }
-# }
-#
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'car_db',
-        'USER': 'car_manager',
-        'PASSWORD': '123456',
-        'HOST': 'car_db',
+        'NAME': 'db_car_park',
+        'USER': 'root',
+        'PASSWORD': 'rootroot',
+        'HOST': 'localhost',
         'PORT': '3306',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'car_db',
+#         'USER': 'car_manager',
+#         'PASSWORD': '123456',
+#         'HOST': 'car_db',
+#         'PORT': '3306',
+#     }
+# }
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
