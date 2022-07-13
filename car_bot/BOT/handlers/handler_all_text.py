@@ -58,7 +58,7 @@ class HandlerAllText(Handler):
         """
 
         self.menu_type = 'nots'
-
+        print("YES!")
         self.user = MyUser.objects.get(chat_id=message.chat.id)
         self.nots = Notifications.objects.filter(recipient=self.user, active=True)
 
@@ -557,7 +557,7 @@ class HandlerAllText(Handler):
             # ********** основные кнопки ********** #
             print(f"{message.text=}")
 
-            if message.text == 'уведомления':
+            if message.text == 'Уведомления':
                 self.pressed_btn_nots(message)
 
             if message.text == 'Меню':
