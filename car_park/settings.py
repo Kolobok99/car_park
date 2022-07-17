@@ -88,17 +88,17 @@ WSGI_APPLICATION = 'car_park.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 #
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'db_car_park',
-        'USER': 'root',
-        'PASSWORD': 'rootroot',
-        'HOST': 'localhost',
-        'PORT': '3306',
-    }
-}
-
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'db_car_park',
+#         'USER': 'root',
+#         'PASSWORD': 'rootroot',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#     }
+# }
+#
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
@@ -111,17 +111,17 @@ DATABASES = {
 # }
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': os.e
-#         'django.db.backends.mysql',
-#         'NAME': 'db_car_park',
-#         'USER': 'root',
-#         'PASSWORD': 'rootroot',
-#         'HOST': 'localhost',
-#         'PORT': '3306',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': os.environ.get('SQL_ENGINE', default='django.db.backends.mysql'),
+        'NAME': os.environ.get('SQL_NAME', default='db_car_park'),
+        'USER': os.environ.get('SQL_USER', default='root'),
+        'PASSWORD': os.environ.get('SQL_PASSWORD', default='rootroot'),
+        'HOST': os.environ.get('SQL_HOST', default='car_db'),
+        'PORT': os.environ.get('SQL_PORT', default='3306'),
+    }
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators

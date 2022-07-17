@@ -7,6 +7,11 @@ ENV PYTHONUNBUFFERED 1
 ENV PATH=$PATH:/usr/src/car_park
 ENV PYTHONPATH /usr/src/car_park
 
+RUN apt-get update && \
+    apt-get -y install \
+    default-libmysqlclient-dev \
+    python3-dev
+
 RUN pip install --upgrade pip
 COPY ./req.txt .
 RUN pip install -r req.txt

@@ -9,20 +9,20 @@ services:
     ports:
       - 8000:8000
     env_file:
-      - ./.env.dev
+      - .env.dev
 
-#  db:
-#    image: mysql:latest
-#    volumes:
-#      - car_park_mysql_data:/var/lib/mysql
-#    ports:
-#      - '3306:3306'
-#    environment:
-#      MYSQL_DATABASE: 'car_db'
-#      MYSQL_USER: 'car_manager'
-#      MYSQL_PORT: 3306
-#      MYSQL_PASSWORD: '123456'
-#      MYSQL_ROOT_PASSWORD: 'root'
-#
-#volumes:
-#  car_park_mysql_data:
+  db:
+    image: mysql:latest
+    volumes:
+      - car_park_mysql_data:/var/lib/mysql
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_DATABASE: 'car_db'
+      MYSQL_USER: 'car_manager'
+      MYSQL_PORT: 3306
+      MYSQL_PASSWORD: '123456'
+      MYSQL_ROOT_PASSWORD: 'root'
+
+volumes:
+  car_park_mysql_data:
