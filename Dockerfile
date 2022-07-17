@@ -1,42 +1,42 @@
-#FROM python:3.8
-#
-#WORKDIR /app
-#
-#ENV PYTHONDONTWRITEBYTECODE 1
-#ENV PYTHONUNBUFFERED 1
-#ENV PATH=$PATH:/usr/src/car_park
-#ENV PYTHONPATH /usr/src/car_park
-#
-#RUN pip install --upgrade pip
-#COPY ./req.txt .
-#RUN pip install -r req.txt
-#
-#COPY . .
-
-
-# ------------------- 1 Dockerfile -------------------
-
-# указываем образ на основе
-# которого будет создан контейнер
 FROM python:3.8
 
-# Создаем рабочую директорию внутри контейнера
-WORKDIR /usr/src/car_park
+WORKDIR /app
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV PATH=$PATH:/usr/src/car_park
 ENV PYTHONPATH /usr/src/car_park
 
+RUN pip install --upgrade pip
+COPY ./req.txt .
+RUN pip install -r req.txt
 
-# копируем файл req.txt
-COPY ./req.txt /usr/src/req.txt
+COPY . .
 
-# выполняем установу зависимостей
-RUN pip install --upgrade pip && pip install -r /usr/src/req.txt
 
-# копируем проект в ворк_дир контейнера
-COPY . /usr/src/car_park
+# ------------------- 1 Dockerfile -------------------
+
+## указываем образ на основе
+## которого будет создан контейнер
+#FROM python:3.8
+#
+## Создаем рабочую директорию внутри контейнера
+#WORKDIR /usr/src/car_park
+#
+#ENV PYTHONDONTWRITEBYTECODE 1
+#ENV PYTHONUNBUFFERED 1
+#ENV PATH=$PATH:/usr/src/car_park
+#ENV PYTHONPATH /usr/src/car_park
+#
+#
+## копируем файл req.txt
+#COPY ./req.txt /usr/src/req.txt
+#
+## выполняем установу зависимостей
+#RUN pip install --upgrade pip && pip install -r /usr/src/req.txt
+#
+## копируем проект в ворк_дир контейнера
+#COPY . /usr/src/car_park
 
 
 # ------------------------------------------------------------
