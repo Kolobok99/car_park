@@ -4,13 +4,14 @@ WORKDIR /app
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
-ENV PATH=$PATH:/usr/src/car_park
-ENV PYTHONPATH /usr/src/car_park
+ENV PATH=$PATH:/app
+ENV PYTHONPATH /app
 
 RUN apt-get update && \
     apt-get -y install \
     default-libmysqlclient-dev \
-    python3-dev
+    python3-dev \
+    netcat
 
 RUN pip install --upgrade pip
 COPY ./req.txt .
@@ -18,6 +19,9 @@ RUN pip install -r req.txt
 
 COPY . .
 
+RUN chmod +x entrypoint.sh
+
+ENTRYPOINT ["entrypoint.sh"]
 
 # ------------------- 1 Dockerfile -------------------
 
