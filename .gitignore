@@ -2,6 +2,7 @@
 /front/img/account/file.png
 /front/img/account/mysql-workbench-community_8.0.29-1ubuntu20.04_amd64.deb
 
+docker-compose.yml
 
 финальные штрихи
 !media/cars/.getkeep
@@ -9,3 +10,5 @@ media/cars/*
 
 !media/drivers/.getkeep
 media/drivers/*
+
+.env.dev
