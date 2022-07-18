@@ -5,11 +5,13 @@ services:
     build: ./
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/usr/src/car_park
+      - .web_data:/car_park
     ports:
       - 8000:8000
     env_file:
       - .env.dev
+    depends_on:
+      - db
 
   db:
     image: mysql:latest
@@ -23,6 +25,26 @@ services:
       MYSQL_PORT: 3306
       MYSQL_PASSWORD: '123456'
       MYSQL_ROOT_PASSWORD: 'root'
+
+#  redis:
+#    image: redis:alpine
+#  celery:
+#    restart: always
+#    build:
+#      context: ./
+#    command: celery -A car_park worker -l info
+#    volumes:
+#      - .:/car_park
+#    environment:
+#      - DB_HOST=db
+#      - DB_NAME=car_db
+#      - DB_USER=car_manager
+#      - DB_PASS=Oaisdi123jaj213
+#    depends_on:
+#      - car_db
+#      - redis
+#      - django
+
 
 volumes:
   car_park_mysql_data:

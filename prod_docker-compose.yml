@@ -1,0 +1,47 @@
+version: '3.7'
+
+services:
+  web:
+    build: ./
+    command: gunicorn car_park.wsgi:application --bind 0.0.0.0:8000
+#    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .web_data:/car_park
+    ports:
+      - 8000:8000
+    env_file:
+      - .env.prod
+    depends_on:
+      - db
+
+  db:
+    image: mysql:latest
+    volumes:
+      - car_park_mysql_data:/var/lib/mysql
+    ports:
+      - '3306:3306'
+    env_file:
+      - .env.prod.db
+
+#  redis:
+#    image: redis:alpine
+#  celery:
+#    restart: always
+#    build:
+#      context: ./
+#    command: celery -A car_park worker -l info
+#    volumes:
+#      - .:/car_park
+#    environment:
+#      - DB_HOST=db
+#      - DB_NAME=car_db
+#      - DB_USER=car_manager
+#      - DB_PASS=Oaisdi123jaj213
+#    depends_on:
+#      - db
+#      - redis
+#      - web
+
+
+volumes:
+  car_park_mysql_data:

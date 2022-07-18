@@ -24,4 +24,4 @@ selenium==4.2.0
 sortedcontainers==2.4.0
 svglib==1.2.1
 webencodings==0.5.1
-
+gunicorn==20.1.0

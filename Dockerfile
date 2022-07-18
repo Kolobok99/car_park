@@ -13,6 +13,7 @@ RUN apt-get update && \
     python3-dev \
     netcat
 
+
 RUN pip install --upgrade pip
 COPY ./req.txt .
 RUN pip install -r req.txt
