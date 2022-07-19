@@ -23,6 +23,9 @@ services:
     env_file:
       - .env.prod.db
 
+volumes:
+  car_park_mysql_data:
+
 #  redis:
 #    image: redis:alpine
 #  celery:
@@ -42,6 +45,3 @@ services:
 #      - redis
 #      - web
 
-
-volumes:
-  car_park_mysql_data:
