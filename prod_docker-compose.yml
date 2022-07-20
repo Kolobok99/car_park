@@ -5,7 +5,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile.prod
-    command: gunicorn car_park.wsgi:application --bind 0.0.0.0:8000
+    command: bash -c "python manage.py migrate && gunicorn car_park.wsgi:application --bind 0.0.0.0:8000"
     volumes:
       - web_data:/home/app/web/
       - static_volume:/home/app/web/static
@@ -59,6 +59,19 @@ services:
     depends_on:
       - db
       - redis
+      - web
+  telebot:
+    restart: always
+    build:
+      context: ./
+      dockerfile: Dockerfile.prod
+    command: bash -c "cd car_bot/BOT && python telbot.py"
+    env_file:
+      - .env/.env.prod
+    volumes:
+      - web_data:/home/app/web/
+    depends_on:
+      - db
       - web
 
 volumes:
