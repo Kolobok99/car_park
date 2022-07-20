@@ -1,1 +1,6 @@
 /old-docker-compose.yml
+!media/cars/
+media/cars/*
+
+!media/drivers/
+media/drivers/*

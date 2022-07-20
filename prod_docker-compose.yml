@@ -9,6 +9,7 @@ services:
     volumes:
 #      - .web_data:/car_park
       - static_volume:/home/app/web/static
+      - media_volume:/home/app/web/media
     expose:
       - 8000
     env_file:
@@ -31,11 +32,11 @@ services:
       - "1337:80"
     volumes:
       - static_volume:/home/app/web/static
-#      - media_volume:/home/app/web/media
+      - media_volume:/home/app/web/media
     depends_on:
       - web
 
 volumes:
   car_park_mysql_data:
   static_volume:
-  media_volume:
+  media_volруume:
