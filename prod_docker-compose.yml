@@ -36,7 +36,27 @@ services:
     depends_on:
       - web
 
+
+  redis:
+    image: redis:alpine
+  celery:
+    restart: always
+    build:
+      context: ./
+    command: celery -A car_park worker -l info
+    volumes:
+      - .:/car_park
+    environment:
+      - DB_HOST=db
+      - DB_NAME=car_db
+      - DB_USER=car_manager
+      - DB_PASS=Oaisdi123jaj213
+    depends_on:
+      - car_db
+      - redis
+      - django
+
 volumes:
   car_park_mysql_data:
   static_volume:
-  media_volруume:
+  media_volume:
