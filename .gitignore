@@ -5,7 +5,7 @@
 old-docker-compose.yml
 
 финальные штрихи
-!media/cars/.getkeep
+!media/cars/.gitkeep
 media/cars/*
 
 !media/drivers/.getkeep
