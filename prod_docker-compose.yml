@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile.prod
     command: gunicorn car_park.wsgi:application --bind 0.0.0.0:8000
     volumes:
-#      - .web_data:/car_park
+      - web_data:/home/app/web/
       - static_volume:/home/app/web/static
       - media_volume:/home/app/web/media
     expose:
@@ -39,24 +39,30 @@ services:
 
   redis:
     image: redis:alpine
+    expose:
+      - 6379
   celery:
     restart: always
     build:
       context: ./
+      dockerfile: Dockerfile.prod
     command: celery -A car_park worker -l info
+    env_file:
+      - .env/.env.prod
     volumes:
-      - .:/car_park
+      - web_data:/home/app/web/
     environment:
       - DB_HOST=db
       - DB_NAME=car_db
       - DB_USER=car_manager
       - DB_PASS=Oaisdi123jaj213
     depends_on:
-      - car_db
+      - db
       - redis
-      - django
+      - web
 
 volumes:
   car_park_mysql_data:
   static_volume:
   media_volume:
+  web_data:

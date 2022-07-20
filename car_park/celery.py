@@ -1,6 +1,7 @@
 import os
 from celery import Celery
 from celery.schedules import crontab
+from django.conf import settings
 
 # указываем место нажождения настройек проекта
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "car_park.settings")
@@ -9,8 +10,8 @@ app = Celery('car_park')
 
 # указываем celery искать настройки в файле settings
 # которые начинаются с CELERY
-app.config_from_object('django.conf:settings', namespace='CELERY')
-
+# app.config_from_object('django.conf:settings', namespace='CELERY')
+app.config_from_object(settings, namespace='CELERY')
 # Указываем авмтоматически подцеплять такси
 app.autodiscover_tasks()
 
