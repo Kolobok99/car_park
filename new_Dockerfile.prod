@@ -33,7 +33,10 @@ ENV APP_HOME=/home/app/web
 RUN mkdir $APP_HOME
 ENV PATH=$PATH:$APP_HOME
 ENV PYTHONPATH $APP_HOME
-#RUN mkdir $APP_HOME/staticfiles
+
+RUN mkdir $APP_HOME/static
+
+WORKDIR $APP_HOME
 
 RUN apt-get update \
     && apt-get install -y netcat
@@ -49,7 +52,7 @@ COPY ./entrypoint.prod.sh $APP_HOME
 COPY . $APP_HOME
 
 RUN chmod +x /home/app/web/entrypoint.prod.sh
-
+RUN chown -R app:app $APP_HOME
 USER app
 
 ENTRYPOINT ["/home/app/web/entrypoint.prod.sh"]
