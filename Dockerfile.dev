@@ -22,7 +22,7 @@ COPY . .
 
 RUN chmod +x entrypoint.sh
 
-ENTRYPOINT ["entrypoint.sh"]
+ENTRYPOINT ["/bash_scripts/entrypoint.sh"]
 
 # ------------------- 1 Dockerfile -------------------
 

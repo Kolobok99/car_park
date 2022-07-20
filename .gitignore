@@ -11,5 +11,5 @@ media/cars/*
 !media/drivers/.getkeep
 media/drivers/*
 
-.env.dev
+.env/.env.dev
 

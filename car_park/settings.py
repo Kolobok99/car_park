@@ -35,6 +35,9 @@ DEBUG = bool(int(os.environ.get("DEBUG", default=1)))
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 # Application definition
 
+CSRF_TRUSTED_ORIGINS = ["127.0.0.1", "localhost"]
+
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',

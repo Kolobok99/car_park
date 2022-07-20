@@ -1,16 +1,18 @@
-version: '3.7'
+version: '3'
 
 services:
   web:
-    build: ./
+    build:
+      context: ./
+      dockerfile: Dockerfile.prod
     command: gunicorn car_park.wsgi:application --bind 0.0.0.0:8000
-#    command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - .web_data:/car_park
-    ports:
-      - 8000:8000
+#      - .web_data:/car_park
+      - static_volume:/home/app/web/static
+    expose:
+      - 8000
     env_file:
-      - .env.prod
+      - .env/.env.prod
     depends_on:
       - db
 
@@ -21,27 +23,19 @@ services:
     ports:
       - '3306:3306'
     env_file:
-      - .env.prod.db
+      - .env/.env.prod.db
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "1337:80"
+    volumes:
+      - static_volume:/home/app/web/static
+#      - media_volume:/home/app/web/media
+    depends_on:
+      - web
 
 volumes:
   car_park_mysql_data:
-
-#  redis:
-#    image: redis:alpine
-#  celery:
-#    restart: always
-#    build:
-#      context: ./
-#    command: celery -A car_park worker -l info
-#    volumes:
-#      - .:/car_park
-#    environment:
-#      - DB_HOST=db
-#      - DB_NAME=car_db
-#      - DB_USER=car_manager
-#      - DB_PASS=Oaisdi123jaj213
-#    depends_on:
-#      - db
-#      - redis
-#      - web
-
+  static_volume:
+  media_volume:
