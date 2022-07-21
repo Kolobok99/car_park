@@ -2,10 +2,13 @@ version: '3.7'
 
 services:
   web:
-    build: ./
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev
+
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - .web_data:/car_park
+      - dev_web_data:/app
     ports:
       - 8000:8000
     env_file:
@@ -16,7 +19,7 @@ services:
   db:
     image: mysql:latest
     volumes:
-      - car_park_mysql_data:/var/lib/mysql
+      - dev_car_park_mysql_data:/var/lib/mysql
     ports:
       - '3306:3306'
     environment:
@@ -26,25 +29,43 @@ services:
       MYSQL_PASSWORD: '123456'
       MYSQL_ROOT_PASSWORD: 'root'
 
-#  redis:
-#    image: redis:alpine
-#  celery:
-#    restart: always
-#    build:
-#      context: ./
-#    command: celery -A car_park worker -l info
-#    volumes:
-#      - .:/car_park
-#    environment:
-#      - DB_HOST=db
-#      - DB_NAME=car_db
-#      - DB_USER=car_manager
-#      - DB_PASS=Oaisdi123jaj213
-#    depends_on:
-#      - car_db
-#      - redis
-#      - django
-
+  redis:
+    image: redis:alpine
+    expose:
+      - 6379
+  celery:
+    restart: always
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev
+    command: celery -A car_park worker -l info
+    env_file:
+      - .env/.env.dev
+    volumes:
+      - dev_web_data:/home/app/web/
+    environment:
+      - DB_HOST=db
+      - DB_NAME=car_db
+      - DB_USER=car_manager
+      - DB_PASS=Oaisdi123jaj213
+    depends_on:
+      - db
+      - redis
+      - web
+  telebot:
+    restart: always
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev
+    command: bash -c "cd car_bot/BOT && python telbot.py"
+    env_file:
+      - .env/.env.dev
+    volumes:
+      - dev_web_data:/home/app/web/
+    depends_on:
+      - db
+      - web
 
 volumes:
-  car_park_mysql_data:
+  dev_car_park_mysql_data:
+  dev_web_data:

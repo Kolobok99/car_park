@@ -18,11 +18,13 @@ RUN pip install --upgrade pip
 COPY ./req.txt .
 RUN pip install -r req.txt
 
+COPY bash_scripts/entrypoint.sh .
+
 COPY . .
 
 RUN chmod +x entrypoint.sh
 
-ENTRYPOINT ["/bash_scripts/entrypoint.sh"]
+ENTRYPOINT ["/app/entrypoint.sh"]
 
 # ------------------- 1 Dockerfile -------------------
 
