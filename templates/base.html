@@ -22,7 +22,6 @@
 
                 <div class="header__menu menu">
                     <ul class="menu__items">
-                        {#      active-page     #}
                       <li class="menu__item {% block car_active %}    {% endblock car_active %}"><a href="{% url 'cars' %}">Автомобили</a></li>
                       <li class="menu__item {% block driver_active %}    {% endblock driver_active %}"><a href="{% url 'drivers' %}">Водители</a></li>
                       <li class="menu__item {% block document_active %}    {% endblock document_active %}"><a href="{% url 'documents' %}">Документы</a></li>
@@ -42,7 +41,14 @@
                                          width: 60px;
                                          height: 60px;"
                                  class="auth__avatar" src="{{ user.image.url }}" alt="avatar">
+                        {% else %}
+                            <img style=" border-radius: 50%;
+                                         border: 1px solid #F5F5F5;
+                                         width: 60px;
+                                         height: 60px;"
+                                 class="auth__avatar" src="" alt="avatar">
                         {% endif %}
+
                     </a>
 {#                    {{ user.role }}#}
 {#                    {{ user.pk }}#}

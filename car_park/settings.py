@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = 'django-insecure-nm_h-x*1#se4anh9uf)-*art)r0e1827u_zqo8ytxn!i5c&%id'
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY", default='django-insecure-nm_h-x*1#se4anh9uf)')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -32,10 +32,10 @@ DEBUG = bool(int(os.environ.get("DEBUG", default=1)))
 
 
 # ALLOWED_HOSTS = ['*']
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", default="localhost 127.0.0.1").split(" ")
 # Application definition
 
-CSRF_TRUSTED_ORIGINS = ["127.0.0.1", "localhost"]
+CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1", "http://localhost"]
 
 
 INSTALLED_APPS = [
@@ -120,7 +120,7 @@ DATABASES = {
         'NAME': os.environ.get('SQL_NAME', default='db_car_park'),
         'USER': os.environ.get('SQL_USER', default='root'),
         'PASSWORD': os.environ.get('SQL_PASSWORD', default='rootroot'),
-        'HOST': os.environ.get('SQL_HOST', default='car_db'),
+        'HOST': os.environ.get('SQL_HOST', default='localhost'),
         'PORT': os.environ.get('SQL_PORT', default='3306'),
     }
 }

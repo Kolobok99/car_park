@@ -399,12 +399,13 @@ class AccountView(LoginRequiredMixin, UpdateView):
             if action_type == 'doc_create' else self.form_add_doc()
         context['form_change_balance'] = self.form_change_balance(self.request.POST) \
             if action_type == 'change_balance' else self.form_change_balance()
-        context['form'] = self.form_class(self.request.POST) \
-            if action_type == 'user_update' else self.form_class(instance=self.get_object())
+        context['form'] = self.form_class(self.request.POST, instance=self.get_object(), user=self.get_object()) \
+            if action_type == 'user_update' else self.form_class(instance=self.get_object(), user=self.get_object())
         return context
 
     def form_invalid(self, **kwargs):
         """Формирует ответ с невалидной формой"""
+        print("Перед render_to_response")
         return self.render_to_response(self.get_context_data(**kwargs))
 
     def post(self, request, *args, **kwargs):
@@ -441,6 +442,7 @@ class AccountView(LoginRequiredMixin, UpdateView):
 
             return self.form_valid(form)
         else:
+            print('Перед вызовом form_invalid')
             return self.form_invalid(**{action_type: form})
 
 class RegistrationView(CreateView):

@@ -152,12 +152,12 @@ class UserUpdateForm(forms.ModelForm):
     """
 
     action = forms.CharField(widget=forms.HiddenInput(), initial="user_update")
-
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         super(UserUpdateForm, self).__init__(*args, **kwargs)
 
     def save(self, **kwargs):
+        print("YES! SAVE METHOD!")
         # Заполняет пустые поля формы
         list_of_fields = ['first_name', 'last_name', 'patronymic',
                           'phone', 'email', 'chat_id']

@@ -20,7 +20,7 @@ RUN pip install -r req.txt
 
 COPY bash_scripts/entrypoint.sh .
 
-COPY . .
+COPY . /app
 
 RUN chmod +x entrypoint.sh
 
