@@ -63,7 +63,7 @@ document.addEventListener('click', function (event) {
 });
 
 //ErrorList
-const errorList = document.querySelector(".form-app__timing > ul.errorlist")
+const errorList = document.querySelectorAll(".form-app__timing > span > ul.errorlist")
 if (errorList.length !== 0) {
     formAddDoc.classList.add('data-show-or-hide-form');
     wrapper.classList.add('blackout');

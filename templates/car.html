@@ -288,8 +288,8 @@
 
                 {{ doc_create_form.end_date.label }}:
                 {{ doc_create_form.end_date }}
-                {{ doc_create_form.errors }}
-                {{ doc_create_form.file.label }}
+                <span class="date-errors" style="color:red"> {{ doc_create_form.start_date.errors }} </span>
+                {{ doc_create_form.file.label }}:
                 {{ doc_create_form.file }}
 
                 {{ doc_create_form.action }}

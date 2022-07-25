@@ -47,7 +47,6 @@ document.addEventListener('click', function (event) {
 const errorList = document.querySelector(".form-app__timing > span > ul.errorlist")
 
 if (errorList.length !== 0) {
-    console.log('YES!');
     formAddDoc.classList.add('data-show-or-hide-form');
     wrapper.classList.add('blackout');
 }

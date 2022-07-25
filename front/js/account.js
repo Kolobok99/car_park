@@ -26,7 +26,6 @@ document.addEventListener('click', function (event) {
     // //кнопка закрытия формы btnReset
     // const btnResetAppChange = document.getElementsByClassName('bnt-form-app-reset-change')[0];
 
-
     //Работа с формой добавления документов:
     
     //кнопка открытия формы:
