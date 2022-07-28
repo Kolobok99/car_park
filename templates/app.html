@@ -51,10 +51,10 @@
                             <p>{{ app.start_date|date:"d-m-Y" }}</p>
                         </div>
 
-                        <div class="info-app__item">
-                            <p id="id_consideration_date" class="info-app__title">Дата рассмотрения (ожидаемая)</p>
-                            <p>21.05.2022</p>
-                        </div>
+{#                        <div class="info-app__item">#}
+{#                            <p id="id_consideration_date" class="info-app__title">Дата рассмотрения (ожидаемая)</p>#}
+{#                            <p>21.05.2022</p>#}
+{#                        </div>#}
 
                         <div class="info-app__item">
                             <p id="id_end_date" class="info-app__title">Дата завершения (ожидаемая)</p>
@@ -127,8 +127,6 @@
                 font-size: 30px;
                 opacity: 0.7;
                 ">Страница недоступна</h1>
-                {{ user.pk }}
-                {{ app.owner.pk }}
             {% endif %}
         </div>
     </div>

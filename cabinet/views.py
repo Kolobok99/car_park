@@ -107,7 +107,7 @@ class CarView(LoginRequiredMixin, UpdateView):
         context['app_create_form'] = self.app_form_class(self.request.POST)\
             if action_type == 'app_create' else self.app_form_class()
         context['form'] = self.form_class(self.request.POST) \
-            if action_type == 'car_update' else self.form_class(instance=self.get_object())
+            if action_type == 'car_update' else self.form_class(instance=self.get_object(), car=self.get_object())
         return context
 
     def post(self, request, *args, **kwargs):

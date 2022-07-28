@@ -119,7 +119,7 @@ class RegistrationPageLocators:
     FORM_REG_INPUT_F_NAME = (By.ID, "id_first_name")
     FORM_REG_INPUT_L_NAME = (By.ID, "id_last_name")
     FORM_REG_INPUT_P_NAME = (By.ID, "id_patronymic")
-    FORM_REG_SELECT_ROLE = (By.ID, "id_role")
+    # FORM_REG_SELECT_ROLE = (By.ID, "id_role")
     FORM_REG_BTN_SUBMIT = (By.CSS_SELECTOR, ".main__button")
 
     FORM_REG_ERROR_EMAIL = (By.XPATH, "//*[contains(@class,'errors')]//span[text() = 'Ваша почта не указана в списке "
@@ -275,6 +275,7 @@ class AccountPageLocators:
     FORM_DOC_ADD_BTN_SUBMIT = (By.CSS_SELECTOR, ".form-app__timing button[type='submit']")
     FORM_DOC_ADD_RESET = (By.CSS_SELECTOR, ".bnt-form-doc-reset-add > svg")
 
+    FORM_DOC_ADD_ERROR_DATE = (By.CSS_SELECTOR, ".form-app__timing > span > ul.errorlist")
     # MESSAGE:
     #           TEXT            - FORM_<FORM_NAME>_MSG_<MSG_NAME>_TEXT
     #           CROSS           - FORM_<FORM_NAME>_MSG_<MSG_NAME>_CROSS

@@ -30,14 +30,14 @@ def post_save_apps(created, instance, **kwargs):
             instance.end_date = instance.start_date + timedelta(days=10)
         elif instance.urgency == 'U':
             instance.end_date = instance.start_date + timedelta(days=7)
-        elif instance.urgency == 'V':
+        elif instance.urgency == 'S':
             instance.end_date = instance.start_date + timedelta(days=3)
         instance.save()
 
     # Заявка "Ожидает рассмотрения механика"
     elif instance.status == 'OE':
         # Уведомление владельцу заявки (о рассмотрении заявки)
-        if instance.owner != manager:
+        if instance.owner != manager and instance.owner:
             Notifications.objects.create(
                 recipient=instance.owner,
                 content=f"Ваша заявка №{instance.pk} рассмотрена\n"
@@ -68,7 +68,7 @@ def post_save_apps(created, instance, **kwargs):
             content_object=instance
         )
 
-    elif instance.status == 'T':
+    elif instance.status == 'T' and instance.owner:
         # Уведомление владельцу заявки (об отклоениии заявки)
         Notifications.objects.create(
             recipient=instance.owner,

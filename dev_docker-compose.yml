@@ -37,7 +37,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile.dev
-    command: celery -A car_park worker -l info
+    command: celery -A car_park worker -B -l info
     env_file:
       - .env/.env.dev
 #    volumes:

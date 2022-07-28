@@ -216,7 +216,7 @@ class AccountPage(BasePage):
     def has_error(self):
         """Проверяет появилось ли сообщение об ошибке"""
 
-        self.is_element_present(*AccountPageLocators.DOC_DATE_ERROR)
+        self.is_element_present(*AccountPageLocators.FORM_DOC_ADD_ERROR_DATE)
 
 
 

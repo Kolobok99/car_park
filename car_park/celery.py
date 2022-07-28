@@ -17,12 +17,29 @@ app.autodiscover_tasks()
 
 
 app.conf.beat_schedule = {
-	'check-last-inspection-every-1-minute': {
+	'check-last-inspection': {
 		'task': "cabinet.tasks.check_last_inspection",
-		'schedule': crontab(minute='*/1'),
+		'schedule': crontab(hour='*/1'),
 	},
 	'delete-empty-card': {
 		'task': "cabinet.tasks.delete_empty_card",
-		'schedule': crontab(minute='*/1'),
+		'schedule': crontab(hour='*/1'),
 	},
+	'check-car-docs-date': {
+		'task': "cabinet.tasks.check_car_docs_date",
+		'schedule': crontab(hour='*/1'),
+	},
+	'check_user_docs_date': {
+		'task': "cabinet.tasks.check_user_docs_date",
+		'schedule': crontab(hour='*/1'),
+	},
+	'checking-timing-app': {
+		'task': "cabinet.tasks.checking_timing_app",
+		'schedule': crontab(hour='*/1'),
+	},
+	'create-note-about-ending-cards': {
+		'task': "cabinet.tasks.create_note_about_ending_cards",
+		'schedule': crontab(hour='*/1'),
+	},
+
 }

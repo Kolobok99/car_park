@@ -44,7 +44,7 @@ def check_car_docs_date():
 
     for car_doc in car_docs:
         time_delta = today - car_doc.end_date
-        if time_delta < 10:
+        if time_delta < datetime.timedelta(days=10):
             Notifications.objects.create(
                 recipient=car_doc.owner.owner,
                 content=f"Срок действия документа на машину {car_doc.owner.registration_number}"
@@ -64,7 +64,7 @@ def check_user_docs_date():
 
     for user_doc in user_docs:
         time_delta = today - user_doc.end_date
-        if time_delta < 10:
+        if time_delta < datetime.timedelta(days=10):
             Notifications.objects.create(
                 recipient=user_doc.owner,
                 content=f"Срок действия {user_doc.type} документа истекает через {time_delta}",

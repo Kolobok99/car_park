@@ -185,10 +185,10 @@ class TestAccountPage:
         card_balance_dict = {
             'FORM_CARD_BALANCE_INPUT_BALANCE': "700"
         }
-        page.change_card_balance("700")
+        page.change_card_balance(card_balance_dict, change_balance_form)
 
         # Проверяем баланс
-        page.change_card_balance("500")
+        page.check_balance("500")
 
 
     def test_manager_can_add_doc_with_valid_data(self, browser, live_server,create_user):
@@ -202,7 +202,7 @@ class TestAccountPage:
         )
         # Получаем форму добавления документа
         add_doc_form = page.should_be_doc_add_form()
-        test_doc_path = str(BASE_DIR) + '/cabinet/early_tests/test_files/Instruction.pdf'
+        test_doc_path = str(BASE_DIR) + '/cabinet/tests/test_files/Instruction.pdf'
         doc_dict = {
             'FORM_DOC_ADD_INPUT_START_DATE': '10-10-2021',
             'FORM_DOC_ADD_INPUT_END_DATE': '21-12-2022',
@@ -238,9 +238,11 @@ class TestAccountPage:
         # Получаем форму добавления документа
         add_doc_form = page.should_be_doc_add_form()
 
+        test_doc_path = str(BASE_DIR) + '/cabinet/tests/test_files/Instruction.pdf'
         doc_dict = {
-            'end_date': '10-10-2021',
-            'start_date': '21-12-2022',
+            'FORM_DOC_ADD_INPUT_START_DATE': '10-10-2023',
+            'FORM_DOC_ADD_INPUT_END_DATE': '21-12-2022',
+            'FORM_DOC_ADD_INPUT_COPY': test_doc_path
 
         }
 
@@ -255,55 +257,55 @@ class TestAccountPage:
         page.has_error()
         # Проверяем, что документ не добавился
      # -------- ВОДИТЕЛЬ ----- #
-
-    def driver_can_logount(self, browser, live_server):
-        """Тест: водитель может выйти из ЛК"""
-        pass
-    def test_driver_canT_go_to_cars_page(self, browser, live_server):
-        """Тест: водитель может перейти на стр. 'cars'"""
-        pass
-
-    def test_driver_canT_go_to_drivers_page(self, browser, live_server):
-        """Тест: водитель может перейти на стр. 'drivers'"""
-        pass
-
-    def test_driver_canT_go_to_documents_page(self, browser, live_server):
-        """Тест: водитель может перейти на стр. 'documents'"""
-        pass
-
-    def test_driver_canT_go_to_cards_page(self, browser, live_server):
-        """Тест: водитель может перейти на стр. 'cards'"""
-        pass
-
-    def test_driver_canT_go_to_applications_page(self, browser, live_server):
-        """Тест: водитель может перейти на стр. 'applications'"""
-        pass
-
-    def test_driver_can_see_form_to_change_personal_data(self, browser, live_server):
-        """Тест: менеджер видит форму изменения личных данных"""
-        pass
-
-    def test_driver_can_change_personal_data_by_valid_data(self, browser, live_server):
-        """Тест: водитель может изменить личные данные (валидными данными)"""
-        pass
-
-    def test_driver_see_cars_table(self, browser, live_server):
-        """Тест: водитель видит таблицу 'машины' """
-        pass
-    def test_driver_see_applications_table(self, browser, live_server):
-        """Тест: водитель видит таблицу 'заявки' """
-        pass
-    def test_driver_see_cards_table(self, browser, live_server):
-        """Тест: водитель видит таблицу 'топливные карты' """
-        pass
-    def test_driver_see_docs_table(self, browser, live_server):
-        """Тест: водитель видит таблицу 'документы' """
-        pass
-
-    def test_driver_can_add_doc(self, browser, live_server):
-        """Тест: водитель может добавить документ """
-        pass
-
-    def test_driver_canT_add_doc_with_invalid_date(self, browser, live_server):
-        """Тест: водитель НЕ может добавить новый документ с невалидной почтой"""
-        pass
+    #
+    # def driver_can_logount(self, browser, live_server):
+    #     """Тест: водитель может выйти из ЛК"""
+    #     pass
+    # def test_driver_canT_go_to_cars_page(self, browser, live_server):
+    #     """Тест: водитель может перейти на стр. 'cars'"""
+    #     pass
+    #
+    # def test_driver_canT_go_to_drivers_page(self, browser, live_server):
+    #     """Тест: водитель может перейти на стр. 'drivers'"""
+    #     pass
+    #
+    # def test_driver_canT_go_to_documents_page(self, browser, live_server):
+    #     """Тест: водитель может перейти на стр. 'documents'"""
+    #     pass
+    #
+    # def test_driver_canT_go_to_cards_page(self, browser, live_server):
+    #     """Тест: водитель может перейти на стр. 'cards'"""
+    #     pass
+    #
+    # def test_driver_canT_go_to_applications_page(self, browser, live_server):
+    #     """Тест: водитель может перейти на стр. 'applications'"""
+    #     pass
+    #
+    # def test_driver_can_see_form_to_change_personal_data(self, browser, live_server):
+    #     """Тест: менеджер видит форму изменения личных данных"""
+    #     pass
+    #
+    # def test_driver_can_change_personal_data_by_valid_data(self, browser, live_server):
+    #     """Тест: водитель может изменить личные данные (валидными данными)"""
+    #     pass
+    #
+    # def test_driver_see_cars_table(self, browser, live_server):
+    #     """Тест: водитель видит таблицу 'машины' """
+    #     pass
+    # def test_driver_see_applications_table(self, browser, live_server):
+    #     """Тест: водитель видит таблицу 'заявки' """
+    #     pass
+    # def test_driver_see_cards_table(self, browser, live_server):
+    #     """Тест: водитель видит таблицу 'топливные карты' """
+    #     pass
+    # def test_driver_see_docs_table(self, browser, live_server):
+    #     """Тест: водитель видит таблицу 'документы' """
+    #     pass
+    #
+    # def test_driver_can_add_doc(self, browser, live_server):
+    #     """Тест: водитель может добавить документ """
+    #     pass
+    #
+    # def test_driver_canT_add_doc_with_invalid_date(self, browser, live_server):
+    #     """Тест: водитель НЕ может добавить новый документ с невалидной почтой"""
+    #     pass

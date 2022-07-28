@@ -10,25 +10,25 @@ class RegistrationPage(BasePage):
 
     def should_be_login_url(self):
         """Проверяет наличие ссылки на стр. 'авторизации'"""
-        assert self.is_element_present(*RegistrationPageLocators.LOGIN_LINK_BTN), \
+        assert self.is_element_present(*RegistrationPageLocators.LINK_BTN_LOGIN), \
             "Ссылка на стр. <авторизации> не найдена"
 
     def go_to_login_page_by_href(self):
         """Клик по ссылке <авторизация>"""
-        self.go_to__page_by_btn(RegistrationPageLocators.LOGIN_LINK_BTN, 'авторизация')
+        self.go_to__page_by_btn(RegistrationPageLocators.LINK_BTN_LOGIN, 'авторизация')
 
     def should_be_registration_form(self):
         """Проверка наличия формы авторизации"""
         form_dict = {
-            'EMAIL': RegistrationPageLocators.EMAIL_INPUT,
+            'EMAIL': RegistrationPageLocators.FORM_REG_INPUT_EMAIL,
             'PASSWORD': RegistrationPageLocators.FORM_REG_INPUT_PASS1,
             'PASSWORD2': RegistrationPageLocators.FORM_REG_INPUT_PASS2,
             'FORM_PERSONAL_INPUT_PHONE': RegistrationPageLocators.FORM_REG_INPUT_PHONE,
             'FIRST NAME': RegistrationPageLocators.FORM_REG_INPUT_F_NAME,
             'LAST NAME': RegistrationPageLocators.FORM_REG_INPUT_L_NAME,
             'PATRONYMIC': RegistrationPageLocators.FORM_REG_INPUT_P_NAME,
-            'ROLE SELECT': RegistrationPageLocators.ROLE_SELECT,
-            'BUTTON SUBMIT': RegistrationPageLocators.SUBMIT_BTN,
+            'ROLE SELECT': RegistrationPageLocators.FORM_REG_SELECT_ROLE,
+            'BUTTON SUBMIT': RegistrationPageLocators.FORM_REG_BTN_SUBMIT,
         }
         registration_form_dict = self.should_be_the_form(form_dict, )
         return registration_form_dict

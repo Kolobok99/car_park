@@ -20,27 +20,32 @@
                                 <img src="{{ car.image.url }}" alt="" />
                             {% endif %}
                             <input type="file" name="image" accept="image/*" id="id_image">
-                            {{ form.errors }}
+
                         </div>
                         <div class="car-area__info">
                             <div class="car-area__item">
                                 <p>Марка:</p>{{ form.brand}}
+                                <span class="date-errors" style="color:red"> {{ form.brand.errors }} </span>
                             </div>
 
                             <div class="car-area__item">
                                 <p>Номер:</p>{{ form.registration_number }}
+                                <span class="date-errors" style="color:red"> {{ form.registration_number.errors }} </span>
                             </div>
 
                             <div class="car-area__item">
                                 <p>Код:</p>{{ form.region_code }}
+                                <span class="date-errors" style="color:red"> {{ form.region_code.errors }} </span>
                             </div>
 
                             <div class="car-area__item">
                                 <p>Последний осмотр:</p>{{ form.last_inspection }}
+                                <span class="date-errors" style="color:red"> {{ form.last_inspection.errors }} </span>
                             </div>
                             <div class="car-area__item">
                                 <p>Водитель:</p>
                                 {{ form.owner}}
+                                <span class="date-errors" style="color:red"> {{ form.owner.errors }} </span>
                             </div>
                             {{ form.action }}
                             <input class="car-area__btn-submit" type="submit">
@@ -211,7 +216,7 @@
             <div class="form-app__timing">
                 {{ app_create_form.errors }}
 
-                <p>{{ app_create_form.type.label }}</p>
+                <p>{{ app_create_form.type.label }}:</p>
                 {{ app_create_form.type }}
                 <p>Срочность:</p>
                 <br>

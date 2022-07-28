@@ -30,6 +30,7 @@ class Car(models.Model):
                                                    regex='[a-zA-Z]{1}[0-9]{3}[a-zA-Z]{2}',
                                                    message='Введите номер правильно!'
                                                )])
+
     region_code = models.PositiveSmallIntegerField('Код региона',
                                                    validators=[
                                                        validators.MaxValueValidator(
