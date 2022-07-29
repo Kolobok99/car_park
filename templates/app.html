@@ -106,15 +106,16 @@
                         {% elif user.is_manager %}
                             <div class="info-app__buttons">
                                 {% if app.status == 'O' or app.status == 'T' %}
-                                    <button class="info-app__btn-confirm">Подтвердить
-                                    <button style="background: #ff7a47" class="info-app__btn-refuse">Вернуть на доработку
+                                    <button class="info-app__btn-confirm">Подтвердить  </button>
+                                    <button style="background: #ff7a47" class="info-app__btn-refuse">Вернуть на доработку  </button>
                                 {% elif app.status == 'OE' %}
-                                    <button class="info-app__btn-confirm">Изменить<br>Поддтверджение
-                                    <button style="background: #ff7a47" class="info-app__btn-refuse">Вернуть на доработку
+                                    <button class="info-app__btn-confirm">Изменить<br>Подтверждение  </button>
+                                    <button style="background: #ff7a47" class="info-app__btn-refuse">Вернуть на доработку  </button>
                                 {% else %}
-                                    <button style="background: #ff7a47" class="info-app__btn-refuse">Вернуть на доработку
+                                    <button style="background: #ff7a47" class="info-app__btn-refuse">Вернуть на доработку  </button>
                                 {% endif %}
-                                    </button>
+
+
                             </div>
                         {% endif %}
 
