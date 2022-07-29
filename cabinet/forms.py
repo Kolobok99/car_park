@@ -189,7 +189,7 @@ class FuelCardAddForm(forms.ModelForm):
         Форма: добавление карты
     """
 
-    owner = forms.ModelChoiceField(queryset=models.MyUser.objects.filter(my_card__isnull=True, role='d'), required=False)
+    owner = forms.ModelChoiceField(queryset=models.MyUser.objects.filter(my_card__isnull=True, role='d'), required=False, label='Владелец')
 
     def clean(self):
         cleaned_data = super().clean()
