@@ -13,7 +13,11 @@
         {% if user.is_manager %}
             <div class="main__account account-area">
                 <div class="account-area__avatar">
-                    <img src="{% static '/img/account/full-avatar.jpeg' %}" alt="" />
+{#                    <img src="{% static '/img/account/full-avatar.jpeg' %}" alt="" />#}
+                    {% if driver.image %}
+                        <img src="{{ car.image.url }}" alt="" />
+                    {% endif %}
+                    <img src="{{ driver.image.url }}" alt="" />
                 </div>
                 <div class="account-area__info">
                     <input type="hidden" name="action" value="user_update">
