@@ -53,7 +53,11 @@
                     </form>
                 {% else %}
                     <div class="car-area__avatar">
-                        <img src="../img/cars/tesla.jpg" alt="" />
+                        {% if car.image %}
+                            <img src="{{ car.image.url }}" alt="" />
+                        {% else %}
+                            <img src="../img/cars/tesla.jpg" alt="" />
+                        {% endif %}
                     </div>
                     <div class="car-area__info">
                         <div class="car-area__item">
