@@ -16,8 +16,9 @@
 {#                    <img src="{% static '/img/account/full-avatar.jpeg' %}" alt="" />#}
                     {% if driver.image %}
                         <img src="{{ car.image.url }}" alt="" />
+                    {% else %}
+                        <img src="{% static '/img/account/full-avatar.jpeg' %}" alt="" />
                     {% endif %}
-                    <img src="{{ driver.image.url }}" alt="" />
                 </div>
                 <div class="account-area__info">
                     <input type="hidden" name="action" value="user_update">
