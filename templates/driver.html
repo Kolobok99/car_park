@@ -73,7 +73,7 @@
                                     <td class="table__cell">{{ car.last_inspection }}</td>
                                     <td class="table__cell">
                                         {% for app in car.applications.all %}
-                                            {{ app.type_of }}<br>
+                                            {{ app.type }} ({{ app.pk }})<br>
                                         {% endfor %}
                                     </td>
                                 </tr>
