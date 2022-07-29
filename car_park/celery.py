@@ -33,10 +33,6 @@ app.conf.beat_schedule = {
 		'task': "cabinet.tasks.check_user_docs_date",
 		'schedule': crontab(hour='*/1'),
 	},
-	'checking-timing-app': {
-		'task': "cabinet.tasks.checking_timing_app",
-		'schedule': crontab(hour='*/1'),
-	},
 	'create-note-about-ending-cards': {
 		'task': "cabinet.tasks.create_note_about_ending_cards",
 		'schedule': crontab(hour='*/1'),

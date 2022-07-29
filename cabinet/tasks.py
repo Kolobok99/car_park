@@ -111,7 +111,7 @@ def checking_timing_app():
     today = datetime.date.today()
     for app in active_apps:
         # Если заявка просрочена
-        if app.end_date > today:
+        if app.end_date > today and app.owner:
             # Уведомление механику
             Notifications.objects.create(
                 recipient=app.engineer,
