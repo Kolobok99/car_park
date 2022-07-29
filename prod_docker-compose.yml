@@ -6,10 +6,6 @@ services:
       context: ./
       dockerfile: Dockerfile.prod
     command: bash -c "python manage.py migrate && gunicorn car_park.wsgi:application --bind 0.0.0.0:8000"
-    volumes:
-#      - prod_web_data:/home/app/web/
-      - prod_static_volume:/home/app/web/static
-      - prod_media_volume:/home/app/web/media
     expose:
       - 8000
     env_file:
@@ -50,8 +46,6 @@ services:
     command: celery -A car_park worker -B -l info
     env_file:
       - .env/.env.prod
-#    volumes:
-#      - prod_web_data:/home/app/web/
     environment:
       - DB_HOST=db
       - DB_NAME=car_db
@@ -69,8 +63,6 @@ services:
     command: bash -c "cd car_bot/BOT && python telbot.py"
     env_file:
       - .env/.env.prod
-#    volumes:
-#      - prod_web_data:/home/app/web/
     depends_on:
       - db
       - web
@@ -79,4 +71,3 @@ volumes:
   prod_car_park_mysql_data:
   prod_static_volume:
   prod_media_volume:
-#  prod_web_data:
