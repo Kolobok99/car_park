@@ -101,7 +101,7 @@
                                 <td class="table__cell">
                                     {% for my_app in driver.my_apps.all %}
                                         {% if my_app.is_active == True %}
-                                            {{ my_app.type_of }}
+                                            {{ my_app.type }}
                                         {% endif %}
                                         <br>
                                     {% endfor %}
