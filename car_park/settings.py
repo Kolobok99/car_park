@@ -12,8 +12,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import os.path
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-from django.urls import reverse_lazy
+# # Build paths inside the project like this: BASE_DIR / 'subdir'.
+# from django.urls import reverse_lazy
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -204,7 +204,7 @@ CELERY_RESULT_SERIALIZER = 'json'
 EMAIL_HOST = 'smtp.mail.ru'
 EMAIL_PORT = 2525
 EMAIL_HOST_USER = "zolotavin011@mail.ru"
-EMAIL_HOST_PASSWORD = "z0w59j9bUh5TWusmNWW6"
+EMAIL_HOST_PASSWORD = "XdN6b2QmuT7VkZyHggKY"
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
