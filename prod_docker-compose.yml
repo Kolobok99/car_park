@@ -50,11 +50,7 @@ services:
     command: celery -A car_park worker -B -l info
     env_file:
       - .env/.env.prod
-    environment:
-      - DB_HOST=db
-      - DB_NAME=car_db
-      - DB_USER=car_manager
-      - DB_PASS=Oaisdi123jaj213
+      - .env/.env.prod.celery
     depends_on:
       - db
       - redis
