@@ -103,11 +103,12 @@ def pre_save_myuser(instance, **kwargs):
                 f'{settings.MEDIA_ROOT}/drivers/{instance.email}'
             )
             #Переносим аватарку:
-            avatar_path = f'{settings.MEDIA_ROOT}/drivers/{instance.email}/avatars/{os.path.basename(user.image.name)}'
-            image = open(avatar_path, 'rb')
-            django_image = File(image)
-            instance.image = django_image
-            os.remove(avatar_path)
+            if user.image.name:
+                avatar_path = f'{settings.MEDIA_ROOT}/drivers/{instance.email}/avatars/{os.path.basename(user.image.name)}'
+                image = open(avatar_path, 'rb')
+                django_image = File(image)
+                instance.image = django_image
+                os.remove(avatar_path)
 
             #Переносим документы
             pathes = [f'{settings.MEDIA_ROOT}/drivers/{instance.email}/docs/{os.path.basename(doc.file.name)}' for doc in user.my_docs.all()]

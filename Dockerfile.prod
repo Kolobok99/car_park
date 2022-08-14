@@ -39,7 +39,8 @@ RUN mkdir $APP_HOME/static
 WORKDIR $APP_HOME
 
 RUN apt-get update \
-    && apt-get install -y netcat
+    && apt-get install -y netcat \
+    && apt-get install -y nano
 
 
 COPY --from=builder /app/wheels /wheels
