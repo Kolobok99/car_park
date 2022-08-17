@@ -85,9 +85,9 @@
 На этой странице гость видит форму регистрации и кнопку для перехода на стр. "авторизации".
 При вводе валидных данных и нажатии кнопки "Отправить",
 
-<br>
+
 ![Регистрация](https://github.com/Kolobok99/car_park/blob/master/docs_images/image.png)
-<br>
+
 
 ![Регистрация](https://github.com/Kolobok99/car_park/blob/master/docs_images/image.png)
 
