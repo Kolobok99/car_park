@@ -86,18 +86,7 @@
 При вводе валидных данных и нажатии кнопки "Отправить",
 
 <br>
-![Иллюстрация к проекту](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%2020220707174335.png)
-![Иллюстрация к проекту](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted image 20220707174335.png)
-![Иллюстрация к проекту](docs_images/Pasted image 20220707174335.png)
-![Иллюстрация к проекту](https://github.com/Kolobok99/car_park/blob/46ac971d4cf80f9fe642f3548d47f37687cbf257/docs_images/Pasted%20image%2020220707174335.png)
-<br>
-------------------------------------------------------
-<br>
-
 ![Иллюстрация к проекту](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted_image_20220707174335.png)
-
-<br>
------------------------------------------------------- 
 <br>
 в таблице MyUser создается запись с новым пользователем и параметром (is_active=False). Гость переадресовывается на стр. 
 [активации аккаунта]( www.car-park.site/activation/), где ему предлагается ввести код активации, высланный на почту.
