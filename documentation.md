@@ -86,8 +86,11 @@
 При вводе валидных данных и нажатии кнопки "Отправить",
 
 <br>
-![Регистрация](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%2020220707174947.png)
-![Иллюстрация к проекту]([https://github.com/jon/coolproject/raw/master/image/image.png](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%2020220707174335.png))
+![Иллюстрация к проекту](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%2020220707174335.png)
+![Иллюстрация к проекту](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted image 20220707174335.png)
+![Иллюстрация к проекту](docs_images/Pasted image 20220707174335.png)
+![Иллюстрация к проекту](https://github.com/Kolobok99/car_park/blob/46ac971d4cf80f9fe642f3548d47f37687cbf257/docs_images/Pasted%20image%2020220707174335.png)
+
 <br>
 
 в таблице MyUser создается запись с новым пользователем и параметром (is_active=False). Гость переадресовывается на стр. 
