@@ -83,22 +83,30 @@
 Для того, чтобы пройти процесс регистрации, гостю необходимо перейти на стр.
 
 На этой странице гость видит форму регистрации и кнопку для перехода на стр. "авторизации".
-При вводе валидных данных  и нажатии кнопки "Отправить",
-![[Pasted image 20220707174947.png]]
+При вводе валидных данных и нажатии кнопки "Отправить",<br>
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
+
 в таблице MyUser создается запись с новым пользователем и параметром (is_active=False). Гость переадресовывается на стр. 
 [активации аккаунта]( www.car-park.site/activation/), где ему предлагается ввести код активации, высланный на почту.
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220707175444.png]]
 
 После отправки валидного кода, гость попадает на стр. [авторизации](http://127.0.0.1:8000/login/), а его аккаунт становится активным (is_active=True).
 
 **P.S** При отправки невалидных данных, гостю возвращается форма с сообщениями об ошибках.
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220707175954.png]]
 
 
 ### Авторизация
 После прохождения процесса регистрации, водитель (или механик) может авторизироваться в системе, введя корректные данные на стр. [авторизации](http://127.0.0.1:8000/)
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220707180619.png]]
+
 При вводе невалидных данных, приложение возвращает сообщение об ошибке
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220707180907.png]].
 **P.S.** В независимости от типа невалидных данных (неправильный пароль, неправильная почта, попытка войти в ЛК неактивированного аккаунта), система всегда возвращает одно и тоже сообщение.
 
@@ -107,127 +115,236 @@
 ### Личный кабинет
 После успешной авторизации водитель переадресовывается на стр. [ЛК](http://127.0.0.1:8000/account/)
 
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220707184920.png]]
 
 Здесь он может:
 - изменять личные данные
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220707185435.png]]
+
 при успешном изменении данных, появляется сообщение:
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220707185645.png]]
 P.S. медиа файлы пользователей (аватарки и документы) хранятся в личной папке, которая создается во время регистрации. Название папки совпадает с email'ом. При изменении email'а, название папки также меняется
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220707185809.png]].
 
 - работать с  закрепленными за ним автомобилями
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220707190149.png]]
+
 При нажатии на *регистрационный номер*, водитель переадресовывается на стр. [выбранного авто](http://127.0.0.1:8000/cars/F128OS)
 При нажатии на *название активной заявки*, водитель переадресовывается на стр. [выбранного авто](http://127.0.0.1:8000/applications/74)
 
 - работать с созданными активными заявками
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220707190642.png]]
 При нажатии на *регистрационный номер*, водитель переадресовывается на стр. [выбранного авто](http://127.0.0.1:8000/cars/F128OS)
 При нажатии на *ID активной заявки*, водитель переадресовывается на стр. [выбранного авто](http://127.0.0.1:8000/applications/74)
 
 - изменять баланс закрепленной за ним топливной карты
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220707190910.png]].
+
 При успешном изменении баланса 
 *(баланс должен быть >= 0 и <= лимиту)*
 Появляется сообщение:
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220707191030.png]]
 
 - добавлять и удалять персональные документы:
 При нажатии на кнопку "добавить" (документ), появляется форма:
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220803130621.png]].
 При отправки валидных данных (здесь невалидным может быть только *дата окончания*, она должна быть больше *даты выдачи*), появляется сообщение:
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220707191336.png]]
 и новая запись в таблице.
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220707191407.png]]
 При вводе невалидной даты, форма возвращается с сообщением об ошибке:
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220707191904.png]]
+
 При нажатии на кнопку "удалить" (определенный документ), появляется окно подтверждения:
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220707191600.png]]
+
 При нажатии кнопки "да" (удалить!), появляется сообщение:
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220707191627.png]]
+
 и запись с ранее созданным документом пропадает:
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220707191740.png]]
 
 
 **Также** стоит отметить, что водитель, хоть и видит меню сайта,
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220707192013.png]]
+
 но при попытке перехода на любую из страниц, он получает сообщение:
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220707192049.png]]
 
 **Также**, при попытке попасть на стр. чужой машины или заявки:
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220707192049.png]]
 
 ### Выбранное авто
 После нажатия на регистрационный номер выбранного авто, владелец авто или менеджер попадает на соответствующую стр.  [страницу ](http://127.0.0.1:8000/cars/F128OS)
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220708130148.png]]
+
 P.S. в отличии от водителя, менеджер имеет возможность менять информацию об авто
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220708130350.png]]
 
 Здесь владелец авто и менеджер могут:
 - Просматривать ранее созданные заявки и переходить на [стр. заявки](http://127.0.0.1:8000/applications/74 путем нажатия по ее ID.
 - Добавлять  новые заявки. При нажатии на кнопку добавить (заявку), открывается форма добавления заявки.
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220708132416.png]]
+
 Форма менеджера отличается наличием поля выбора механика.
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220729172325.png]]
+
 После нажатия кнопки отправить, новая заявка появляется в таблице.
 - таблица Документы, идентична таблице Документы на стр. ЛК.
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220708132607.png]]
 
 ### Выбранная заявка
 После создания заявки (водителем), ей присваивается первичный статус: "Ожидает рассмотрения". 
 
 Перейдя на [стр. заявки](), **владелец** заявки, может:
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220708133714.png]]
+
 - ознакомиться со всей информацией;
-- изменить заявку, нажав на кнопку "Изменить заявку". Появится форма, аналогичная форме на стр. выбранное авто; 
- ![[Pasted image 20220729172455.png]]
- - удалить заявку. При нажатии на кнопку "Удалить заявку", появится форма подтверждения.
- ![[Pasted image 20220708133756.png]]
+- изменить заявку, нажав на кнопку "Изменить заявку". Появится форма, аналогичная форме на стр. выбранное авто;
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
+![[Pasted image 20220729172455.png]]
  
- **Менеджер** при переходе на чужую заявку, может:
- ![[Pasted image 20220708133845.png]]
- - Одобрить заявку, нажав на кнопку "Подтвердить". После отправки формы, заявке присвоится статус "Ожидает  рассмотрения механика";
+- удалить заявку. При нажатии на кнопку "Удалить заявку", появится форма подтверждения.
+ 
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
+![[Pasted image 20220708133756.png]]
+ 
+**Менеджер** при переходе на чужую заявку, может:
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
+![[Pasted image 20220708133845.png]]
+
+- Одобрить заявку, нажав на кнопку "Подтвердить". После отправки формы, заявке присвоится статус "Ожидает  рассмотрения механика";
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220708134114.png]]
+
 - Отклонить заявку, нажав на кнопку "Вернуть на доработку". После подтверждения, заявке присвоится статус "Отклонена".
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220708134223.png]]
 
 ### Автомобили
 Перейдя на стр. [автомобили](http://127.0.0.1:8000/cars/), менеджер:
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220729172557.png]]
+
 - видит общее кол-во (или кол-во отфильтрованных) авто;
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220708140121.png]]
+
 - может добавить новое авто. При нажатии на кнопку "добавить авто", открывается форма;
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220708140243.png]]
+
 При введении корректных данных и нажатии кнопки "отправить", новое авто появляется в таблице.
 При введении некорректных данных, форма возвращается с сообщениями об ошибках.
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220708140450.png]]
+
 - фильтровать автомобили по их параметрам;
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220708140539.png]]
+
 - удалять и изымать выбранные автомобили.
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220708141109.png]]
 
 ### Водители
 Стр. [водители](http://127.0.0.1:8000/drivers/) аналогична стр. Автомобили, за исключением возможности добавления новых водителей.
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220708140801.png]]
+
 ### Документы
 Стр. [документы](http://127.0.0.1:8000/documents/) отличается от стр. Водители одновременной работой c двумя таблицами: "документы авто" и "документы водителей".
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220708141014.png]]
+
 ### Топливные карты
 стр. [топливные карты](http://127.0.0.1:8000/cards/) идентична стр. Автомобили.
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220708141158.png]]
+
 ### Заявки
 стр. [заявки](http://127.0.0.1:8000/applications) идентична стр. Водители.
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220708141237.png]]
+
 ### История
 стр. [история](127.0.0.1:8000/history/) отображает всю историю действий пользователей. Также есть возможность фильтровать историю по времени, типу и статусу.
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220708141456.png]]
+
 ### Выбранный водитель
 Стр. Выбранного водителя отображает всю информацию о нем и связанных с ним записях.
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220708143423.png]]
+
 Также на этой стр. имеется возможность присвоить водителю одну из свободных топливных карт.
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220708143459.png]]
+
 
 ### Celery
 Для обработки фоновых и переодических задач была использована программа celery и redis в качестве брокера задач.  
@@ -253,30 +370,53 @@ P.S. в отличии от водителя, менеджер имеет воз
 
 #### Авторизация
 При первом запуске телеграмм бота (вводе команды /start), он просит доступ к номеру телефону. Номер телефона должен совпадать с номером, указанным во время регистрации.
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220708155138.png]]
+
 После отправки номера и его успешной валидации, пользователь получает доступ к главному меню.
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220708155522.png]]
 
 #### Уведомления
 После нажатия кнопки "уведомления", пользователь из основного меню попадает в меню активные уведомления.
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220708164124.png]]
+
 Используя "<<" и "">>" можно перемещаться между уведомлениями
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220708164226.png]].
+
 Кнопка "подтвердить" делает уведомление просмотренным.
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220708164339.png]]
 
 #### Заявки
 После нажатия кнопки "Заявки", пользователь из основного меню попадает в меню заявки.
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220708174231.png]]
 
 Нажатие кнопки "Новые заявки" генерирует первую заявку, рассмотренную менеджером. Нажатие кнопки "Приступить к ремонту", изменяет статус заявки на "Ремонтируется" и удаляет ее из списка новых заявок!
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220708174731.png]]
+
 Нажатие кнопки "Приступить к ремонту", изменяет статус заявки на "Ремонтируется" и удаляет ее из списка новых заявок!
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220708174746.png]]
 
 После завершение ремотных работ, механик должен перейти в меню "Активные заявки" и нажать кнопку "Выполнить заявку".
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220708175015.png]]
 
 Если кнопка выполнения заявки была нажата по ошибке, есть возможность вернуть заявке статус *ремонтируется*, перейдя в раздел меню "Выполненные заявки" и нажав кнопку "Доработать заявку".
 
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
 ![[Pasted image 20220708175209.png]]
