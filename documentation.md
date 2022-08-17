@@ -89,7 +89,7 @@
 ![Регистрация](https://github.com/Kolobok99/car_park/blob/master/docs_images/image.png)
 <br>
 
-![Иллюстрация к проекту](https://github.com/Kolobok99/car_park/blob/master/docs_images/image.png)
+![Регистрация](https://github.com/Kolobok99/car_park/blob/master/docs_images/image.png)
 
 
 в таблице MyUser создается запись с новым пользователем и параметром (is_active=False). Гость переадресовывается на стр. 
