@@ -94,8 +94,7 @@
 ------------------------------------------------------
 <br>
 
-![Иллюстрация к проекту](https://github.com/Kolobok99/car_park/blob/master/docs_images/image.png)
-https://github.com/jon/coolproject/raw/master/image/image.png
+![Иллюстрация к проекту](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted_image_20220707174335.png)
 
 <br>
 ------------------------------------------------------ 
