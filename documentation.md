@@ -86,7 +86,8 @@
 При вводе валидных данных и нажатии кнопки "Отправить",
 
 <br>
-![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%2020220707174947.png)
+![Регистрация](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted image 20220707174947.png)
+
 <br>
 
 в таблице MyUser создается запись с новым пользователем и параметром (is_active=False). Гость переадресовывается на стр. 
