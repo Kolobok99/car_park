@@ -92,32 +92,32 @@
 
 
 ![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%2020220707175444.png)
-![[Pasted image 20220707175444.png]]
+<!-- ![[Pasted image 20220707175444.png]] -->
 
 
 После отправки валидного кода, гость попадает на стр. [авторизации](http://127.0.0.1:8000/login/), а его аккаунт становится активным (is_active=True).
 
 **P.S** При отправки невалидных данных, гостю возвращается форма с сообщениями об ошибках.
 
-<br>
-![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
-![[Pasted image 20220707175954.png]]
-<br>
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%2020220707175954.png)
+<!-- ![[Pasted image 20220707175954.png]] -->
+
 
 ### Авторизация
 После прохождения процесса регистрации, водитель (или механик) может авторизироваться в системе, введя корректные данные на стр. [авторизации](http://127.0.0.1:8000/)
 
-<br>
-![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
-![[Pasted image 20220707180619.png]]
-<br>
+<!-- <br> -->
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%2020220707180619.png)
+<!-- ![[Pasted image 20220707180619.png]] -->
+<!-- <br> -->
 
 При вводе невалидных данных, приложение возвращает сообщение об ошибке
 
-<br>
-![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
-![[Pasted image 20220707180907.png]].
-<br>
+<!-- <br> -->
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%2020220707180907.png)
+<!-- ![[Pasted image 20220707180907.png]]. -->
+<!-- <br> -->
 **P.S.** В независимости от типа невалидных данных (неправильный пароль, неправильная почта, попытка войти в ЛК неактивированного аккаунта), система всегда возвращает одно и тоже сообщение.
 
 
