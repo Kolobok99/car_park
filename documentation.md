@@ -90,10 +90,10 @@
 в таблице MyUser создается запись с новым пользователем и параметром (is_active=False). Гость переадресовывается на стр. 
 [активации аккаунта]( www.car-park.site/activation/), где ему предлагается ввести код активации, высланный на почту.
 
-<br>
-![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%20.png)
+
+![](https://github.com/Kolobok99/car_park/blob/master/docs_images/Pasted%20image%2020220707175444.png)
 ![[Pasted image 20220707175444.png]]
-<br>
+
 
 После отправки валидного кода, гость попадает на стр. [авторизации](http://127.0.0.1:8000/login/), а его аккаунт становится активным (is_active=True).
 
