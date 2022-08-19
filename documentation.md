@@ -33,7 +33,7 @@
 2. Собрать докер-образы: *docker-compose -f prod_docker-compose.yml build*
 3. Поднять проект *docker-compose -f prod_docker-compose.yml up*
 
-**Запуск интеграционных тестов**
+**Запуск тестов**
 1. Перейти в корень проекта: *cd /car_park/*
 2. Запустить тесты *pytest*
 
