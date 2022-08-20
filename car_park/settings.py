@@ -102,14 +102,11 @@ WSGI_APPLICATION = 'car_park.wsgi.application'
 #     }
 # }
 #
+
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'car_db',
-#         'USER': 'car_manager',
-#         'PASSWORD': '123456',
-#         'HOST': 'car_db',
-#         'PORT': '3306',
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
 
