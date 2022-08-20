@@ -65,6 +65,7 @@
 - Celery + Redis
 - pyTelegramBotAPI
 - Docker + docker-compose
+- Nginx
 
 
 ### Регистрация <a name="регистрация"></a>
