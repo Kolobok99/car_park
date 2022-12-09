@@ -176,5 +176,4 @@ def generator_activation_code():
     letters = string.ascii_lowercase
     length = 6
     rand_string = ''.join(random.choice(letters) for i in range(length))
-    # print("Random string of length", length, "is:", rand_string)
     return rand_string

@@ -5,7 +5,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile.prod
-    command: bash -c "python manage.py migrate && gunicorn car_park.wsgi:application --bind 0.0.0.0:8000"
+    command: bash -c "python manage.py makemigrations nots && python manage.py migrate  gunicorn car_park.wsgi:application --bind 0.0.0.0:8000"
     volumes:
 #      - prod_web_data:/home/app/web/
       - prod_static_volume:/home/app/web/static

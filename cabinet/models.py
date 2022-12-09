@@ -26,10 +26,7 @@ class Car(models.Model):
     registration_number = models.CharField('Регистрационный номер',
                                            unique=True, max_length=6,
                                            validators=[
-                                               validators.RegexValidator(
-                                                   regex='[a-zA-Z]{1}[0-9]{3}[a-zA-Z]{2}',
-                                                   message='Введите номер правильно!'
-                                               )])
+
 
     region_code = models.PositiveSmallIntegerField('Код региона',
                                                    validators=[

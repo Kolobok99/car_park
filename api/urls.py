@@ -26,7 +26,7 @@ urlpatterns = router.urls
 
 # urlpatterns = [
 #
-#     path('cars/list/', CarAPIViewSet.as_view({'get': 'list'})),
+    # path('cars/list/', CarAPIViewSet.as_view({'get': 'list'})),
 #     path('cars/filtration', CarAPIViewSet.as_view({'get': 'filtration'})),
 #     path('cars/create', CarAPIViewSet.as_view({'post': 'create'})),
 #     path('cars/<str:registration_number>/', CarAPIViewSet.as_view({'get': 'retrieve'})),
